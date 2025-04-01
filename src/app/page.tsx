@@ -14,12 +14,10 @@ export default function Home() {
         />
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-<h1>March materials coming soon.</h1>
-
+          <h1 className="font-bold">March materials coming soon.</h1>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      </footer>
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
   );
 }
