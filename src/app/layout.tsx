@@ -5,6 +5,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "MARCH",
   description: "MARCH materials coming soon",
+  openGraph: {
+    title: "MARCH",
+    description: "MARCH materials beta application",
+    type: "website",
+    locale: "en",
+  },
 };
 
 export default function RootLayout({
