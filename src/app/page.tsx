@@ -13,7 +13,7 @@ export default function Home() {
           priority
         />
 
-        <div className="flex gap-4 items-center flex-col">
+        <div className="flex gap-4 items-center flex-col text-center">
           <h1 className="font-bold text-4xl">Just materials & architecture</h1>
           <h4>(No BS.)</h4>
           <h1 className="font-bold text-2xl">
@@ -35,14 +35,24 @@ export default function Home() {
             </button>
           </a>
         </div>
-        <div className="flex md:flex-row flex-col items-center justify-center">
+        <div className="flex flex-col justify-center gap-10">
+          <video
+            autoPlay
+            muted
+            playsInline
+            loop
+            width={800}
+            height={400}
+            src="/prototype-better-quality.mov"
+            className="rounded-lg"
+          ></video>
           <Image
             src="/march-ex-search.png"
             alt="march app example search results"
             sizes="45vw"
             width={800}
             height={200}
-            className="rounded-lg m-2"
+            className="rounded-lg"
           />
           <Image
             src="/march-ex-project.png"
@@ -50,20 +60,9 @@ export default function Home() {
             sizes="45vw"
             width={800}
             height={200}
-            className="rounded-lg m-2"
+            className="rounded-lg"
           />
         </div>
-
-        <video
-          autoPlay
-          muted
-          playsInline
-          loop
-          width={700}
-          height={400}
-          src="/prototype2.mp4"
-          className="rounded-lg"
-        ></video>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
