@@ -16,6 +16,20 @@ export default function Home() {
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <h1 className="font-bold">March materials coming soon.</h1>
         </div>
+        <div className="flex-col">
+          <a
+            href="https://forms.fillout.com/t/kweQHzpMbAus"
+            target="_blank"
+            rel="noopener"
+          >
+            <button
+              className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
+              type="button"
+            >
+              Join the Waitlist
+            </button>
+          </a>
+        </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
