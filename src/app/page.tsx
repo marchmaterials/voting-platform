@@ -35,25 +35,56 @@ export default function Home() {
             </button>
           </a>
         </div>
+        <Image
+          src="/march-ex-search.png"
+          alt="march app example search results"
+          width={700}
+          height={400}
+          className="rounded-lg"
+        />
+        <Image
+          src="/march-ex-project.png"
+          alt="march app example project details overlay"
+          width={700}
+          height={400}
+          className="rounded-lg"
+        />
+        <a
+          href="https://forms.fillout.com/t/kweQHzpMbAus"
+          target="_blank"
+          rel="noopener"
+        >
+          <button
+            className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
+            type="button"
+          >
+            Join the Waitlist
+          </button>
+        </a>
         <video
           autoPlay
           playsInline
           loop
-          width="800"
-          height="500"
-          src="/prototype.mov"
+          width={700}
+          height={400}
+          src="/prototype2.mp4"
           className="rounded-lg"
-          preload="none"
-        >
-          <Image
-            src="/march-ex-search.png"
-            alt="march app example search results"
-            width={800}
-            height={500}
-          />
-        </video>
+        ></video>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <a
+          href="https://forms.fillout.com/t/kweQHzpMbAus"
+          target="_blank"
+          rel="noopener"
+        >
+          <button
+            className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
+            type="button"
+          >
+            Join the Waitlist
+          </button>
+        </a>
+      </footer>
     </div>
   );
 }
