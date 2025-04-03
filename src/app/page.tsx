@@ -35,6 +35,23 @@ export default function Home() {
             </button>
           </a>
         </div>
+        <video
+          autoPlay
+          playsInline
+          loop
+          width="800"
+          height="500"
+          src="/prototype.mov"
+          className="rounded-lg"
+          preload="none"
+        >
+          <Image
+            src="/march-ex-search.png"
+            alt="march app example search results"
+            width={800}
+            height={500}
+          />
+        </video>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
