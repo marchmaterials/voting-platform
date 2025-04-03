@@ -35,34 +35,28 @@ export default function Home() {
             </button>
           </a>
         </div>
-        <Image
-          src="/march-ex-search.png"
-          alt="march app example search results"
-          width={700}
-          height={400}
-          className="rounded-lg"
-        />
-        <Image
-          src="/march-ex-project.png"
-          alt="march app example project details overlay"
-          width={700}
-          height={400}
-          className="rounded-lg"
-        />
-        <a
-          href="https://forms.fillout.com/t/kweQHzpMbAus"
-          target="_blank"
-          rel="noopener"
-        >
-          <button
-            className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
-            type="button"
-          >
-            Join the Waitlist
-          </button>
-        </a>
+        <div className="flex md:flex-row flex-col items-center justify-center">
+          <Image
+            src="/march-ex-search.png"
+            alt="march app example search results"
+            sizes="45vw"
+            width={800}
+            height={200}
+            className="rounded-lg m-2"
+          />
+          <Image
+            src="/march-ex-project.png"
+            alt="march app example project details overlay"
+            sizes="45vw"
+            width={800}
+            height={200}
+            className="rounded-lg m-2"
+          />
+        </div>
+
         <video
           autoPlay
+          muted
           playsInline
           loop
           width={700}
