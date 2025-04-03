@@ -13,8 +13,13 @@ export default function Home() {
           priority
         />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <h1 className="font-bold">March materials coming soon.</h1>
+        <div className="flex gap-4 items-center flex-col">
+          <h1 className="font-bold text-4xl">Just materials & architecture</h1>
+          <h4>(No BS.)</h4>
+          <h1 className="font-bold text-2xl">
+            We are the new visual discovery platfrom for architects.
+          </h1>
+          <h4>...with a focus on sustainable and affordable materials.</h4>
         </div>
         <div className="flex-col">
           <a
