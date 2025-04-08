@@ -12,5 +12,54 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum BUILDING_TYPOLOGY{
+RESIDENTIAL
+COMMERCIAL
+INDUSTRIAL
+INSTITUTIONAL
+}
+
+model User {
+  id    String    @default(cuid()) @id
+  email String  @unique
+  submissions Project[]
+}
+
+model Project {
+  id        String     @default(cuid()) @id
+  title     String
+  description   String?
+  location String
+  yearCompleted Int
+  typology BUILDING_TYPOLOGY 
+  creationDate DateTime @default(now()) @db.Timestamp
+  author    User   @relation(fields: [authorId], references: [id])
+  authorId  String
+  images Image[]
+  materials Material[]
+  selectedForCompetition Boolean @default(false)
+}
+
+model Image {
+  id  String @default(cuid()) @id
+  url String
+  project Project @relation(fields: [projectId], references: [id])
+  projectId String
+}
+
+model Supplier {
+  id String @default(cuid()) @id
+  materials Material[]
+  website String
+}
+
+model Material {
+  id String @default(cuid()) @id
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  supplierId String
+  projects Project[]
 }
