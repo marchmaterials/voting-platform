@@ -3,13 +3,31 @@ type InputProps = {
   id: string;
   label: string;
   name: string;
+  required?: boolean;
+  inputProps?: object;
 };
 
-const Input = ({ type, id, label, name }: InputProps) => {
+const Input = ({
+  type,
+  id,
+  label,
+  name,
+  required = true,
+  inputProps,
+}: InputProps) => {
   return (
-    <div className="flex justify-between align-center">
-      <label htmlFor={id}>{label}</label>
-      <input type={type} id={id} name={name} className="h-10"></input>
+    <div className="flex justify-between items-center">
+      <label htmlFor={id} className="pr-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={id}
+        name={name}
+        required={required}
+        {...inputProps}
+        className="h-10"
+      ></input>
     </div>
   );
 };
