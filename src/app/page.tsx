@@ -14,12 +14,12 @@ export default function Home() {
         />
 
         <div className="flex gap-4 items-center flex-col text-center">
-          <h1 className="font-bold text-4xl">Just materials & architecture</h1>
-          <h4>(No BS.)</h4>
-          <h1 className="font-bold text-2xl">
-            We are the new visual discovery platfrom for architects.
+          <h1 className="font-bold text-4xl mb-4">
+            Tactile search engine for materials
           </h1>
-          <h4>...with a focus on sustainable and affordable materials.</h4>
+          <h1 className="text-xl">Get inspired</h1>
+          <h1 className="text-xl">Find material suppliers</h1>
+          <h1 className="text-xl mb-2">Connect with skilled professionals</h1>
         </div>
         <div className="flex-col">
           <a
@@ -46,22 +46,6 @@ export default function Home() {
             src="/prototype-better-quality.mov"
             className="rounded-lg"
           ></video>
-          <Image
-            src="/march-ex-search.png"
-            alt="march app example search results"
-            sizes="45vw"
-            width={800}
-            height={200}
-            className="rounded-lg"
-          />
-          <Image
-            src="/march-ex-project.png"
-            alt="march app example project details overlay"
-            sizes="45vw"
-            width={800}
-            height={200}
-            className="rounded-lg"
-          />
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
