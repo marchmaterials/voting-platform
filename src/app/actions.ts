@@ -22,15 +22,7 @@ export async function persistProject(
   console.log("SUBMIT FORM !:", formData);
   console.log("form DATA:", formData.get("materials"));
 
-  //   const prunedMaterials = Object.keys(formData)
-  //     .filter((k) => k.startsWith("material") || k.startsWith("supplier"))
-  //     .reduce((acc, val) => {
-  //       const suffix = String(val.split("-")[1]);
-  //       console.log('what', val)
-  //       return (acc[suffix][val] = formData.get(val));
-  //       //   [ [materialName0, supplierName0, supplierWebsite0], [..] ]
-  //       //   [ {materialName0: name, supplierName0: name}, {}]
-  //     }, {});
+
 
   // prisma.material.create({
   //     name: formData.get('materialName'),

@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 export default function Page() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
-  const [formState, formAction, isPending] = useActionState(persistProject, {});
+
+  const [formState, formAction] = useActionState(persistProject, {});
   const {
     register,
     handleSubmit,
@@ -26,6 +27,7 @@ export default function Page() {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "materials",
+    rules: { minLength: 3 },
   });
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function Page() {
             id="materialName"
             label="Material Used"
             inputProps={{
-              ...register(`materials.${index}.materialName.value`),
+              ...register(`materials.${index}.materialName`),
             }}
           />
           <Input
@@ -55,7 +57,7 @@ export default function Page() {
             id="supplierName"
             label="Supplier name"
             inputProps={{
-              ...register(`materials.${index}.supplierName.value`),
+              ...register(`materials.${index}.supplierName`),
             }}
           />
           <Input
@@ -65,9 +67,10 @@ export default function Page() {
             id="supplierWebsite"
             label="Supplier website"
             inputProps={{
-              ...register(`materials.${index}.supplierWebsite.value`),
+              ...register(`materials.${index}.supplierWebsite`),
             }}
           />
+          <button onClick={() => remove(index)}>Delete this material</button>
         </div>
       </fieldset>
     );
@@ -78,8 +81,14 @@ export default function Page() {
       ref={formRef}
       onSubmit={(e) => {
         e.preventDefault();
+        console.log("fields 01 ?", fields);
+        console.log("form state :", formState);
         handleSubmit(() => {
-          startTransition(() => formAction(new FormData(formRef.current!)));
+          startTransition(() => {
+            const newForm = new FormData(formRef.current!);
+            newForm.append("materials", JSON.stringify(fields));
+            formAction(newForm);
+          });
         })(e);
       }}
     >
