@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/prisma"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -23,11 +22,11 @@ INDUSTRIAL
 INSTITUTIONAL
 }
 
-model User {
-  id    String    @default(cuid()) @id
-  email String  @unique
-  submissions Project[]
-}
+// model User {
+//   id    String    @default(cuid()) @id
+//   email String  @unique
+//   submissions Project[]
+// }
 
 model Project {
   id        String     @default(cuid()) @id
@@ -35,10 +34,11 @@ model Project {
   description   String?
   location String
   yearCompleted Int
-  typology BUILDING_TYPOLOGY 
+  typology BUILDING_TYPOLOGY
   creationDate DateTime @default(now()) @db.Timestamp
-  author    User   @relation(fields: [authorId], references: [id])
-  authorId  String
+  // author    User   @relation(fields: [authorId], references: [id])
+  // authorId  String
+  authorEmail String
   images Image[]
   materials Material[]
   selectedForCompetition Boolean @default(false)
@@ -59,6 +59,7 @@ model Supplier {
 
 model Material {
   id String @default(cuid()) @id
+  name String
   supplier Supplier @relation(fields: [supplierId], references: [id])
   supplierId String
   projects Project[]
