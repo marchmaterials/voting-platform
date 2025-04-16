@@ -1,6 +1,13 @@
 "use server";
 import prisma from "@/lib/prisma";
 
+export type materialActionState = {
+  materialName: string;
+  description: string;
+  usedWhere: string;
+  supplierName: string;
+  url: string;
+};
 export type projectActionState = {
   email: string;
   title: string;
@@ -8,13 +15,7 @@ export type projectActionState = {
   location: string;
   yearCompleted: number;
   typology: "residential" | "commercial" | "industrial" | "institutional";
-  materials: Array<{
-    materialName: string;
-    description: string;
-    usedWhere: string;
-    supplierName: string;
-    url: string;
-  }>;
+  materials: Array<materialActionState>;
 };
 
 export async function persistProject(
@@ -24,7 +25,13 @@ export async function persistProject(
   console.log("SUBMIT FORM !:", formData);
   console.log("form DATA:", formData.get("materials"));
 
-  async function createMaterialsAndConnections({ materialData, projectId }) {
+  async function createMaterialsAndConnections({
+    materialData,
+    projectId,
+  }: {
+    materialData: Array<materialActionState>;
+    projectId: string;
+  }) {
     return Promise.all(
       materialData.map((m) =>
         prisma.material.create({
@@ -42,8 +49,8 @@ export async function persistProject(
             },
             projectMaterials: {
               create: {
-                projectId: { connect: { id: projectId } },
                 usedWhere: m.usedWhere,
+                projectId: { connect: { id: projectId } },
               },
             },
           },
