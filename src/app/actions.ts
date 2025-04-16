@@ -50,7 +50,7 @@ export async function persistProject(
             projectMaterials: {
               create: {
                 usedWhere: m.usedWhere,
-                projectId: { connect: { id: projectId } },
+                projectId: projectId,
               },
             },
           },
