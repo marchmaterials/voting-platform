@@ -41,6 +41,7 @@ model Project {
   authorEmail String
   images Image[]
   materials Material[]
+  projectMaterial ProjectMaterial[]
   selectedForCompetition Boolean @default(false)
 }
 
@@ -60,7 +61,18 @@ model Supplier {
 model Material {
   id String @default(cuid()) @id
   name String
+  description String
   supplier Supplier @relation(fields: [supplierId], references: [id])
   supplierId String
   projects Project[]
+  projectMaterials ProjectMaterial[]
+}
+
+model ProjectMaterial {
+  id String @default(cuid()) @id
+  material Material @relation(fields: [materialId], references: [id])
+  materialId String
+  project Project @relation(fields: [projectId], references: [id])
+  projectId String
+  usedWhere String
 }

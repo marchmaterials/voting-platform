@@ -45,11 +45,30 @@ export default function Page() {
             type="text"
             name="materialName"
             id="materialName"
-            label="Material Used"
+            label="Name of Material"
             inputProps={{
               ...register(`materials.${index}.materialName`),
             }}
           />
+          <Input
+            key={`where-${id}`}
+            type="text"
+            name="usedWhere"
+            id="usedWhere"
+            label="Where this material is used in the project"
+            inputProps={{
+              placeholder: "ex. Interior flooring",
+              ...register(`materials.${index}.usedWhere`),
+            }}
+          />
+          <div className="flex justify-between items-center">
+            <label htmlFor="materialDescription">Describe the material</label>
+            <textarea
+              id="materialDescription"
+              {...register(`materials.${index}.description`)}
+            />
+          </div>
+
           <Input
             key={`supplier-${id}`}
             type="text"
