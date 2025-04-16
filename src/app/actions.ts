@@ -33,7 +33,7 @@ export async function persistProject(
             description: m.description,
             url: m.url,
             projects: {
-              connect: [{ id: projectID }],
+              connect: [{ id: projectId }],
             },
             supplier: {
               create: {
