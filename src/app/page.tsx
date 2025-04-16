@@ -48,19 +48,63 @@ export default function Home() {
           ></video>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          href="https://forms.fillout.com/t/kweQHzpMbAus"
-          target="_blank"
-          rel="noopener"
-        >
-          <button
-            className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
-            type="button"
+      <footer className="row-start-3 flex flex-row gap-6 items-center justify-between container">
+        <div className="flex flex-row">
+          <a
+            href="https://www.instagram.com/marchmaterials/"
+            target="blank"
+            rel="noopener noreferrer"
           >
-            Join the Waitlist
-          </button>
-        </a>
+            <Image
+              className="dark:invert"
+              src="/instagram.svg"
+              alt="instagram logo"
+              width={30}
+              height={30}
+              priority
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/marchmaterials/"
+            target="blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/linkedin.svg"
+              alt="linkedin logo"
+              width={30}
+              height={30}
+              priority
+            />
+          </a>
+        </div>
+        <div className="flex flex-row justify-around gap-2 h-10">
+          <Image
+            className="dark:invert"
+            src="/avant-now.png"
+            alt="avant now accelerator fem track logo"
+            width={60}
+            height={20}
+            priority
+          />
+          <Image
+            className="dark:invert"
+            src="https://www.berlin.de/i9f/r1/images/logo_berlin_m_srgb.svg"
+            alt="Berlin Senat Logo"
+            width={120}
+            height={20}
+            priority
+          />
+          <Image
+            className=""
+            src="/EU-logo.png"
+            alt="kofinanziert von der Europäischen Union"
+            width={170}
+            height={10}
+            priority
+          />
+        </div>
       </footer>
     </div>
   );
