@@ -30,12 +30,12 @@ INSTITUTIONAL
 
 model Project {
   id        String     @default(cuid()) @id
+  createdAt DateTime @default(now()) @db.Timestamp
   title     String
   description   String?
   location String
   yearCompleted Int
   typology BUILDING_TYPOLOGY
-  creationDate DateTime @default(now()) @db.Timestamp
   // author    User   @relation(fields: [authorId], references: [id])
   // authorId  String
   authorEmail String
@@ -54,8 +54,9 @@ model Image {
 
 model Supplier {
   id String @default(cuid()) @id
+  name String
   materials Material[]
-  website String
+  website String?
 }
 
 model Material {
@@ -64,6 +65,7 @@ model Material {
   description String
   supplier Supplier @relation(fields: [supplierId], references: [id])
   supplierId String
+  url String
   projects Project[]
   projectMaterials ProjectMaterial[]
 }

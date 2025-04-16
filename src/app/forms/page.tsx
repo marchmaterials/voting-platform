@@ -61,7 +61,10 @@ export default function Page() {
               ...register(`materials.${index}.usedWhere`),
             }}
           />
-          <div className="flex justify-between items-center">
+          <div
+            className="flex justify-between items-center"
+            key={`description-${id}`}
+          >
             <label htmlFor="materialDescription">Describe the material</label>
             <textarea
               id="materialDescription"
@@ -82,11 +85,11 @@ export default function Page() {
           <Input
             key={`website-${id}`}
             type="text"
-            name="supplierWebsite"
-            id="supplierWebsite"
-            label="Supplier website"
+            name="materialUrl"
+            id="materialUrl"
+            label="Link to the material on the supplier website"
             inputProps={{
-              ...register(`materials.${index}.supplierWebsite`),
+              ...register(`materials.${index}.url`),
             }}
           />
           <button onClick={() => remove(index)}>Delete this material</button>
@@ -103,6 +106,14 @@ export default function Page() {
         console.log("fields 01 ?", fields);
         console.log("form state :", formState);
         handleSubmit(() => {
+          // TO DO: get supplier base url and persist to supplier
+
+          // const enrichedFields = fields.map((m) => ({
+          //   ...m,
+          //   supplierWebsite: new URL(m.url).protocol.concat(
+          //     new URL(m.url).host
+          //   ),
+          // }));
           startTransition(() => {
             const newForm = new FormData(formRef.current!);
             newForm.append("materials", JSON.stringify(fields));

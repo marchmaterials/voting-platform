@@ -13,7 +13,7 @@ export type projectActionState = {
     description: string;
     usedWhere: string;
     supplierName: string;
-    supplierWebsite: string;
+    url: string;
   }>;
 };
 
@@ -24,19 +24,48 @@ export async function persistProject(
   console.log("SUBMIT FORM !:", formData);
   console.log("form DATA:", formData.get("materials"));
 
-  try {
-    const suppliers = await prisma.supplier.createManyAndReturn({
-      data: [...formData.get("materials")],
-    });
-    const materialRecords = await prisma.material.createManyAndReturn;
-  } catch (err) {}
+  async function createMaterialsAndConnections({ materialData, projectId }) {
+    return Promise.all(
+      materialData.map((m) =>
+        prisma.material.create({
+          data: {
+            name: m.materialName,
+            description: m.description,
+            url: m.url,
+            projects: {
+              connect: [{ id: projectID }],
+            },
+            supplier: {
+              create: {
+                name: m.supplierName,
+              },
+            },
+            projectMaterials: {
+              create: {
+                projectId: { connect: { id: projectId } },
+                usedWhere: m.usedWhere,
+              },
+            },
+          },
+        })
+      )
+    );
+  }
 
-  prisma.project.create({
-    title: formData.get("title"),
-    description: formData.get("description"),
-    location: formData.get("location"),
-    yearCompleted: formData.get("yearCompleted"),
-    typology: formData.get("typology"),
-    authorEmail: formData.get("email"),
-  });
+  try {
+    const id = await prisma.project.create({
+      title: formData.get("title"),
+      description: formData.get("description"),
+      location: formData.get("location"),
+      yearCompleted: formData.get("yearCompleted"),
+      typology: formData.get("typology"),
+      authorEmail: formData.get("email"),
+    });
+    await createMaterialsAndConnections({
+      materialData: formData.get("materials"),
+      projectId: id,
+    });
+  } catch (err) {
+    console.error(err);
+  }
 }
