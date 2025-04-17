@@ -5,10 +5,19 @@ import { useFieldArray, useForm } from "react-hook-form";
 import Input from "../ui/Input";
 import { persistProject } from "../actions";
 import { useRouter } from "next/navigation";
+import { ProjectSubmissionForm, materialActionState } from "../types/forms";
 
 export default function Page() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
+
+  const emptyMaterial: materialActionState = {
+    materialName: "",
+    description: "",
+    usedWhere: "",
+    supplierName: "",
+    url: "",
+  };
 
   const [formState, formAction] = useActionState(persistProject, {});
   const {
@@ -19,11 +28,7 @@ export default function Page() {
       errors: {},
       isSubmitSuccessful,
     },
-  } = useForm({
-    defaultValues: {
-      materials: [{ materialName: "", supplierName: "", supplierWebsite: "" }],
-    },
-  });
+  } = useForm<ProjectSubmissionForm>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "materials",
@@ -199,7 +204,7 @@ export default function Page() {
             {materialInputs}
           </fieldset>
           <button
-            onClick={() => append({})}
+            onClick={() => append(emptyMaterial)}
             className="border-2 border-black text-s font-thin p-2"
           >
             Add another material

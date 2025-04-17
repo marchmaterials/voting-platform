@@ -1,37 +1,15 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { materialActionState } from "./types/forms";
 
-export type materialActionState = {
-  materialName: string;
-  description: string;
-  usedWhere: string;
-  supplierName: string;
-  url: string;
-};
-export type projectActionState = {
-  email: string;
-  title: string;
-  description: string;
-  location: string;
-  yearCompleted: number;
-  typology: "residential" | "commercial" | "industrial" | "institutional";
-  materials: Array<materialActionState>;
-};
-
-export async function persistProject(
-  prevState: projectActionState,
-  formData: FormData
-) {
+export async function persistProject(prevState, formData: FormData) {
   console.log("SUBMIT FORM !:", formData);
   console.log("form DATA:", formData.get("materials"));
 
-  async function createMaterialsAndConnections({
-    materialData,
-    projectId,
-  }: {
-    materialData: Array<materialActionState>;
-    projectId: string;
-  }) {
+  async function createMaterialsAndConnections(
+    materialData: Array<materialActionState>,
+    projectId: string
+  ) {
     return Promise.all(
       materialData.map((m) =>
         prisma.material.create({
@@ -60,7 +38,7 @@ export async function persistProject(
   }
 
   try {
-    const id = await prisma.project.create({
+    const newProject = await prisma.project.create({
       title: formData.get("title"),
       description: formData.get("description"),
       location: formData.get("location"),
@@ -68,10 +46,10 @@ export async function persistProject(
       typology: formData.get("typology"),
       authorEmail: formData.get("email"),
     });
-    await createMaterialsAndConnections({
-      materialData: formData.get("materials"),
-      projectId: id,
-    });
+    await createMaterialsAndConnections(
+      [...formData.get("materials")],
+      newProject.id
+    );
   } catch (err) {
     console.error(err);
   }
