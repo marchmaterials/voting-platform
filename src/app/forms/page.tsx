@@ -18,8 +18,22 @@ export default function Page() {
     supplierName: "",
     url: "",
   };
+  const initialState: ProjectSubmissionForm = {
+    success: false,
+    email: "",
+    title: "",
+    description: "",
+    location: "",
+    yearCompleted: 0,
+    typology: "RESIDENTIAL",
+    materials: [{ ...emptyMaterial }],
+  };
 
-  const [formState, formAction] = useActionState(persistProject, {});
+  const [, formAction] = useActionState<ProjectSubmissionForm, FormData>(
+    persistProject,
+    initialState
+  );
+
   const {
     register,
     handleSubmit,
@@ -109,21 +123,18 @@ export default function Page() {
       onSubmit={(e) => {
         e.preventDefault();
         console.log("fields 01 ?", fields);
-        console.log("form state :", formState);
-        handleSubmit(() => {
+        handleSubmit((d) => {
           // TO DO: get supplier base url and persist to supplier
-
           // const enrichedFields = fields.map((m) => ({
           //   ...m,
           //   supplierWebsite: new URL(m.url).protocol.concat(
           //     new URL(m.url).host
           //   ),
           // }));
-          startTransition(() => {
-            const newForm = new FormData(formRef.current!);
-            newForm.append("materials", JSON.stringify(fields));
-            formAction(newForm);
-          });
+          console.log("data", d);
+          const newForm = new FormData(formRef.current!);
+          newForm.append("materials", JSON.stringify(fields));
+          startTransition(() => formAction(newForm));
         })(e);
       }}
     >
@@ -171,28 +182,28 @@ export default function Page() {
               id="residential"
               name="typology"
               label="Residential"
-              inputProps={{ value: "residential" }}
+              inputProps={{ value: "RESIDENTIAL" }}
             />
             <Input
               type="radio"
               id="commercial"
               name="typology"
               label="Commercial"
-              inputProps={{ value: "commercial" }}
+              inputProps={{ value: "COMMERCIAL" }}
             />
             <Input
               type="radio"
               id="industrial"
               name="typology"
               label="Industrial"
-              inputProps={{ value: "industrial" }}
+              inputProps={{ value: "INDUSTRIAL" }}
             />
             <Input
               type="radio"
               id="institutional"
               name="typology"
               label="Institutional / Infrastructure"
-              inputProps={{ value: "institutional" }}
+              inputProps={{ value: "INSTITUTIONAL" }}
             />
           </fieldset>
         </div>

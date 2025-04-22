@@ -1,4 +1,5 @@
 export interface ProjectSubmissionForm {
+  success: boolean;
   email: string;
   title: string;
   description: string;

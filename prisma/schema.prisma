@@ -1,80 +1,66 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-enum BUILDING_TYPOLOGY{
-RESIDENTIAL
-COMMERCIAL
-INDUSTRIAL
-INSTITUTIONAL
-}
-
-// model User {
-//   id    String    @default(cuid()) @id
-//   email String  @unique
-//   submissions Project[]
-// }
-
 model Project {
-  id        String     @default(cuid()) @id
-  createdAt DateTime @default(now()) @db.Timestamp
-  title     String
-  description   String?
-  location String
-  yearCompleted Int
-  typology BUILDING_TYPOLOGY
-  // author    User   @relation(fields: [authorId], references: [id])
-  // authorId  String
-  authorEmail String
-  images Image[]
-  materials Material[]
-  projectMaterial ProjectMaterial[]
-  selectedForCompetition Boolean @default(false)
+  id                     String            @id @default(cuid())
+  createdAt              DateTime          @default(now()) @db.Timestamp(6)
+  title                  String
+  description            String?
+  location               String
+  yearCompleted          Int
+  typology               BUILDING_TYPOLOGY
+  authorEmail            String
+  selectedForCompetition Boolean           @default(false)
+  images                 Image[]
+  projectMaterial        ProjectMaterial[]
+  materials              Material[]        @relation("MaterialToProject")
 }
 
 model Image {
-  id  String @default(cuid()) @id
-  url String
-  project Project @relation(fields: [projectId], references: [id])
+  id        String  @id @default(cuid())
+  url       String
   projectId String
+  project   Project @relation(fields: [projectId], references: [id])
 }
 
 model Supplier {
-  id String @default(cuid()) @id
-  name String
+  id        String     @id @default(cuid())
+  name      String
+  website   String?
   materials Material[]
-  website String?
 }
 
 model Material {
-  id String @default(cuid()) @id
-  name String
-  description String
-  supplier Supplier @relation(fields: [supplierId], references: [id])
-  supplierId String
-  url String
-  projects Project[]
+  id               String            @id @default(cuid())
+  name             String
+  description      String
+  supplierId       String
+  url              String
+  supplier         Supplier          @relation(fields: [supplierId], references: [id])
   projectMaterials ProjectMaterial[]
+  projects         Project[]         @relation("MaterialToProject")
 }
 
 model ProjectMaterial {
-  id String @default(cuid()) @id
-  material Material @relation(fields: [materialId], references: [id])
+  id         String   @id @default(cuid())
   materialId String
-  project Project @relation(fields: [projectId], references: [id])
-  projectId String
-  usedWhere String
+  projectId  String
+  usedWhere  String
+  material   Material @relation(fields: [materialId], references: [id])
+  project    Project  @relation(fields: [projectId], references: [id])
+}
+
+enum BUILDING_TYPOLOGY {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  INSTITUTIONAL
 }
