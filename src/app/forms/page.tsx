@@ -21,7 +21,6 @@ export default function Page() {
     url: "",
   };
   const initialState: ProjectSubmissionForm = {
-    success: false,
     email: "",
     title: "",
     description: "",
@@ -31,7 +30,7 @@ export default function Page() {
     materials: [{ ...emptyMaterial }],
   };
 
-  const [formState, formAction] = useActionState<
+  const [, formAction, isPending] = useActionState<
     ProjectSubmissionForm,
     FormData
   >(persistProject, initialState);
@@ -55,7 +54,6 @@ export default function Page() {
       router.push("/forms/success");
     }
   }, [isSubmitSuccessful]);
-
   const materialInputs = fields.map(({ id }, index) => {
     return (
       <fieldset key={id}>
@@ -136,7 +134,9 @@ export default function Page() {
               {rhfErrors.materials[index]?.url?.message}
             </p>
           )}
-          <button onClick={() => remove(index)}>Delete this material</button>
+          <button type="button" onClick={() => remove(index)}>
+            Delete this material
+          </button>
         </div>
       </fieldset>
     );
@@ -194,11 +194,7 @@ export default function Page() {
           <p className="text-red-600">{rhfErrors.title?.message}</p>
         )}
         <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          {...register("description")}
-        />
+        <textarea id="description" {...register("description")} />
         {rhfErrors.description?.message && (
           <p className="text-red-600">{rhfErrors.description?.message}</p>
         )}
@@ -270,6 +266,7 @@ export default function Page() {
             )}
           </fieldset>
           <button
+            type="button"
             onClick={() => append(emptyMaterial)}
             className="border-2 border-black text-s font-thin p-2"
           >
@@ -278,6 +275,7 @@ export default function Page() {
         </div>
         <button
           type="submit"
+          disabled={isPending}
           className="bg-black text-white rounded-full p-3 text-xl m-6 w-80 text-lg self-center"
         >
           Submit Project

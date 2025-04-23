@@ -20,7 +20,6 @@ export const materialSchema = z.object({
 
 // 👇 The entire form structure
 export const projectSubmissionSchema = z.object({
-  success: z.boolean(),
   email: z.string().email("Invalid email address"),
 
   title: z.string().min(1, "Project title is required"),
