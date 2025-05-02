@@ -9,7 +9,7 @@ const prismaClientSingleton = () => {
 
   const pool = new Pool({ connectionString }) as unknown as PoolConfig;
   const adapter = new PrismaNeon(pool);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter, log: ["query", "info"] });
 
   return prisma;
 };

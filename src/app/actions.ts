@@ -8,42 +8,69 @@ export async function persistProject(
   formData: FormData
 ): Promise<ProjectSubmissionForm> {
   console.log("SUBMIT FORM !:", formData);
-  console.log("form DATA:", formData.get("materials"));
-  console.log("form DATA title:", formData.get("title"));
+  console.log("materials DATA:", formData.get("materials"));
 
   async function createMaterialsAndConnections(
     materialData: Array<materialActionState>,
     projectId: string
   ) {
+    console.log(
+      "DEBUG: createMaterialsAndConnections projectID",
+      typeof projectId
+    );
     return Promise.all(
-      materialData.map((m) =>
-        prisma.material.create({
-          data: {
-            name: m.materialName,
-            description: m.description,
-            url: m.url,
-            projects: {
-              connect: [{ id: projectId }],
-            },
-            supplier: {
-              create: {
-                name: m.supplierName,
+      materialData.map((m) => {
+        try {
+          const supplierBaseUrl = new URL(m.url).hostname;
+          console.log("type of supplier base url:", typeof supplierBaseUrl);
+          console.log("type of materialname:", typeof m.materialName);
+          console.log(
+            "type of materialname:",
+            typeof m.materialName.toString()
+          );
+          console.log("type of description:", typeof m.description);
+          console.log("type of projectID:", typeof projectId);
+          console.log("type of supplierName:", typeof m.supplierName);
+          console.log("type of usedWhere", typeof m.usedWhere);
+          return prisma.material.create({
+            data: {
+              name: m.materialName,
+              description: m.description,
+              url: m.url,
+              projects: {
+                connect: [{ id: projectId }],
+              },
+              supplier: {
+                create: {
+                  name: m.supplierName,
+                  website: supplierBaseUrl,
+                },
+              },
+              projectMaterials: {
+                create: {
+                  usedWhere: m.usedWhere,
+                  projectId: projectId,
+                },
               },
             },
-            projectMaterials: {
-              create: {
-                usedWhere: m.usedWhere,
-                projectId: projectId,
-              },
-            },
-          },
-        })
-      )
+          });
+        } catch (err) {
+          console.log("error creating material", err);
+        }
+      })
     );
   }
 
   try {
     const materialsJson = formData.get("materials");
+    const parsedMaterials = JSON.parse(materialsJson as string);
+    console.log("materials URL?", parsedMaterials[0].url);
+    console.log(
+      "materials typeof name?",
+      typeof parsedMaterials[0].materialName
+    );
+    console.log("materials [0] ?", parsedMaterials[0]);
+
     const rawData = {
       email: formData.get("email")?.toString(),
       title: formData.get("title")?.toString(),
@@ -51,11 +78,19 @@ export async function persistProject(
       location: formData.get("location")?.toString(),
       yearCompleted: Number(formData.get("yearCompleted")),
       typology: formData.get("typology")?.toString(),
-      materials: JSON.parse(materialsJson as string),
+      materials: parsedMaterials,
     };
+    console.log("DEBUG: before zod parse");
     const validatedData: ProjectSubmissionForm =
       projectSubmissionSchema.parse(rawData);
 
+    console.log("DEBUG: after zod parse");
+    console.log("typeof title", typeof validatedData.title);
+    console.log("typeof description", typeof validatedData.description);
+    console.log("typeof location", typeof validatedData.location);
+    console.log("typeof yearComp", typeof validatedData.yearCompleted);
+    console.log("typeof typology", typeof validatedData.typology);
+    console.log("typeof email", typeof validatedData.email);
     const newProject = await prisma.project.create({
       data: {
         title: validatedData.title,
@@ -66,7 +101,12 @@ export async function persistProject(
         authorEmail: validatedData.email,
       },
     });
-    await createMaterialsAndConnections(validatedData.materials, newProject.id);
+    console.log("NEW PROJECT CREATED: ", newProject);
+    const newMaterials = await createMaterialsAndConnections(
+      validatedData.materials,
+      newProject.id
+    );
+    console.log("NEW MATERIALS CREATED: ", newMaterials);
   } catch (err) {
     console.error(err);
   }

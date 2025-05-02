@@ -148,16 +148,12 @@ export default function Page() {
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit((d) => {
-          // TO DO: get supplier base url and persist to supplier
-          // const enrichedFields = fields.map((m) => ({
-          //   ...m,
-          //   supplierWebsite: new URL(m.url).protocol.concat(
-          //     new URL(m.url).host
-          //   ),
-          // }));
           console.log("data", d);
           const newForm = new FormData(formRef.current!);
-          newForm.append("materials", JSON.stringify(fields));
+          console.log("newForm materials?:", newForm.get("materials"));
+          console.log("form desc", newForm.get("description"));
+          newForm.append("materials", JSON.stringify(d.materials));
+          console.log("with materials ?", newForm.get("materials"));
           startTransition(() => formAction(newForm));
         })(e);
       }}
