@@ -7,19 +7,57 @@ import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts"
 import { readFileSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 import type { Project } from "@prisma/client";
-
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import {
+  IMAGE_KIT_PUBLIC_KEY,
+  IMAGE_KIT_UPLOAD_URL,
+} from "../src/constants.js";
+import fs from "fs";
+import ImageKit from "imagekit";
 
-async function main(): Promise<Project | null | undefined> {
+const prisma = new PrismaClient();
+const imagekit = new ImageKit({
+  publicKey: IMAGE_KIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_API_TOKEN || "",
+  urlEndpoint: IMAGE_KIT_UPLOAD_URL,
+});
+
+interface UploadResult {
+  fileId: string;
+  url: string;
+  AITags?: Array<{ tag: string; confidence: number }>;
+}
+
+const uploadAndConnectImages = async (
+  projectId: string,
+  images: Array<string>
+) => {
+  return Promise.all(
+    images.map((i, index) => {
+      const file = fs.readFileSync(i).toString("base64");
+      try {
+        return imagekit.upload({
+          file,
+          fileName: `${projectId}-${index}`,
+          responseFields: "metadata, embeddedMetadata, customMetadata, tags",
+          useUniqueFileName: true,
+          extensions: [
+            { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
+          ],
+        });
+      } catch (err) {
+        console.error(err);
+        return err;
+      }
+    })
+  );
+};
+
+async function main(): Promise<Project | null> {
   async function createMaterialsAndConnections(
     materialData: Array<materialActionState>,
     projectId: string
   ) {
-    console.log(
-      "DEBUG: createMaterialsAndConnections projectID",
-      typeof projectId
-    );
     return Promise.all(
       materialData.map((m) => {
         try {
@@ -83,24 +121,21 @@ async function main(): Promise<Project | null | undefined> {
     });
   } catch (err) {
     console.error(err);
+    return null;
   }
 }
 
 try {
-  await main();
+  // await main();
+  const imageUpload = await uploadAndConnectImages("fakeID", [
+    "/Users/alexservie/tech-stuff/March/march-app/local/img/icon.png",
+  ]);
+  console.log("uploaded image?? ", imageUpload);
+  const typedResult = imageUpload as unknown as UploadResult[];
+  console.log("ai tags: ", typedResult[0].AITags);
   await prisma.$disconnect();
 } catch (err) {
   console.error(err);
   await prisma.$disconnect();
   process.exit(1);
 }
-
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect();
-//   })
-//   .catch(async (e) => {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   });
