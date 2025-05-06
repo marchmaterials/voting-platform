@@ -1,6 +1,5 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -49,6 +48,7 @@ model Material {
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
   projectMaterials ProjectMaterial[]
   projects         Project[]         @relation("MaterialToProject")
+  // Add characteristics, (ex. biodegradable) certifications
 }
 
 model ProjectMaterial {
