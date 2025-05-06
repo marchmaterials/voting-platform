@@ -4,7 +4,7 @@ import type {
   ProjectSubmissionForm,
 } from "../src/app/types/forms.ts";
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts";
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 import type { Project } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
@@ -12,7 +12,6 @@ import {
   IMAGE_KIT_PUBLIC_KEY,
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
-import fs from "fs";
 import ImageKit from "imagekit";
 
 const prisma = new PrismaClient();
@@ -28,17 +27,16 @@ interface UploadResult {
   AITags?: Array<{ tag: string; confidence: number }>;
 }
 
-const uploadAndConnectImages = async (
-  projectId: string,
-  images: Array<string>
-) => {
+const uploadImages = async (images: Array<string>) => {
   return Promise.all(
     images.map((i, index) => {
-      const file = fs.readFileSync(i).toString("base64");
+      const file = readFileSync(`${testData.imageDirectory}/${i}`).toString(
+        "base64"
+      );
       try {
         return imagekit.upload({
           file,
-          fileName: `${projectId}-${index}`,
+          fileName: `march-mvp-${index}`,
           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
           useUniqueFileName: true,
           extensions: [
@@ -46,7 +44,7 @@ const uploadAndConnectImages = async (
           ],
         });
       } catch (err) {
-        console.error(err);
+        console.error("failed to upload images", err);
         return err;
       }
     })
@@ -92,10 +90,19 @@ async function main(): Promise<Project | null> {
   }
 
   try {
-    console.log("DEBUG: before zod parse");
+    // VALIDATE INPUT
     const validatedData: ProjectSubmissionForm =
       projectSubmissionSchema.parse(testData);
-    console.log("after zod parse");
+
+    // UPLOAD IMAGES
+    const imageFiles = readdirSync(testData.imageDirectory);
+    console.log("img files:", imageFiles);
+    const imageUpload = await uploadImages(imageFiles);
+    console.log("uploaded images?? ", imageUpload);
+    const typedResult = imageUpload as unknown as UploadResult[];
+    console.log("ai tags: ", typedResult[0].AITags);
+
+    // CREATE PROJECT
     const newProject = await prisma.project.create({
       data: {
         title: validatedData.title,
@@ -104,21 +111,30 @@ async function main(): Promise<Project | null> {
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         authorEmail: validatedData.email,
+        images: {
+          create: typedResult.map((i) => ({
+            id: i.fileId,
+            url: i.url,
+          })),
+        },
       },
     });
     console.log("NEW PROJECT CREATED: ", newProject);
 
+    // CREATE MATERIALS, SUPPLIERS, PROJECT_MATERIALS, CONNECTIONS
     const newMaterials = await createMaterialsAndConnections(
       testData.materials,
       newProject.id
     );
     console.log("NEW MATERIALS CREATED: ", newMaterials);
 
-    return await prisma.project.findFirst({
+    const finalProject = await prisma.project.findFirst({
       where: {
-        authorEmail: validatedData.email,
+        id: newProject.id,
       },
     });
+    console.log("FULLY PERSISTED PROJECT: ", finalProject);
+    return finalProject;
   } catch (err) {
     console.error(err);
     return null;
@@ -126,13 +142,7 @@ async function main(): Promise<Project | null> {
 }
 
 try {
-  // await main();
-  const imageUpload = await uploadAndConnectImages("fakeID", [
-    "/Users/alexservie/tech-stuff/March/march-app/local/img/icon.png",
-  ]);
-  console.log("uploaded image?? ", imageUpload);
-  const typedResult = imageUpload as unknown as UploadResult[];
-  console.log("ai tags: ", typedResult[0].AITags);
+  await main();
   await prisma.$disconnect();
 } catch (err) {
   console.error(err);

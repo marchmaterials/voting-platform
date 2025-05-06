@@ -5,6 +5,7 @@
   "location": "Berlin, Germany",
   "yearCompleted": 2010,
   "typology": "RESIDENTIAL",
+  "imageDirectory": "/Users/alexservie/tech-stuff/March/march-app/local/img",
   "materials": [
     {
       "materialName": "brick",
