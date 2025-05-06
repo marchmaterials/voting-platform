@@ -1,0 +1,24 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export default function NavBar() {
+  const pathname = usePathname();
+  return (
+    <div className="w-full flex justify-start m-4">
+      <Link href={"/"}>
+        <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>Home</div>
+      </Link>
+      <Link href={"/dashboard"}>
+        <div className={`m-8 ${pathname === "/dashboard" ? "font-bold" : ""}`}>
+          Dashboard
+        </div>
+      </Link>
+      <Link href={"/forms"}>
+        <div className={`m-8 ${pathname === "/forms" ? "font-bold" : ""}`}>
+          Submit Project
+        </div>
+      </Link>
+    </div>
+  );
+}

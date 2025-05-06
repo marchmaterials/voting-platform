@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { spaceGrotesk } from "@/app/ui/fonts";
+import { spaceGrotesk } from "@/ui/fonts";
 import "./globals.css";
+import NavBar from "@/ui/NavBar";
 
 export const metadata: Metadata = {
   title: "MARCH",
@@ -21,6 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.className} antialiased`}>
+        <header>
+          <NavBar />
+        </header>
         {children}
       </body>
     </html>

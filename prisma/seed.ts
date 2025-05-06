@@ -2,7 +2,7 @@
 import type {
   materialActionState,
   ProjectSubmissionForm,
-} from "../src/app/types/forms.ts";
+} from "../src/types/forms.ts";
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts";
 import { readFileSync, readdirSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));

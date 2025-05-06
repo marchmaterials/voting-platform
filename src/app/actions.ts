@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { materialActionState, ProjectSubmissionForm } from "./types/forms";
+import { materialActionState, ProjectSubmissionForm } from "../types/forms";
 import { projectSubmissionSchema } from "@/lib/validation/projectSchema";
 
 export async function persistProject(
