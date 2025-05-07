@@ -1,32 +1,34 @@
-{
-  "email": "alex@gmail.com",
-  "title": "Amazing Test Projct",
-  "description": "This project was built using sustainable materials",
-  "location": "Berlin, Germany",
-  "yearCompleted": 2010,
-  "typology": "RESIDENTIAL",
-  "imageDirectory": "/Users/alexservie/tech-stuff/March/march-app/local/img",
-  "materials": [
-    {
-      "materialName": "brick",
-      "description": "large red brick",
-      "usedWhere": "exterior facade",
-      "supplierName": "brick supplier",
-      "url": "https://www.bricks.de"
-    },
-    {
-      "materialName": "tile",
-      "description": "cute white tiles",
-      "usedWhere": "interior floor",
-      "supplierName": "tile supplier",
-      "url": "https://www.tiles.de"
-    },
-    {
-      "materialName": "wood",
-      "description": "smoked oak wood",
-      "usedWhere": "carpentry and interior wall paneling",
-      "supplierName": "wood supplier",
-      "url": "https://www.wood.de"
-    }
-  ]
-}
+[
+  {
+    "email": "alex@gmail.com",
+    "title": "Amazing Test Projct",
+    "description": "This project was built using sustainable materials",
+    "location": "Berlin, Germany",
+    "yearCompleted": 2010,
+    "typology": "RESIDENTIAL",
+    "imageDirectory": "/Users/alexservie/tech-stuff/March/march-app/local/img",
+    "materials": [
+      {
+        "materialName": "brick",
+        "description": "large red brick",
+        "usedWhere": "exterior facade",
+        "supplierName": "brick supplier",
+        "url": "https://www.bricks.de"
+      },
+      {
+        "materialName": "tile",
+        "description": "cute white tiles",
+        "usedWhere": "interior floor",
+        "supplierName": "tile supplier",
+        "url": "https://www.tiles.de"
+      },
+      {
+        "materialName": "wood",
+        "description": "smoked oak wood",
+        "usedWhere": "carpentry and interior wall paneling",
+        "supplierName": "wood supplier",
+        "url": "https://www.wood.de"
+      }
+    ]
+  }
+]

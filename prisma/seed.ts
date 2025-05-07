@@ -27,12 +27,14 @@ interface UploadResult {
   AITags?: Array<{ tag: string; confidence: number }>;
 }
 
-const uploadImages = async (images: Array<string>) => {
+type ProjectWithImageFolder = Project & {
+  imageDirectory: string;
+};
+
+const uploadImages = async (images: Array<string>, rootDir: string) => {
   return Promise.all(
     images.map((i, index) => {
-      const file = readFileSync(`${testData.imageDirectory}/${i}`).toString(
-        "base64"
-      );
+      const file = readFileSync(`${rootDir}/${i}`).toString("base64");
       try {
         return imagekit.upload({
           file,
@@ -51,53 +53,58 @@ const uploadImages = async (images: Array<string>) => {
   );
 };
 
-async function main(): Promise<Project | null> {
-  async function createMaterialsAndConnections(
-    materialData: Array<materialActionState>,
-    projectId: string
-  ) {
-    return Promise.all(
-      materialData.map((m) => {
-        try {
-          const supplierBaseUrl = new URL(m.url).hostname;
-          return prisma.material.create({
-            data: {
-              name: m.materialName,
-              description: m.description,
-              url: m.url,
-              projects: {
-                connect: [{ id: projectId }],
-              },
-              supplier: {
-                create: {
-                  name: m.supplierName,
-                  website: supplierBaseUrl,
-                },
-              },
-              projectMaterials: {
-                create: {
-                  usedWhere: m.usedWhere,
-                  projectId: projectId,
-                },
+async function createMaterialsAndConnections(
+  materialData: Array<materialActionState>,
+  projectId: string
+) {
+  return Promise.all(
+    materialData.map((m) => {
+      try {
+        const supplierBaseUrl = new URL(m.url).hostname;
+        return prisma.material.create({
+          data: {
+            name: m.materialName,
+            description: m.description,
+            url: m.url,
+            projects: {
+              connect: [{ id: projectId }],
+            },
+            supplier: {
+              create: {
+                name: m.supplierName,
+                website: supplierBaseUrl,
               },
             },
-          });
-        } catch (err) {
-          console.log("error creating material", err);
-        }
-      })
-    );
-  }
+            projectMaterials: {
+              create: {
+                usedWhere: m.usedWhere,
+                projectId: projectId,
+              },
+            },
+          },
+        });
+      } catch (err) {
+        console.log("error creating material", err);
+      }
+    })
+  );
+}
 
+const createFullyEnrichedProject = async (
+  projectData: ProjectWithImageFolder
+) => {
   try {
     // VALIDATE INPUT
     const validatedData: ProjectSubmissionForm =
-      projectSubmissionSchema.parse(testData);
+      projectSubmissionSchema.parse(projectData);
 
     // UPLOAD IMAGES
-    const imageFiles = readdirSync(testData.imageDirectory);
+    const imageFiles = readdirSync(projectData.imageDirectory);
     console.log("img files:", imageFiles);
-    const imageUpload = await uploadImages(imageFiles);
+    const imageUpload = await uploadImages(
+      imageFiles,
+      projectData.imageDirectory
+    );
     console.log("uploaded images?? ", imageUpload);
     const typedResult = imageUpload as unknown as UploadResult[];
     console.log("ai tags: ", typedResult[0].AITags);
@@ -123,7 +130,7 @@ async function main(): Promise<Project | null> {
 
     // CREATE MATERIALS, SUPPLIERS, PROJECT_MATERIALS, CONNECTIONS
     const newMaterials = await createMaterialsAndConnections(
-      testData.materials,
+      validatedData.materials,
       newProject.id
     );
     console.log("NEW MATERIALS CREATED: ", newMaterials);
@@ -132,12 +139,26 @@ async function main(): Promise<Project | null> {
       where: {
         id: newProject.id,
       },
+      include: { images: true },
     });
-    console.log("FULLY PERSISTED PROJECT: ", finalProject);
+    // console.log("FULLY PERSISTED PROJECT: ", finalProject);
     return finalProject;
   } catch (err) {
     console.error(err);
     return null;
+  }
+};
+
+async function main(): Promise<void> {
+  try {
+    const allProjects: Array<Project> = await Promise.all(
+      testData.map((p: ProjectWithImageFolder) => {
+        return createFullyEnrichedProject(p);
+      })
+    );
+    console.log("all projects successfully created:", allProjects);
+  } catch (err) {
+    console.error("could not create all projects", err);
   }
 }
 
