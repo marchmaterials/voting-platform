@@ -1,12 +1,7 @@
 import prisma from "@/lib/prisma";
-import { Image, Prisma, Project } from "@prisma/client";
-import { Card } from "@/ui/Card";
+import { Card, CardBody } from "@heroui/card";
 
 export default async function Page() {
-  // type ProjectWithImages = Prisma.PromiseReturnType<typeof getProjects>;
-  type ProjectWithImages = Project & {
-    images: Array<Image>;
-  };
   const getProjects = async () => {
     try {
       console.log("trying to fetch");
@@ -26,15 +21,24 @@ export default async function Page() {
     }
   };
 
-  console.log("FINDMANY projects !");
-  const projects: ProjectWithImages[] = await getProjects();
-  console.log("PROJECTS ??", projects);
+  const projects = await getProjects();
   return (
-    <div>
-      <h2>Dashboard page</h2>
-      <div>
+    <div className="m-2">
+      <h2>All Projects</h2>
+      <div className="flex flex-row m-4">
         {projects.map((p) => (
-          <Card key={p.id} {...p} />
+          <Card
+            key={p.id}
+            className="max-w-md"
+            isHoverable
+            isPressable
+            radius="lg"
+            shadow="md"
+          >
+            <CardBody>
+              <h2>{p.title}</h2>
+            </CardBody>
+          </Card>
         ))}
       </div>
     </div>

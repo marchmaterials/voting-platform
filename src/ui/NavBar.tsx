@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 export default function NavBar() {
   const pathname = usePathname();
   return (
-    <div className="w-full flex justify-start m-4">
+    <div className="w-full flex justify-start">
       <Link href={"/"}>
         <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>Home</div>
       </Link>
