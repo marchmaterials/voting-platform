@@ -69,6 +69,9 @@ async function createMaterialsAndConnections(
             projects: {
               connect: [{ id: projectId }],
             },
+            images: {
+              connect: [],
+            },
             supplier: {
               create: {
                 name: m.supplierName,
@@ -118,28 +121,55 @@ const createFullyEnrichedProject = async (
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         authorEmail: validatedData.email,
+        area: validatedData.area,
+        stakeholders: {
+          create: validatedData.stakeholders,
+        },
         images: {
           create: typedResult.map((i) => ({
             id: i.fileId,
             url: i.url,
+            aiTags: i.AITags,
+            credit: validatedData.imageCredit,
+          })),
+        },
+        materials: {
+          create: validatedData.materials.map((m) => ({
+            name: m.materialName,
+            description: m.description,
+            url: m.url,
+            tags: m.tags,
+            supplier: {
+              create: {
+                name: m.supplierName,
+                website: m.supplierContact.url,
+                email: m.supplierContact.email,
+                phoneNumber: m.supplierContact.phoneNumber,
+                location: m.supplierContact.location,
+              },
+            },
+            projectMaterials: {
+              create: {
+                usedWhere: m.usedWhere,
+              },
+            },
           })),
         },
       },
     });
     console.log("NEW PROJECT CREATED: ", newProject);
-
     // CREATE MATERIALS, SUPPLIERS, PROJECT_MATERIALS, CONNECTIONS
-    const newMaterials = await createMaterialsAndConnections(
-      validatedData.materials,
-      newProject.id
-    );
-    console.log("NEW MATERIALS CREATED: ", newMaterials);
+    // const newMaterials = await createMaterialsAndConnections(
+    //   validatedData.materials,
+    //   newProject.id
+    // );
+    // console.log("NEW MATERIALS CREATED: ", newMaterials);
 
     const finalProject = await prisma.project.findFirst({
       where: {
         id: newProject.id,
       },
-      include: { images: true },
+      include: { images: true, materials: true },
     });
     // console.log("FULLY PERSISTED PROJECT: ", finalProject);
     return finalProject;

@@ -1,11 +1,11 @@
 generator client {
   provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Project {
@@ -19,23 +19,38 @@ model Project {
   authorEmail            String
   selectedForCompetition Boolean           @default(false)
   images                 Image[]
-  projectMaterial        ProjectMaterial[]
-  materials              Material[]        @relation("MaterialToProject")
-  // TO ADD: architect, contractors
+  projectMaterial        ProjectMaterial[] @relation("MaterialToProject")
+  materials              Material[]
+  stakeholders           Stakeholder[]
+  area                   Int
 }
 
 model Image {
-  id        String  @id @default(cuid())
+  id        String     @id @default(cuid())
   url       String
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
-  // TO ADD: aitags?, tags, MATERIALS!, alt text?
+  project   Project    @relation(fields: [projectId], references: [id])
+  aiTags    String[]
+  materials Material[]
+  credit    String?
+}
+
+model Stakeholder {
+  id          String           @id @default(cuid())
+  type        STAKEHOLDER_TYPE
+  name        String
+  email       String[] 
+  phoneNumber String[] 
+  projects    Project[]
 }
 
 model Supplier {
   id        String     @id @default(cuid())
   name      String
   website   String?
+  location String
+  email       String[]
+  phoneNumber String[]
   materials Material[]
 }
 
@@ -46,9 +61,11 @@ model Material {
   supplierId       String
   url              String
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
-  projectMaterials ProjectMaterial[]
-  projects         Project[]         @relation("MaterialToProject")
-  // Add characteristics, (ex. biodegradable) certifications
+  projectMaterials ProjectMaterial[] @relation("MaterialToProject")
+  projects         Project[]
+  images           Image[]
+  tags             String[] //characteristics, ex. natural, reused
+  certifications   String[]
 }
 
 model ProjectMaterial {
@@ -56,8 +73,8 @@ model ProjectMaterial {
   materialId String
   projectId  String
   usedWhere  String
-  material   Material @relation(fields: [materialId], references: [id])
-  project    Project  @relation(fields: [projectId], references: [id])
+  material   Material @relation("MaterialToProject", fields: [materialId], references: [id])
+  project    Project  @relation("MaterialToProject", fields: [projectId], references: [id])
 }
 
 enum BUILDING_TYPOLOGY {
@@ -65,4 +82,10 @@ enum BUILDING_TYPOLOGY {
   COMMERCIAL
   INDUSTRIAL
   INSTITUTIONAL
+}
+
+enum STAKEHOLDER_TYPE {
+  ARCHITECT
+  CONTRACTOR
+  ENGINEER
 }
