@@ -20,8 +20,6 @@
     "@heroui/theme": "^2.4.15",
     "@hookform/resolvers": "^5.0.1",
     "@imagekit/next": "^2.1.0",
-    "@neondatabase/serverless": "^1.0.0",
-    "@prisma/adapter-neon": "^6.7.0",
     "@prisma/client": "^6.7.0",
     "framer-motion": "^12.10.0",
     "imagekit": "^6.0.0",
@@ -31,7 +29,6 @@
     "react-hook-form": "^7.55.0",
     "tsconfig-paths": "^4.2.0",
     "vercel": "^41.4.1",
-    "ws": "^8.18.2",
     "zod": "^3.24.3"
   },
   "devDependencies": {
