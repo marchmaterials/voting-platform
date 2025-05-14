@@ -1,16 +1,6 @@
 import { z } from "zod";
 import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE } from "@prisma/client";
 
-export const supplierContact = z.object({
-  url: z.string().url("Must be a valid URL"),
-
-  email: z.array(z.string().email()),
-
-  phoneNumber: z.array(z.string().min(8).max(19)),
-
-  location: z.string().min(2),
-});
-
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
 
@@ -23,11 +13,23 @@ export const materialSchema = z.object({
       "Please describe where the material is used. Interior / Exterior and on which surface (facade, flooring, etc.)"
     ),
 
-  supplierName: z.string().min(1, "Supplier name is required"),
-
   url: z.string().url("Must be a valid URL"),
 
-  supplierContact: z.object({ supplierContact }),
+  tags: z.array(z.string()),
+
+  supplierName: z.string().min(1, "Supplier name is required"),
+
+  supplierContact: z.object({
+    url: z.string().url("Must be a valid URL"),
+
+    email: z.array(z.string().email()).nullish(),
+
+    phoneNumber: z.array(z.string().min(8).max(25)),
+
+    location: z.string().min(2),
+  }),
+
+  certifications: z.array(z.string()).nullish(),
 });
 
 export const stakeholder = z.object({
@@ -52,7 +54,7 @@ export const projectSubmissionSchema = z.object({
     .string()
     .min(10, "Project description should be more detailed"),
 
-  location: z.string().min(1, "Location is required"),
+  location: z.string().min(2, "Location is required"),
 
   yearCompleted: z
     .number()
@@ -74,6 +76,8 @@ export const projectSubmissionSchema = z.object({
   stakeholders: z.array(stakeholder),
 
   area: z.number().int(),
+
+  imageCredit: z.string(),
 });
 
 // 👇 Type inference if needed elsewhere

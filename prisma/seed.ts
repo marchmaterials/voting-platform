@@ -7,14 +7,15 @@ import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts"
 import { readFileSync, readdirSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 import type { Project } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import prisma from "../src/lib/prisma.ts";
 import {
   IMAGE_KIT_PUBLIC_KEY,
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
 import ImageKit from "imagekit";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_API_TOKEN || "",
@@ -24,7 +25,7 @@ const imagekit = new ImageKit({
 interface UploadResult {
   fileId: string;
   url: string;
-  AITags?: Array<{ tag: string; confidence: number }>;
+  AITags?: Array<{ name: string; confidence: number }>;
 }
 
 type ProjectWithImageFolder = Project & {
@@ -60,22 +61,21 @@ async function createMaterialsAndConnections(
   return Promise.all(
     materialData.map((m) => {
       try {
-        const supplierBaseUrl = new URL(m.url).hostname;
+        // const supplierBaseUrl = new URL(m.url).hostname;
         return prisma.material.create({
           data: {
             name: m.materialName,
             description: m.description,
             url: m.url,
-            projects: {
-              connect: [{ id: projectId }],
-            },
-            images: {
-              connect: [],
-            },
+            tags: m.tags,
+            certifications: [],
             supplier: {
               create: {
                 name: m.supplierName,
-                website: supplierBaseUrl,
+                website: m.supplierContact.url,
+                email: m.supplierContact.email ?? [],
+                phoneNumber: m.supplierContact.phoneNumber,
+                location: m.supplierContact.location,
               },
             },
             projectMaterials: {
@@ -86,6 +86,29 @@ async function createMaterialsAndConnections(
             },
           },
         });
+        //     name: m.materialName,
+        //     description: m.description,
+        //     url: m.url,
+        //     projects: {
+        //       connect: [{ id: projectId }],
+        //     },
+        //     images: {
+        //       connect: [],
+        //     },
+        //     supplier: {
+        //       create: {
+        //         name: m.supplierName,
+        //         website: supplierBaseUrl,
+        //       },
+        //     },
+        //     projectMaterials: {
+        //       create: {
+        //         usedWhere: m.usedWhere,
+        //         projectId: projectId,
+        //       },
+        //     },
+        //   },
+        // });
       } catch (err) {
         console.log("error creating material", err);
       }
@@ -129,41 +152,43 @@ const createFullyEnrichedProject = async (
           create: typedResult.map((i) => ({
             id: i.fileId,
             url: i.url,
-            aiTags: i.AITags,
+            aiTags: i.AITags?.map((tag) => tag.name),
             credit: validatedData.imageCredit,
           })),
         },
-        materials: {
-          create: validatedData.materials.map((m) => ({
-            name: m.materialName,
-            description: m.description,
-            url: m.url,
-            tags: m.tags,
-            supplier: {
-              create: {
-                name: m.supplierName,
-                website: m.supplierContact.url,
-                email: m.supplierContact.email,
-                phoneNumber: m.supplierContact.phoneNumber,
-                location: m.supplierContact.location,
-              },
-            },
-            projectMaterials: {
-              create: {
-                usedWhere: m.usedWhere,
-              },
-            },
-          })),
-        },
+        // materials: {
+        //   create: validatedData.materials.map((m) => ({
+        //     name: m.materialName,
+        //     description: m.description,
+        //     url: m.url,
+        //     tags: m.tags,
+        //     // certifications: [],
+        //     supplier: {
+        //       create: {
+        //         name: m.supplierName,
+        //         website: m.supplierContact.url,
+        //         email: m.supplierContact.email,
+        //         phoneNumber: m.supplierContact.phoneNumber,
+        //         location: m.supplierContact.location,
+        //       },
+        //     },
+        //     projectMaterials: {
+        //       create: {
+        //         usedWhere: m.usedWhere,
+        //       },
+        //     },
+        //   })),
+        // },
       },
     });
     console.log("NEW PROJECT CREATED: ", newProject);
+
     // CREATE MATERIALS, SUPPLIERS, PROJECT_MATERIALS, CONNECTIONS
-    // const newMaterials = await createMaterialsAndConnections(
-    //   validatedData.materials,
-    //   newProject.id
-    // );
-    // console.log("NEW MATERIALS CREATED: ", newMaterials);
+    const newMaterials = await createMaterialsAndConnections(
+      validatedData.materials,
+      newProject.id
+    );
+    console.log("NEW MATERIALS CREATED: ", newMaterials);
 
     const finalProject = await prisma.project.findFirst({
       where: {

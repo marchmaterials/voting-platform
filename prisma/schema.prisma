@@ -22,7 +22,7 @@ model Project {
   projectMaterial        ProjectMaterial[] @relation("MaterialToProject")
   materials              Material[]
   stakeholders           Stakeholder[]
-  area                   Int
+  area                   Int?
 }
 
 model Image {
@@ -48,7 +48,7 @@ model Supplier {
   id        String     @id @default(cuid())
   name      String
   website   String?
-  location String
+  location String?
   email       String[]
   phoneNumber String[]
   materials Material[]
@@ -58,8 +58,8 @@ model Material {
   id               String            @id @default(cuid())
   name             String
   description      String
-  supplierId       String
   url              String
+  supplierId       String
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
   projectMaterials ProjectMaterial[] @relation("MaterialToProject")
   projects         Project[]
