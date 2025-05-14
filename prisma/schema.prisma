@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
+  output          = "./generated/client"
 }
 
 datasource db {
@@ -39,19 +40,19 @@ model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE
   name        String
-  email       String[] 
-  phoneNumber String[] 
+  email       String[]
+  phoneNumber String[]
   projects    Project[]
 }
 
 model Supplier {
-  id        String     @id @default(cuid())
-  name      String
-  website   String?
-  location String?
+  id          String     @id @default(cuid())
+  name        String
+  website     String?
+  location    String?
   email       String[]
   phoneNumber String[]
-  materials Material[]
+  materials   Material[]
 }
 
 model Material {
