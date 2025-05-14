@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.className} antialiased h-screen`}>
+      <body className={`${spaceGrotesk.className} antialiased`}>
         <Providers>
           <header>
             <NavBar />

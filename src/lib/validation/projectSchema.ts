@@ -1,6 +1,16 @@
 import { z } from "zod";
+import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE } from "@prisma/client";
 
-// 👇 Each material used in the project
+export const supplierContact = z.object({
+  url: z.string().url("Must be a valid URL"),
+
+  email: z.array(z.string().email()),
+
+  phoneNumber: z.array(z.string().min(8).max(19)),
+
+  location: z.string().min(2),
+});
+
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
 
@@ -16,9 +26,23 @@ export const materialSchema = z.object({
   supplierName: z.string().min(1, "Supplier name is required"),
 
   url: z.string().url("Must be a valid URL"),
+
+  supplierContact: z.object({ supplierContact }),
 });
 
-// 👇 The entire form structure
+export const stakeholder = z.object({
+  type: z.enum([
+    STAKEHOLDER_TYPE.ARCHITECT,
+    STAKEHOLDER_TYPE.CONTRACTOR,
+    STAKEHOLDER_TYPE.ENGINEER,
+  ]),
+  name: z.string().min(2),
+
+  email: z.array(z.string().email()),
+
+  phoneNumber: z.array(z.string().min(8).max(19)),
+});
+
 export const projectSubmissionSchema = z.object({
   email: z.string().email("Invalid email address"),
 
@@ -37,15 +61,19 @@ export const projectSubmissionSchema = z.object({
     .lte(new Date().getFullYear(), "Year cannot be in the future"),
 
   typology: z.enum([
-    "RESIDENTIAL",
-    "COMMERCIAL",
-    "INDUSTRIAL",
-    "INSTITUTIONAL",
+    BUILDING_TYPOLOGY.RESIDENTIAL,
+    BUILDING_TYPOLOGY.COMMERCIAL,
+    BUILDING_TYPOLOGY.INDUSTRIAL,
+    BUILDING_TYPOLOGY.INSTITUTIONAL,
   ]),
 
   materials: z
     .array(materialSchema)
     .min(3, "Please include at least 3 materials"),
+
+  stakeholders: z.array(stakeholder),
+
+  area: z.number().int(),
 });
 
 // 👇 Type inference if needed elsewhere
