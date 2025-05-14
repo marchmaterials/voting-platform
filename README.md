@@ -6,6 +6,8 @@ Create a new Neon branch for your local dev environment in the Neon Console["htt
 Click "Connect" and copy the connection string.
 Make this string your `DATABASE_URL` in your local `.env` file.
 
+A new neon branch will also be created with every git branch for preview deployments.
+
 To run the development server:
 
 ```bash

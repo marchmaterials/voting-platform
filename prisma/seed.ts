@@ -6,8 +6,10 @@ import type {
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts";
 import { readFileSync, readdirSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
+const imageData = JSON.parse(
+  readFileSync("src/tests/testImages.json", "utf-8")
+);
 import type { Project } from "@prisma/client";
-// import { PrismaClient } from "@prisma/client";
 import prisma from "../src/lib/prisma.ts";
 import {
   IMAGE_KIT_PUBLIC_KEY,
@@ -15,7 +17,6 @@ import {
 } from "../src/constants.js";
 import ImageKit from "imagekit";
 
-// const prisma = new PrismaClient();
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_API_TOKEN || "",
@@ -30,6 +31,13 @@ interface UploadResult {
 
 type ProjectWithImageFolder = Project & {
   imageDirectory: string;
+};
+
+type ImageData = {
+  id: string;
+  url: string;
+  aiTags?: string[];
+  credit: string;
 };
 
 const uploadImages = async (images: Array<string>, rootDir: string) => {
@@ -86,29 +94,6 @@ async function createMaterialsAndConnections(
             },
           },
         });
-        //     name: m.materialName,
-        //     description: m.description,
-        //     url: m.url,
-        //     projects: {
-        //       connect: [{ id: projectId }],
-        //     },
-        //     images: {
-        //       connect: [],
-        //     },
-        //     supplier: {
-        //       create: {
-        //         name: m.supplierName,
-        //         website: supplierBaseUrl,
-        //       },
-        //     },
-        //     projectMaterials: {
-        //       create: {
-        //         usedWhere: m.usedWhere,
-        //         projectId: projectId,
-        //       },
-        //     },
-        //   },
-        // });
       } catch (err) {
         console.log("error creating material", err);
       }
@@ -124,17 +109,26 @@ const createFullyEnrichedProject = async (
     const validatedData: ProjectSubmissionForm =
       projectSubmissionSchema.parse(projectData);
 
-    // UPLOAD IMAGES
-    const imageFiles = readdirSync(projectData.imageDirectory);
-    console.log("img files:", imageFiles);
-    const imageUpload = await uploadImages(
-      imageFiles,
-      projectData.imageDirectory
-    );
-    console.log("uploaded images?? ", imageUpload);
-    const typedResult = imageUpload as unknown as UploadResult[];
-    console.log("ai tags: ", typedResult[0].AITags);
-
+    // UPLOAD IMAGES - ONLY FOR INITIAL LOCAL SEED
+    // const imageFiles = readdirSync(projectData.imageDirectory);
+    // console.log("img files:", imageFiles);
+    // const imageUpload = await uploadImages(
+    //   imageFiles,
+    //   projectData.imageDirectory
+    // );
+    // console.log("uploaded images?? ", imageUpload);
+    // const typedResult = imageUpload as unknown as UploadResult[];
+    // console.log("ai tags: ", typedResult[0].AITags);
+    const images = imageData
+      .filter((img: ImageData) => img.credit === validatedData.imageCredit)
+      .map((img: ImageData) => {
+        return {
+          id: img.id,
+          url: img.url,
+          aiTags: img.aiTags,
+          credit: img.credit,
+        };
+      });
     // CREATE PROJECT
     const newProject = await prisma.project.create({
       data: {
@@ -149,34 +143,14 @@ const createFullyEnrichedProject = async (
           create: validatedData.stakeholders,
         },
         images: {
-          create: typedResult.map((i) => ({
-            id: i.fileId,
-            url: i.url,
-            aiTags: i.AITags?.map((tag) => tag.name),
-            credit: validatedData.imageCredit,
-          })),
+          create: images,
         },
-        // materials: {
-        //   create: validatedData.materials.map((m) => ({
-        //     name: m.materialName,
-        //     description: m.description,
-        //     url: m.url,
-        //     tags: m.tags,
-        //     // certifications: [],
-        //     supplier: {
-        //       create: {
-        //         name: m.supplierName,
-        //         website: m.supplierContact.url,
-        //         email: m.supplierContact.email,
-        //         phoneNumber: m.supplierContact.phoneNumber,
-        //         location: m.supplierContact.location,
-        //       },
-        //     },
-        //     projectMaterials: {
-        //       create: {
-        //         usedWhere: m.usedWhere,
-        //       },
-        //     },
+        // images: {
+        //   create: typedResult.map((i) => ({
+        //     id: i.fileId,
+        //     url: i.url,
+        //     aiTags: i.AITags?.map((tag) => tag.name),
+        //     credit: validatedData.imageCredit,
         //   })),
         // },
       },
