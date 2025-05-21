@@ -1,7 +1,10 @@
 import prisma from "@/lib/prisma";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { Project, Image as PrismaImage } from "@prisma/client";
+import {
+  Project,
+  Image as PrismaImage,
+} from "../../../prisma/generated/client";
 
 export default async function Page() {
   type ProjectsWithImages = Project & {

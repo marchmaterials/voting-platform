@@ -9,7 +9,7 @@ const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 const imageData = JSON.parse(
   readFileSync("src/tests/testImages.json", "utf-8")
 );
-import type { Project } from "@prisma/client";
+import type { Project } from "../prisma/generated/client";
 import prisma from "../src/lib/prisma.ts";
 import {
   IMAGE_KIT_PUBLIC_KEY,
