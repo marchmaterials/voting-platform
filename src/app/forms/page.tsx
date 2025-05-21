@@ -19,6 +19,8 @@ export default function Page() {
     usedWhere: "",
     supplierName: "",
     url: "",
+    tags: [],
+    supplierContact: { url: "", email: [], phoneNumber: [], location: "" },
   };
   const initialState: ProjectSubmissionForm = {
     email: "",
@@ -28,6 +30,9 @@ export default function Page() {
     yearCompleted: new Date().getFullYear(),
     typology: "RESIDENTIAL",
     materials: [{ ...emptyMaterial }],
+    stakeholders: [],
+    area: 0,
+    imageCredit: "",
   };
 
   const [, formAction, isPending] = useActionState<
