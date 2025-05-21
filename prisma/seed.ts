@@ -4,7 +4,7 @@ import type {
   ProjectSubmissionForm,
 } from "../src/types/forms.ts";
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts";
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 const imageData = JSON.parse(
   readFileSync("src/tests/testImages.json", "utf-8")
@@ -23,6 +23,7 @@ const imagekit = new ImageKit({
   urlEndpoint: IMAGE_KIT_UPLOAD_URL,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface UploadResult {
   fileId: string;
   url: string;
@@ -54,6 +55,7 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const uploadImages = async (images: Array<string>, rootDir: string) => {
   return Promise.all(
     images.map((i, index) => {
