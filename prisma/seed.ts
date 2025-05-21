@@ -16,6 +16,7 @@ import {
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
 import ImageKit from "imagekit";
+import { PrismaClient } from "@prisma/client/extension";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
@@ -38,6 +39,20 @@ type ImageData = {
   url: string;
   aiTags?: string[];
   credit: string;
+};
+
+const isAlreadySeeded = async (): Promise<boolean | Error> => {
+  const projectTitles = [testData[0].title, testData[1].title];
+  try {
+    const projects = await prisma.project.findMany({
+      where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
+    });
+    console.log("projects found:", projects);
+    return projects.length === 2;
+  } catch (err) {
+    console.log("error checking if seeded", err);
+    return new Error("cannot check if db is already seeded");
+  }
 };
 
 const uploadImages = async (images: Array<string>, rootDir: string) => {
@@ -180,6 +195,7 @@ const createFullyEnrichedProject = async (
 
 async function main(): Promise<void> {
   try {
+    if (await isAlreadySeeded()) return;
     const allProjects: Array<Project> = await Promise.all(
       testData.map((p: ProjectWithImageFolder) => {
         return createFullyEnrichedProject(p);
