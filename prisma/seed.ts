@@ -195,6 +195,7 @@ const createFullyEnrichedProject = async (
 };
 
 async function main(): Promise<void> {
+  console.info("SEEDING");
   try {
     if (await isAlreadySeeded()) return;
     const allProjects: Array<Project> = await Promise.all(
