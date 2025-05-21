@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  BUILDING_TYPOLOGY,
-  STAKEHOLDER_TYPE,
-} from "../../../prisma/generated/client";
+import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE } from "@prisma/client";
 
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),

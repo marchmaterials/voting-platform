@@ -4,7 +4,7 @@ import { Image } from "@heroui/image";
 import {
   Project,
   Image as PrismaImage,
-} from "../../../prisma/generated/client";
+} from "@prisma/client";
 
 export default async function Page() {
   type ProjectsWithImages = Project & {

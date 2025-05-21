@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../prisma/generated/client";
+import { PrismaClient } from "@prisma/client";
 
 export const prismaClientSingleton = () => {
   console.log("PRISMACLIENTSINGLETON", process.env.DATABASE_URL);
