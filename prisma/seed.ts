@@ -16,7 +16,6 @@ import {
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
 import ImageKit from "imagekit";
-import { PrismaClient } from "@prisma/client/extension";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
