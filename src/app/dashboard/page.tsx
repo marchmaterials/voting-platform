@@ -1,10 +1,8 @@
 import prisma from "@/lib/prisma";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
-import {
-  Project,
-  Image as PrismaImage,
-} from "@prisma/client";
+import { Project, Image as PrismaImage } from "@prisma/client";
+import { main } from "../../../prisma/seed";
 
 export default async function Page() {
   type ProjectsWithImages = Project & {
@@ -12,6 +10,7 @@ export default async function Page() {
   };
   const getProjects = async (): Promise<Array<ProjectsWithImages>> => {
     try {
+      main();
       console.log("trying to fetch");
       return await prisma.project.findMany({
         include: { images: true },

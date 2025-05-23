@@ -47,7 +47,7 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     const projects = await prisma.project.findMany({
       where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
     });
-    console.log("projects found:", projects);
+    console.log("DB already seeded? :", projects.length === 2);
     return projects.length === 2;
   } catch (err) {
     console.log("error checking if seeded", err);
@@ -194,7 +194,7 @@ const createFullyEnrichedProject = async (
   }
 };
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   console.info("SEEDING");
   try {
     if (await isAlreadySeeded()) return;
