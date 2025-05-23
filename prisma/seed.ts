@@ -196,13 +196,16 @@ const createFullyEnrichedProject = async (
 
 export async function main(): Promise<void> {
   console.info("SEEDING");
+  let allProjects: Array<Project>;
   try {
     if (await isAlreadySeeded()) return;
-    const allProjects: Array<Project> = await Promise.all(
-      testData.map((p: ProjectWithImageFolder) => {
-        return createFullyEnrichedProject(p);
-      })
-    );
+    else {
+      allProjects = await Promise.all(
+        testData.map((p: ProjectWithImageFolder) => {
+          return createFullyEnrichedProject(p);
+        })
+      );
+    }
     console.log("all projects successfully created:", allProjects);
   } catch (err) {
     console.error("could not create all projects", err);
