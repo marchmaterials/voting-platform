@@ -28,33 +28,35 @@ export default async function Page() {
 
   const projects = await getProjects();
   return (
-    <div className="m-2">
-      <h2>All Projects</h2>
-      <div className="flex flex-row m-4 flex-wrap">
-        {projects &&
-          projects.map((p) => (
-            <Card
-              key={p.id}
-              className="max-w-md m-4"
-              isHoverable
-              isPressable
-              radius="lg"
-              shadow="md"
-            >
-              <CardHeader>
-                <h2>{p.title}</h2>
-              </CardHeader>
-              <CardBody>
-                {Boolean(p.images.length) && (
-                  <Image
-                    src={p.images[0].url}
-                    alt={`image of architectural project titled ${p.title}`}
-                    width={400}
-                  />
-                )}
-              </CardBody>
-            </Card>
-          ))}
+    <div className="min-h-screen">
+      <div className="m-2">
+        <h2>All Projects</h2>
+        <div className="flex flex-row m-4 flex-wrap">
+          {projects &&
+            projects.map((p) => (
+              <Card
+                key={p.id}
+                className="max-w-md m-4"
+                isHoverable
+                isPressable
+                radius="lg"
+                shadow="md"
+              >
+                <CardHeader>
+                  <h2>{p.title}</h2>
+                </CardHeader>
+                <CardBody>
+                  {Boolean(p.images.length) && (
+                    <Image
+                      src={p.images[0].url}
+                      alt={`image of architectural project titled ${p.title}`}
+                      width={400}
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            ))}
+        </div>
       </div>
     </div>
   );
