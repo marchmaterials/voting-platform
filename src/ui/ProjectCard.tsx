@@ -1,6 +1,5 @@
 "use client";
 import { ProjectWithImages } from "@/types/dashboard";
-import { useState } from "react";
 import { Card, Image } from "antd";
 
 export default function DashboardProjects({
