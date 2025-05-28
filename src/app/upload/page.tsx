@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload } from "antd";
-import { generateImagekitSignature } from "../actions.ts/upload";
+import { generateImagekitSignature } from "../actions/upload";
 import { useRef } from "react";
 import { upload } from "@imagekit/next";
 
@@ -67,24 +67,43 @@ export default function Page() {
   const [projectInput, setProjectInput] = useState<string>();
   const [files, setFiles] = useState<Array<File>>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const [emailInput, setEmailInput] = useState<HTMLElement | undefined>();
 
-  interface ReceiveMessageEvent extends MessageEvent {
-    data: string;
-  }
-
-  const handleReceiveMessage = (event: ReceiveMessageEvent): void => {
-    console.log("message event:", event);
-    if (event.origin === JOTFORM_URL) {
-      console.log("message is from jotform", event);
-      setProjectInput(event.data);
-    }
-  };
+  // const handleReceiveMessage = (event: ReceiveMessageEvent): void => {
+  //   console.log("message event:", event);
+  //   if (event.origin === JOTFORM_URL) {
+  //     console.log("message is from jotform", event);
+  //     setProjectInput(event.data);
+  //   }
+  // };
 
   useEffect(() => {
-    window.addEventListener("message", handleReceiveMessage);
+    // window.addEventListener("message", handleReceiveMessage);
 
-    return () => window.removeEventListener("message", handleReceiveMessage);
+    const testEmail = document.getElementById("input_2");
+    console.log("found jotform input", testEmail);
+    console.log(
+      "found jotform input",
+      (testEmail as HTMLInputElement | null)?.value
+    );
+    if (testEmail) {
+      setEmailInput(testEmail);
+    }
+    const jotformProjectTitle = document.querySelector("#input_49");
+    console.log("jotform project title:", jotformProjectTitle);
+
+    // return () => window.removeEventListener("message", handleReceiveMessage);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    console.log("email input updated", emailInput);
+    console.log(
+      "email input value",
+      (emailInput as HTMLInputElement | undefined)?.value
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emailInput, (emailInput as HTMLInputElement | undefined)?.value]);
 
   const { Dragger } = Upload;
 
