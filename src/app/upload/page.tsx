@@ -9,9 +9,7 @@ import { useRef } from "react";
 import { upload } from "@imagekit/next";
 
 const JOTFORM_URL = "";
-
 const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
-const IMAGE_KIT_UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload";
 
 interface UploadResult {
   fileId: string;
@@ -68,10 +66,6 @@ const handleImageUpload = async (
 export default function Page() {
   const [projectInput, setProjectInput] = useState<string>();
   const [files, setFiles] = useState<Array<File>>([]);
-  const [tokens, setTokens] = useState<
-    { expire: number; token: string; signature: string } | undefined
-  >();
-  const [readyToSubmit, setReadyToSubmit] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   interface ReceiveMessageEvent extends MessageEvent {
@@ -79,20 +73,16 @@ export default function Page() {
   }
 
   const handleReceiveMessage = (event: ReceiveMessageEvent): void => {
+    console.log("message event:", event);
     if (event.origin === JOTFORM_URL) {
-      console.log("message received from jotform", event);
+      console.log("message is from jotform", event);
       setProjectInput(event.data);
     }
   };
 
   useEffect(() => {
     window.addEventListener("message", handleReceiveMessage);
-    const getTokens = async () => {
-      const res = await generateImagekitSignature();
-      console.log("got tokens", res);
-      setTokens(res);
-    };
-    // getTokens();
+
     return () => window.removeEventListener("message", handleReceiveMessage);
   }, []);
 
@@ -163,10 +153,6 @@ export default function Page() {
             className="m-5 p-4 mt-10"
             type="primary"
             // loading={loading}
-            // onClick={() => {
-            //   console.log("uplodaing file -> server action", files);
-            //   handleImageUpload(files, projectInput ?? "");
-            // }}
             htmlType="submit"
           >
             Submit Images
