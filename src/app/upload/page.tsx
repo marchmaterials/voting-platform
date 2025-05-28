@@ -8,7 +8,6 @@ import { generateImagekitSignature } from "../actions/upload";
 import { useRef } from "react";
 import { upload } from "@imagekit/next";
 
-const JOTFORM_URL = "https://www.jotform.com/";
 const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
 
 interface UploadResult {
@@ -64,7 +63,7 @@ const handleImageUpload = async (
 };
 
 export default function Page() {
-  const [projectInput, setProjectInput] = useState<string>();
+  const [projectInput, setProjectInput] = useState<string | null>();
   const [files, setFiles] = useState<Array<File>>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [emailInput, setEmailInput] = useState<HTMLElement | undefined>();
@@ -91,7 +90,9 @@ export default function Page() {
     }
     const jotformProjectTitle = document.querySelector("#input_49");
     console.log("jotform project title:", jotformProjectTitle);
-
+    if (jotformProjectTitle) {
+      setProjectInput(jotformProjectTitle.nodeValue);
+    }
     // return () => window.removeEventListener("message", handleReceiveMessage);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
