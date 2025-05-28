@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload } from "antd";
-import { generateImagekitSignature } from "../actions.ts/upload";
+import { generateImagekitSignature } from "../actions/upload";
 import { useRef } from "react";
 import { upload } from "@imagekit/next";
 
-const JOTFORM_URL = "https://www.jotform.com/";
 const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
 
 interface UploadResult {
@@ -17,20 +16,23 @@ interface UploadResult {
   AITags?: Array<{ name: string; confidence: number }>;
 }
 
-const uploadImages = async (images: Array<File>, projectTitle: string) => {
+const uploadImages = async (
+  images: Array<File>,
+  projectTitle: string,
+  authorEmail: string
+) => {
   return Promise.all(
-    images.map(async (i, index): Promise<UploadResult | Error> => {
+    images.map(async (i): Promise<UploadResult | Error> => {
       try {
         const { expire, token, signature } = await generateImagekitSignature();
         const uploadResponse = await upload({
           file: i,
-          fileName: `march-competition-${projectTitle}-${index}`,
+          fileName: `march-competition::${projectTitle}::${authorEmail}::${i.name}`,
           signature,
           token,
           expire,
           publicKey: IMAGE_KIT_PUBLIC_KEY,
           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
-          useUniqueFileName: true,
           extensions: [
             { name: "google-auto-tagging", maxTags: 5, minConfidence: 60 },
           ],
@@ -59,32 +61,61 @@ const handleImageUpload = async (
 
   const files = data.getAll("files") as File[];
   const projectTitle = data.get("projectTitle") as string;
-  console.log("files?", files);
-  return await uploadImages(files, projectTitle);
+  const authorEmail = data.get("projectAuthorEmail") as string;
+  return await uploadImages(files, projectTitle, authorEmail);
 };
 
 export default function Page() {
-  const [projectInput, setProjectInput] = useState<string>();
   const [files, setFiles] = useState<Array<File>>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const [emailInput, setEmailInput] = useState<HTMLInputElement | undefined>();
+  const [titleInput, setTitleInput] = useState<HTMLInputElement | undefined>();
+  const [emailValue, setEmailValue] = useState<string | undefined>();
+  const [titleValue, setTitleValue] = useState<string | undefined>();
 
-  interface ReceiveMessageEvent extends MessageEvent {
-    data: string;
-  }
-
-  const handleReceiveMessage = (event: ReceiveMessageEvent): void => {
-    console.log("message event:", event);
-    if (event.origin === JOTFORM_URL) {
-      console.log("message is from jotform", event);
-      setProjectInput(event.data);
-    }
-  };
+  // const handleReceiveMessage = (event: ReceiveMessageEvent): void => {
+  //   console.log("message event:", event);
+  //   if (event.origin === JOTFORM_URL) {
+  //     console.log("message is from jotform", event);
+  //     setProjectInput(event.data);
+  //   }
+  // };
 
   useEffect(() => {
-    window.addEventListener("message", handleReceiveMessage);
+    // window.addEventListener("message", handleReceiveMessage);
 
-    return () => window.removeEventListener("message", handleReceiveMessage);
+    const testEmail = document.getElementById("input_2");
+    console.log("testEmail", testEmail);
+    console.log(
+      "testEmail value?",
+      (testEmail as HTMLInputElement | null)?.value
+    );
+    const jotformProjectTitle = document.querySelector("#input_49");
+    console.log("test project title:", jotformProjectTitle);
+
+    const parentEmailInput = window.parent.document.getElementById("input_2");
+    const parentTitleInput = window.parent.document.getElementById("input_49");
+    const parentInput = window.parent.document.getElementById("input_2");
+    const parentQuery = window.parent.document.querySelector("#input_2");
+    console.log("parent window get by id??", parentInput);
+    console.log("parent query selector:", parentQuery);
+    if (parentEmailInput) {
+      setEmailInput(parentEmailInput as HTMLInputElement);
+    }
+    if (parentTitleInput) {
+      setTitleInput(parentTitleInput as HTMLInputElement);
+    }
+    // return () => window.removeEventListener("message", handleReceiveMessage);
   }, []);
+  useEffect(() => {
+    console.log("email input updated", emailInput);
+    console.log("email input value?", emailInput?.value);
+    console.log("title input updated", titleInput);
+    console.log("title input value?", titleInput?.value);
+    setEmailValue(emailInput?.value);
+    setTitleValue(titleInput?.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emailInput?.value, titleInput?.value]);
 
   const { Dragger } = Upload;
 
@@ -124,7 +155,8 @@ export default function Page() {
           files.forEach((file) => {
             formData.append("files", file);
           });
-          formData.append("projectInput", projectInput ?? "");
+          formData.append("projectAuthorEmail", emailValue ?? "");
+          formData.append("projectTitle", titleValue ?? "");
           try {
             await handleImageUpload(formData);
           } catch (err) {
