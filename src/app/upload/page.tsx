@@ -19,11 +19,7 @@ interface UploadResult {
   AITags?: Array<{ name: string; confidence: number }>;
 }
 
-const uploadImages = async (
-  images: Array<File>,
-  projectTitle: string,
-
-) => {
+const uploadImages = async (images: Array<File>, projectTitle: string) => {
   return Promise.all(
     images.map(async (i, index): Promise<UploadResult | Error> => {
       try {
@@ -38,7 +34,7 @@ const uploadImages = async (
           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
           useUniqueFileName: true,
           extensions: [
-            { name: "google-auto-tagging", maxTags: 5, minConfidence: 50 },
+            { name: "google-auto-tagging", maxTags: 5, minConfidence: 60 },
           ],
         });
 
