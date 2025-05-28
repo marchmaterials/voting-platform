@@ -8,7 +8,7 @@ import { generateImagekitSignature } from "../actions.ts/upload";
 import { useRef } from "react";
 import { upload } from "@imagekit/next";
 
-const JOTFORM_URL = "";
+const JOTFORM_URL = "https://www.jotform.com/";
 const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
 
 interface UploadResult {
