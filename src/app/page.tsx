@@ -96,9 +96,9 @@ export default function Home() {
           />
           <Image
             className=""
-            src="/EU-logo.png"
+            src="/EUlogo.png"
             alt="kofinanziert von der Europäischen Union"
-            width={170}
+            width={180}
             height={10}
             priority
           />
