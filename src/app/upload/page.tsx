@@ -100,6 +100,10 @@ function ImageUploader() {
             );
             return;
           }
+          if (!titleImageUid) {
+            message.error("Please select a file to be the title image");
+            return;
+          }
           setLoading(true);
           try {
             const res = await Promise.all(
