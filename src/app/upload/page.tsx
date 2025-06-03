@@ -23,6 +23,7 @@ function ImageUploader() {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
+  const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const projectTitle = searchParams.get("project");
@@ -68,6 +69,24 @@ function ImageUploader() {
         message.error(`${file.name} file upload failed.`);
       }
     },
+    itemRender: (originNode, file) => {
+      return (
+        <div className="flex justify-between items-end">
+          {originNode}
+          <Button
+            size="small"
+            className="ml-2"
+            disabled={loading || submittedSuccess}
+            type={titleImageUid === file.uid ? "primary" : "default"}
+            onClick={() => {
+              setTitleImageUid(file.uid);
+            }}
+          >
+            Title Image
+          </Button>
+        </div>
+      );
+    },
   };
 
   return (
@@ -75,7 +94,6 @@ function ImageUploader() {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-
           if (!email || !projectTitle || files.length === 0) {
             message.error(
               "Missing required information, please upload at least one image."
@@ -88,9 +106,11 @@ function ImageUploader() {
               files.map(async (i): Promise<UploadResult | Error> => {
                 const { expire, token, signature } =
                   await generateImagekitSignature();
+                const tags = i.uid === titleImageUid ? ["title-image"] : [];
                 const uploadResponse = await upload({
                   file: i,
                   fileName: `march-competition.-.${projectTitle}.-.${email}.-.${i.name}`,
+                  tags,
                   signature,
                   token,
                   expire,
@@ -127,8 +147,11 @@ function ImageUploader() {
         }}
       >
         {submittedSuccess && (
-          <div className="flex justify-center text-green-600">
-            <h3>Thank you! Your images have successfully been submitted</h3>
+          <div className="flex justify-center text-green-600 max-w-2/3">
+            <h3>
+              Thank you for your submission! Your project details and images
+              have successfully been submitted
+            </h3>
           </div>
         )}
         <div className="mt-6">
