@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { spaceGrotesk } from "@/components/fonts";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 
@@ -21,11 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.className} antialiased`}>
+      <body className="antialiased">
         <header>
           <NavBar />
         </header>
         {children}
+        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
+        <Analytics />
       </body>
     </html>
   );
