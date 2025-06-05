@@ -45,7 +45,7 @@ export default function Home() {
             width={800}
             height={400}
             src="/prototype-better-quality.mov"
-            className="rounded-lg"
+            className="rounded-lg shadow-xl"
           ></video>
         </div>
       </main>
