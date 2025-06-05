@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.className} antialiased`}>
         {children}
-        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />
+        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
         <Analytics />
       </body>
     </html>
