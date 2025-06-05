@@ -66,9 +66,9 @@ const uploadImages = async (images: Array<string>, rootDir: string) => {
           fileName: `march-mvp-${index}`,
           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
           useUniqueFileName: true,
-          extensions: [
-            { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
-          ],
+          // extensions: [
+          //   { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
+          // ],
         });
       } catch (err) {
         console.error("failed to upload images", err);
