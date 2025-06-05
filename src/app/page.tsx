@@ -14,10 +14,12 @@ export default function Home() {
         />
 
         <div className="flex gap-4 items-center flex-col text-center">
-          <h1 className="font-bold text-3xl m-5 w-3/4">
-            MARCH is a visual sourcing engine — where architects, designers, and
-            clients come to get inspired and source materials through built
-            projects.
+          <h1 className="font-bold text-2xl m-5 w-3/4">
+            MARCH is a visual sourcing engine -{" "}
+            <span className="font-normal">
+              where architects, designers, and clients come to get inspired and
+              source materials through built projects.
+            </span>
           </h1>
         </div>
         <div className="flex-col">
@@ -27,7 +29,7 @@ export default function Home() {
             rel="noopener"
           >
             <button
-              className="bg-black min-w-48 hover:opacity-75 text-white font-bold py-2 px-4 rounded-full"
+              className="bg-green min-w-48 hover:opacity-75  font-bold py-2 px-4 rounded-full"
               type="button"
             >
               Join the Waitlist
