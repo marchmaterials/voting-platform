@@ -118,6 +118,16 @@ function ImageUploader() {
             Then select one image that you think best represents the project to
             be the title image.
           </p>
+          <p className="text-xs italic">
+            If you need help submitting your project, please contact{" "}
+            <a
+              href="mailto:info@marchmaterials.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              info@marchmaterials.com
+            </a>
+          </p>
           <form
             onSubmit={async (e) => {
               e.preventDefault();
