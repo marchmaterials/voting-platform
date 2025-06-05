@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { ProjectWithImages } from "@/types/dashboard";
-import ProjectCard from "@/ui/ProjectCard";
+import ProjectCard from "@/components/ProjectCard";
 
 export default async function Page() {
   const projects: Array<ProjectWithImages> = await prisma.project.findMany({

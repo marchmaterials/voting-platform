@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { spaceGrotesk } from "@/ui/fonts";
+import { spaceGrotesk } from "@/components/fonts";
 import "./globals.css";
-import NavBar from "@/ui/NavBar";
+import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
   title: "MARCH",
