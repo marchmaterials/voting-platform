@@ -121,20 +121,8 @@ const createFullyEnrichedProject = async (
   projectData: ProjectWithImageFolder
 ) => {
   try {
-    // VALIDATE INPUT
     const validatedData: ProjectSubmissionForm =
       projectSubmissionSchema.parse(projectData);
-
-    // UPLOAD IMAGES - ONLY FOR INITIAL LOCAL SEED
-    // const imageFiles = readdirSync(projectData.imageDirectory);
-    // console.log("img files:", imageFiles);
-    // const imageUpload = await uploadImages(
-    //   imageFiles,
-    //   projectData.imageDirectory
-    // );
-    // console.log("uploaded images?? ", imageUpload);
-    // const typedResult = imageUpload as unknown as UploadResult[];
-    // console.log("ai tags: ", typedResult[0].AITags);
     const images = imageData
       .filter((img: ImageData) => img.credit === validatedData.imageCredit)
       .map((img: ImageData) => {
@@ -161,14 +149,6 @@ const createFullyEnrichedProject = async (
         images: {
           create: images,
         },
-        // images: {
-        //   create: typedResult.map((i) => ({
-        //     id: i.fileId,
-        //     url: i.url,
-        //     aiTags: i.AITags?.map((tag) => tag.name),
-        //     credit: validatedData.imageCredit,
-        //   })),
-        // },
       },
     });
     console.log("NEW PROJECT CREATED: ", newProject);
@@ -186,7 +166,6 @@ const createFullyEnrichedProject = async (
       },
       include: { images: true, materials: true },
     });
-    // console.log("FULLY PERSISTED PROJECT: ", finalProject);
     return finalProject;
   } catch (err) {
     console.error(err);
