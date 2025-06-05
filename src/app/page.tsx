@@ -15,7 +15,8 @@ export default function Home() {
 
         <div className="flex gap-4 items-center flex-col text-center">
           <h1 className="font-bold text-3xl m-5 w-3/4">
-            MARCH is a visual sourcing hub to explore materials through real
+            MARCH is a visual sourcing engine — where architects, designers, and
+            clients come to get inspired and source materials through built
             projects.
           </h1>
         </div>
