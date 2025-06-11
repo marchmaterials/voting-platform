@@ -58,10 +58,9 @@ export default function Lightbox({
           loader={imageKitLoader}
           src={images[index]}
           alt={`Project image ${index + 1}`}
-          width={600}
-          height={400}
-          className="rounded-lg max-h-[80vh] object-contain"
-          style={{ background: "#222" }}
+          width={800}
+          height={800}
+          className="w-[70vw] max-h-[80vh] object-contain"
         />
         <div className="text-white mt-2">
           {index + 1} / {images.length}
