@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { imageKitLoader } from "@/utils/imageKit";
 
@@ -16,10 +16,26 @@ export default function Lightbox({
 }) {
   const [index, setIndex] = useState(initialIndex);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      console.log("e", e.key);
+      if (e.key === "ArrowLeft") {
+        setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+      } else if (e.key === "ArrowRight") {
+        setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+      } else if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown, true);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [images.length, onClose, open]);
 
   const prev = () => setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
   const next = () => setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
