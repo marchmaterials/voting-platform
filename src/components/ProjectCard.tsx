@@ -1,6 +1,6 @@
 "use client";
 import { ProjectWithImages } from "@/types/dashboard";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
@@ -36,7 +36,7 @@ export default function DashboardProjects({
       <Lightbox
         images={project.images.map((img) => img.url)}
         open={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
+        onClose={useCallback(() => setLightboxOpen(false), [])}
       />
     </>
   );
