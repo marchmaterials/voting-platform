@@ -17,19 +17,26 @@ export default function DashboardProjects({
     <>
       <Card
         key={project.id}
-        className="max-w-md m-4 cursor-pointer"
+        className="max-w-sm cursor-pointer"
         title={project.title}
         onClick={() => project.images.length && setLightboxOpen(true)}
         hoverable
       >
         {Boolean(project.images.length) && (
           <Image
-            loader={imageKitLoader}
+            loader={() =>
+              imageKitLoader({
+                src: project.images[0].url,
+                height: 280,
+                width: 400,
+              })
+            }
             src={project.images[0].url}
             alt={`image of architectural project titled ${project.title}`}
-            width={400}
+            width={500}
             height={300}
             className="rounded-lg"
+            loading="lazy"
           />
         )}
       </Card>

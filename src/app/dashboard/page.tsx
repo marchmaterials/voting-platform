@@ -8,9 +8,8 @@ export default async function Page() {
   });
   return (
     <div className="min-h-screen">
-      <div className="m-2">
-        <h2>All Projects</h2>
-        <div className="flex flex-row m-4 flex-wrap">
+      <div className="m-4">
+        <div className="flex flex-row m-4 flex-wrap justify-around">
           {projects.map((p) => (
             <ProjectCard key={p.id} project={p} />
           ))}

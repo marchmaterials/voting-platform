@@ -1,5 +1,12 @@
 import { ImageLoaderProps } from "next/image";
 
-export const imageKitLoader = ({ src, width, quality }: ImageLoaderProps) => {
-  return `${src}?tr=w-${width},q-${quality || 75}`;
+export const imageKitLoader = ({
+  src,
+  width,
+  height,
+  quality,
+}: ImageLoaderProps) => {
+  return `${src}?tr=w-${width},${height ? `h-${height}` : ""},q-${
+    quality || 75
+  }`;
 };
