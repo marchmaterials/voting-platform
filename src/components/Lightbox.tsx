@@ -55,7 +55,7 @@ export default function Lightbox({
       </button>
       <div className="flex flex-col items-center">
         <Image
-          loader={imageKitLoader}
+          loader={() => imageKitLoader({ src: images[index], width: 800 })}
           src={images[index]}
           alt={`Project image ${index + 1}`}
           width={800}
