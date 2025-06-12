@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 export const metadata: Metadata = {
   title: "MARCH",
@@ -23,12 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <header>
-          <NavBar />
-        </header>
-        {children}
-        <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
-        <Analytics />
+        <AntdRegistry>
+          <header>
+            <NavBar />
+          </header>
+          {children}
+          <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
+          <Analytics />
+        </AntdRegistry>
       </body>
     </html>
   );
