@@ -98,7 +98,7 @@ jobs:
           echo Using branch: "${BRANCH_NAME}"
           PROJECT_ID="${{ secrets.NEON_PROJECT_ID }}"
           BRANCH_INFO=$(curl -s -H "Authorization: Bearer $NEON_API_KEY" \
-            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/branches?name=$BRANCH_NAME")
+            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/branches?search=$BRANCH_NAME")
           BRANCH_ID=$(echo "$BRANCH_INFO" | jq -r '.branches[0].id')
           if [ "$BRANCH_ID" = "null" ] || [ -z "$BRANCH_ID" ]; then
             echo "Branch $BRANCH_NAME not found in Neon project $PROJECT_ID"
