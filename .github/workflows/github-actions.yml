@@ -111,6 +111,7 @@ jobs:
             echo "DATABASE_URL not found for branch $BRANCH_NAME"
             exit 1
           fi
+          echo "Fetched DATABASE_URL: $DATABASE_URL"
           echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
 
       # - name: Install dependencies
