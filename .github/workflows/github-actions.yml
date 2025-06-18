@@ -9,8 +9,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,9 +30,13 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm ci
 
       - name: Run ESLint
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run lint
 
   test:
