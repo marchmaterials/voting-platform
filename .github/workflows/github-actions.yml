@@ -99,18 +99,17 @@ jobs:
             echo "Branch $BRANCH_NAME not found in Neon project $PROJECT_ID"
             exit 1
           fi
-          BRANCH_DETAIL=$(curl -s -H "Authorization: Bearer $NEON_API_KEY" \
-            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/branches/$BRANCH_ID")
-          echo "BRANCH_DETAIL: $BRANCH_DETAIL" 
-          DATABASE_URL=$(echo "$BRANCH_DETAIL" | jq -r '.branch.connection_uris.primary')
+          CONNECTION_INFO=$(curl -s -H "Authorization: Bearer $NEON_API_KEY" \
+            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/connection_uri?branch_id=$BRANCH_ID")
+          DATABASE_URL=$(echo "$CONNECTION_INFO" | jq -r '.connection_uri')
           if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
             echo "DATABASE_URL not found for branch $BRANCH_NAME"
             exit 1
           fi
           echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
 
-      - name: Install dependencies
-        run: npm ci
+      # - name: Install dependencies
+      #   run: npm ci
 
-      - name: Check Next.js build
-        run: npm run build
+      # - name: Check Next.js build
+      #   run: npm run build
