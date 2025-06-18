@@ -105,7 +105,7 @@ jobs:
             exit 1
           fi
           CONNECTION_INFO=$(curl -s -H "Authorization: Bearer $NEON_API_KEY" \
-            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/connection_uri?database_name=neondb&role_name=&branch_id=$BRANCH_ID")
+            "https://console.neon.tech/api/v2/projects/$PROJECT_ID/connection_uri?database_name=neondb&role_name=neondb_owner&branch_id=$BRANCH_ID")
           DATABASE_URL=$(echo "$CONNECTION_INFO" | jq -r '.uri')
           if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "null" ]; then
             echo "DATABASE_URL not found for branch $BRANCH_NAME"
