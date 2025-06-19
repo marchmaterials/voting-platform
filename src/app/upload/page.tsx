@@ -55,7 +55,6 @@ function ImageUploader() {
     disabled: submittedSuccess || loading,
     accept: ".jpg, .png, .avif, .gif, .webp",
     beforeUpload(file) {
-      console.log("before upload", file);
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
         message.error("Image must smaller than 2MB");
@@ -68,14 +67,12 @@ function ImageUploader() {
       const { status } = file;
       const isUploading = fileList.some((f) => f.status === "uploading");
       setLoading(isUploading);
-      console.log("status", status);
 
       if (status === "removed") {
         setFiles([...files].filter((f) => f.uid !== file.originFileObj?.uid));
       }
       if (status === "done") {
         if (file.originFileObj instanceof File) {
-          console.log("setting files", fileList);
           setFiles([...files, file.originFileObj]);
         } else {
           message.error("image file not instance of FILE");
