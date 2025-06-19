@@ -1,0 +1,92 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                     String            @id @default(cuid())
+  createdAt              DateTime          @default(now()) @db.Timestamp(6)
+  title                  String
+  description            String?
+  location               String
+  yearCompleted          Int
+  typology               BUILDING_TYPOLOGY
+  authorEmail            String
+  selectedForCompetition Boolean           @default(false)
+  images                 Image[]
+  projectMaterial        ProjectMaterial[] @relation("MaterialToProject")
+  materials              Material[]
+  stakeholders           Stakeholder[]
+  area                   Int?
+}
+
+model Image {
+  id        String     @id @default(cuid())
+  url       String
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id])
+  aiTags    String[]
+  materials Material[]
+  credit    String?
+}
+
+model Stakeholder {
+  id          String           @id @default(cuid())
+  type        STAKEHOLDER_TYPE
+  name        String
+  email       String[]
+  phoneNumber String[]
+  projects    Project[]
+}
+
+model Supplier {
+  id          String     @id @default(cuid())
+  name        String
+  website     String?
+  location    String?
+  email       String[]
+  phoneNumber String[]
+  materials   Material[]
+}
+
+model Material {
+  id               String            @id @default(cuid())
+  name             String
+  description      String
+  url              String
+  supplierId       String
+  supplier         Supplier          @relation(fields: [supplierId], references: [id])
+  projectMaterials ProjectMaterial[] @relation("MaterialToProject")
+  projects         Project[]
+  images           Image[]
+  tags             String[] //characteristics, ex. natural, reused
+  certifications   String[]
+}
+
+model ProjectMaterial {
+  id         String   @id @default(cuid())
+  materialId String
+  projectId  String
+  usedWhere  String
+  material   Material @relation("MaterialToProject", fields: [materialId], references: [id])
+  project    Project  @relation("MaterialToProject", fields: [projectId], references: [id])
+}
+
+enum BUILDING_TYPOLOGY {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  INSTITUTIONAL
+}
+
+enum STAKEHOLDER_TYPE {
+  ARCHITECT
+  CONTRACTOR
+  ENGINEER
+}
