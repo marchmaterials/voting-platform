@@ -23,7 +23,7 @@ jest.mock("next/navigation", () => ({
     },
   }),
 }));
-jest.mock("../../components/navbar", () => ({
+jest.mock("../../components/NavBar.tsx", () => ({
   __esModule: true,
   default: () => <div data-testid="navbar">Navbar</div>,
 }));
