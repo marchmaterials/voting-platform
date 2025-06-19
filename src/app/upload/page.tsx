@@ -7,6 +7,7 @@ import { Button, message, Upload } from "antd";
 import { generateImagekitSignature } from "../actions/upload";
 import { upload } from "@imagekit/next";
 import { useSearchParams } from "next/navigation";
+import { useLoading } from "@/hooks/useLoading";
 
 const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
 
@@ -37,14 +38,18 @@ function ThankYouMessage() {
   );
 }
 
-function ImageUploader() {
+export function ImageUploader({
+  uploadState,
+}: { uploadState?: ReturnType<typeof useLoading> } = {}) {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const projectTitle = searchParams.get("project");
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { loading, setLoading } = uploadState ?? useLoading(false);
 
   const { Dragger } = Upload;
 

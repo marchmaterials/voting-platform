@@ -13,6 +13,7 @@ const config: Config = {
   },
   moduleNameMapper: {
     "^@imagekit/next$": "<rootDir>/__mocks__/imagekitNextMock.js",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   // All imported modules in your tests should be mocked automatically
   // automock: false,
