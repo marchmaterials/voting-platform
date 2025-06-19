@@ -42,7 +42,6 @@ export function ImageUploader({
   uploadState,
 }: { uploadState?: ReturnType<typeof useLoading> } = {}) {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
-  // const [loading, setLoading] = useState<boolean>(false);
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
