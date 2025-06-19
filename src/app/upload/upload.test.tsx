@@ -1,11 +1,9 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { upload } from "@imagekit/next";
 import Page from "./page";
 import { ImageUploader } from "./page";
 
-// Mock dependencies
 jest.mock("@imagekit/next", () => ({
   upload: jest.fn(),
 }));
@@ -50,34 +48,6 @@ describe("/upload page", () => {
         screen.getByText(/please upload at least one image/i)
       ).toBeInTheDocument()
     );
-  });
-
-  // it.only("shows error if submitting with no title image selected", async () => {
-  //   render(<Page />);
-  //   // Simulate file upload
-  //   const mockFile = new File(["dummy content"], "example.png", {
-  //     type: "image/png",
-  //   });
-  //   fireEvent.change(screen.getByTestId(/drag-to-upload/i), {
-  //     target: { files: [mockFile] },
-  //   });
-  //   fireEvent.click(screen.getByRole("button", { name: /submit images/i }));
-  //   await waitFor(() =>
-  //     expect(
-  //       screen.getByText(/Please select a file to be the title image/i)
-  //     ).toBeInTheDocument()
-  //   );
-  // });
-
-  it("calls upload for each file on submit", async () => {
-    (upload as jest.Mock).mockResolvedValue({
-      fileId: "id",
-      url: "url",
-      AITags: [],
-    });
-    render(<Page />);
-    // Simulate file upload and title image selection
-    // This is difficult with AntD's Upload component, see suggestions below
   });
 
   it("does not render navbar so user cannot navigate away", () => {

@@ -207,6 +207,7 @@ export function ImageUploader({
               <Button
                 className="m-5 p-4 mt-10"
                 type="primary"
+                data-testid="image-submit"
                 loading={loading}
                 disabled={loading || submittedSuccess}
                 htmlType="submit"
