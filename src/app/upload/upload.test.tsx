@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { upload } from "@imagekit/next";
 import Page from "./page";
+import { ImageUploader } from "./page";
 
 // Mock dependencies
 jest.mock("@imagekit/next", () => ({
@@ -24,8 +25,12 @@ jest.mock("next/navigation", () => ({
     },
   }),
 }));
+jest.mock("../../components/navbar", () => ({
+  __esModule: true,
+  default: () => <div data-testid="navbar">Navbar</div>,
+}));
 
-describe("ImageUploader", () => {
+describe("/upload page", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -47,10 +52,12 @@ describe("ImageUploader", () => {
     );
   });
 
-  // it("shows error if submitting with no title image selected", async () => {
+  // it.only("shows error if submitting with no title image selected", async () => {
   //   render(<Page />);
   //   // Simulate file upload
-  //   const mockFile = new File(["dummy content"], "example.png", { type: "image/png" });
+  //   const mockFile = new File(["dummy content"], "example.png", {
+  //     type: "image/png",
+  //   });
   //   fireEvent.change(screen.getByTestId(/drag-to-upload/i), {
   //     target: { files: [mockFile] },
   //   });
@@ -71,5 +78,20 @@ describe("ImageUploader", () => {
     render(<Page />);
     // Simulate file upload and title image selection
     // This is difficult with AntD's Upload component, see suggestions below
+  });
+
+  it("does not render navbar so user cannot navigate away", () => {
+    render(<Page />);
+    expect(screen.queryByTestId("navbar")).not.toBeInTheDocument();
+  });
+});
+
+describe("ImageUploade", () => {
+  it("submit button is disabled when loading is true", () => {
+    const mockUploadState = { loading: true, setLoading: jest.fn() };
+    render(<ImageUploader uploadState={mockUploadState} />);
+    expect(
+      screen.getByRole("button", { name: /submit images/i })
+    ).toBeDisabled();
   });
 });
