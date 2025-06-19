@@ -7,17 +7,9 @@ import { Button, message, Upload } from "antd";
 import { generateImagekitSignature } from "../actions/upload";
 import { upload } from "@imagekit/next";
 import { useSearchParams } from "next/navigation";
-
-const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
-
-interface UploadResult {
-  fileId: string;
-  url: string;
-  AITags?: Array<{ name: string; confidence: number }>;
-}
-interface FileUploadAntD extends File {
-  uid: string;
-}
+import { useLoading } from "@/hooks/useLoading";
+import { UploadResult, FileUploadAntD } from "@/types/upload";
+import { IMAGE_KIT_PUBLIC_KEY } from "@/constants";
 
 function ThankYouMessage() {
   return (
@@ -39,12 +31,12 @@ function ThankYouMessage() {
 
 function ImageUploader() {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const projectTitle = searchParams.get("project");
+  const { loading, setLoading } = useLoading(false);
 
   const { Dragger } = Upload;
 
@@ -55,7 +47,6 @@ function ImageUploader() {
     disabled: submittedSuccess || loading,
     accept: ".jpg, .png, .avif, .gif, .webp",
     beforeUpload(file) {
-      console.log("before upload", file);
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
         message.error("Image must smaller than 2MB");
@@ -68,14 +59,12 @@ function ImageUploader() {
       const { status } = file;
       const isUploading = fileList.some((f) => f.status === "uploading");
       setLoading(isUploading);
-      console.log("status", status);
 
       if (status === "removed") {
         setFiles([...files].filter((f) => f.uid !== file.originFileObj?.uid));
       }
       if (status === "done") {
         if (file.originFileObj instanceof File) {
-          console.log("setting files", fileList);
           setFiles([...files, file.originFileObj]);
         } else {
           message.error("image file not instance of FILE");
@@ -188,7 +177,7 @@ function ImageUploader() {
             }}
           >
             <div className="mt-6">
-              <Dragger {...props}>
+              <Dragger {...props} data-testid="drag-to-upload">
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
@@ -205,6 +194,7 @@ function ImageUploader() {
               <Button
                 className="m-5 p-4 mt-10"
                 type="primary"
+                data-testid="image-submit"
                 loading={loading}
                 disabled={loading || submittedSuccess}
                 htmlType="submit"

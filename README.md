@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Create a new Neon branch for your local dev environment in the Neon Console["https://console.neon.tech/app/projects/fragrant-unit-07862890/branches"]
+Click "Connect" and copy the connection string.
+Make this string your `DATABASE_URL` in your local `.env` file.
+
+A new neon branch will also be created with every git branch for preview deployments.
+
+To run the development server:
 
 ```bash
 npm run dev
