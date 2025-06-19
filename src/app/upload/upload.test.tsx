@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Page from "./page";
-import ImageUploader from "./page";
 
 jest.mock("@imagekit/next", () => ({
   upload: jest.fn(),
@@ -53,15 +52,5 @@ describe("/upload page", () => {
   it("does not render navbar so user cannot navigate away", () => {
     render(<Page />);
     expect(screen.queryByTestId("navbar")).not.toBeInTheDocument();
-  });
-});
-
-describe("ImageUploade", () => {
-  it("submit button is disabled when loading is true", () => {
-    const mockUploadState = { loading: true, setLoading: jest.fn() };
-    render(<ImageUploader uploadState={mockUploadState} />);
-    expect(
-      screen.getByRole("button", { name: /submit images/i })
-    ).toBeDisabled();
   });
 });

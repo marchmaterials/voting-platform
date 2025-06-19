@@ -8,17 +8,8 @@ import { generateImagekitSignature } from "../actions/upload";
 import { upload } from "@imagekit/next";
 import { useSearchParams } from "next/navigation";
 import { useLoading } from "@/hooks/useLoading";
-
-const IMAGE_KIT_PUBLIC_KEY = "public_zippyGUFnPZ9M2RQ6pPgLqCwo4I=";
-
-interface UploadResult {
-  fileId: string;
-  url: string;
-  AITags?: Array<{ name: string; confidence: number }>;
-}
-interface FileUploadAntD extends File {
-  uid: string;
-}
+import { UploadResult, FileUploadAntD } from "@/types/upload";
+import { IMAGE_KIT_PUBLIC_KEY } from "@/constants";
 
 function ThankYouMessage() {
   return (
@@ -38,17 +29,14 @@ function ThankYouMessage() {
   );
 }
 
-export default function ImageUploader({
-  uploadState,
-}: { uploadState?: ReturnType<typeof useLoading> } = {}) {
+export default function ImageUploader() {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const projectTitle = searchParams.get("project");
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { loading, setLoading } = uploadState ?? useLoading(false);
+  const { loading, setLoading } = useLoading(false);
 
   const { Dragger } = Upload;
 
