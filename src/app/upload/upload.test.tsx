@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Page from "./page";
-import { ImageUploader } from "./page";
+import ImageUploader from "./page";
 
 jest.mock("@imagekit/next", () => ({
   upload: jest.fn(),
