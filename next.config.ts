@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  profiler: true,
 };
 
 export default nextConfig;
