@@ -1,15 +1,16 @@
 "use client";
-import { ProjectWithImages } from "@/types/dashboard";
+import { Images, ProjectMaterials } from "@/types/dashboard";
 import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
 import { imageKitLoader } from "@/utils/imageKit";
+import { Project } from "@prisma/client";
 
-export default function DashboardProjects({
+export default function ProjectCard({
   project,
 }: {
-  project: ProjectWithImages;
+  project: Project & Images & ProjectMaterials;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -42,6 +43,9 @@ export default function DashboardProjects({
       </Card>
       <Lightbox
         images={project.images.map((img) => img.url)}
+        materials={project.projectMaterial.map((m) => m)}
+        title={project.title}
+        project={project}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
       />
