@@ -1,18 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { imageKitLoader } from "@/utils/imageKit";
+import { Sidebar } from "./Sidebar";
+import { Gallery } from "./Gallery";
+import { Project, ProjectMaterial } from "@prisma/client";
+import { Images, ProjectMaterials } from "@/types/dashboard";
 
 export default function Lightbox({
   images,
   open,
   initialIndex = 0,
   onClose,
+  materials,
+  title,
+  project,
 }: {
   images: string[];
   open: boolean;
   initialIndex?: number;
   onClose: () => void;
+  materials: Array<ProjectMaterial>;
+  title: string;
+  project: Project & Images & ProjectMaterials;
 }) {
   const [index, setIndex] = useState(initialIndex);
 
@@ -46,33 +54,22 @@ export default function Lightbox({
       >
         &times;
       </button>
-      <button
-        className="absolute left-4 text-3xl text-white"
-        onClick={prev}
-        aria-label="Previous"
-      >
-        &#8592;
-      </button>
-      <div className="flex flex-col items-center">
-        <Image
-          loader={() => imageKitLoader({ src: images[index], width: 800 })}
-          src={images[index]}
-          alt={`Project image ${index + 1}`}
-          width={800}
-          height={800}
-          className="w-[70vw] max-h-[80vh] object-contain"
-        />
-        <div className="text-white mt-2">
-          {index + 1} / {images.length}
+      <div className="bg-white rounded-lg shadow-lg w-[90vw] h-[80vh] flex flex-col">
+        <h2 className="text-2xl p-4 font-extrabold">{title}</h2>
+        <div className="flex sm:flex-row flex-col-reverse flex-1 h-0">
+          <div className="h-full w-full sm:w-1/3 sm:max-w-[260px] border-r border-gray-200 overflow-y-auto">
+            <Sidebar materials={materials} project={project} />
+          </div>
+          <div className="h-full w-2/3 flex">
+            <Gallery
+              images={images}
+              index={index}
+              onPrev={prev}
+              onNext={next}
+            />
+          </div>
         </div>
       </div>
-      <button
-        className="absolute right-4 text-3xl text-white"
-        onClick={next}
-        aria-label="Next"
-      >
-        &#8594;
-      </button>
     </div>
   );
 }

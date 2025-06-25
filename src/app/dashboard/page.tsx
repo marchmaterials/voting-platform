@@ -1,11 +1,17 @@
 import prisma from "@/lib/prisma";
-import { ProjectWithImages } from "@/types/dashboard";
+import { Images, ProjectMaterials } from "@/types/dashboard";
 import ProjectCard from "@/components/ProjectCard";
+import { Project } from "@prisma/client";
 
 export default async function Page() {
-  const projects: Array<ProjectWithImages> = await prisma.project.findMany({
-    include: { images: true },
-  });
+  const projects: Array<Project & Images & ProjectMaterials> =
+    await prisma.project.findMany({
+      include: {
+        images: true,
+        projectMaterial: { include: { material: true } },
+      },
+    });
+  console.log("whole project:", projects[0]);
   return (
     <div className="min-h-screen">
       <div className="m-4">
