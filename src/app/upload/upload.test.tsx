@@ -39,7 +39,7 @@ describe("/upload page", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows error if submitting with no files", async () => {
+  it("shows error if submitting with no files-sumbit images", async () => {
     render(<Page />);
     fireEvent.click(screen.getByRole("button", { name: /submit images/i }));
     await waitFor(() =>
@@ -53,4 +53,15 @@ describe("/upload page", () => {
     render(<Page />);
     expect(screen.queryByTestId("navbar")).not.toBeInTheDocument();
   });
+ 
+  // it("sumbit another project", async () => {
+  //   render(<Page />);
+  //   fireEvent.click(screen.getByRole("button", { name: /sumbit another project/i }));
+  //   await waitFor(() =>
+  //     expect(
+  //       screen.getByText(/The Final Step! Upload all images/i)
+  //     ).toBeInTheDocument()
+  //   );
+  // });
+
 });
