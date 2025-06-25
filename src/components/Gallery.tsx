@@ -1,45 +1,30 @@
 "use client";
 import { imageKitLoader } from "@/utils/imageKit";
 import Image from "next/image";
+import { useRef } from "react";
 
-export function Gallery({
-  images,
-  index,
-  onPrev,
-  onNext,
-}: {
-  images: string[];
-  index: number;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
+export function Gallery({ images }: { images: string[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="h-full">
-      <button
-        className="absolute left-4 text-3xl text-white"
-        onClick={onPrev}
-        aria-label="Previous"
+    <div className="h-full w-full relative flex flex-col items-center justify-center">
+      <div
+        ref={scrollRef}
+        className="flex flex-row h-full overflow-x-auto gap-4 scroll-smooth"
+        // style={{ scrollSnapType: "x mandatory" }}
       >
-        &#8592;
-      </button>
-      <Image
-        loader={() => imageKitLoader({ src: images[index], width: 800 })}
-        src={images[index]}
-        alt={`Project image ${index + 1}`}
-        width={800}
-        height={800}
-        className="max-h-full max-w-full object-contain"
-      />
-      <div className="text-white mt-2">
-        {index + 1} / {images.length}
+        {images.map((img, i) => (
+          <Image
+            key={img}
+            loader={() => imageKitLoader({ src: img, width: 800 })}
+            src={img}
+            alt={`Project image ${i + 1}`}
+            width={800}
+            height={800}
+            className="max-h-full max-w-full object-contain"
+          />
+        ))}
       </div>
-      <button
-        className="absolute right-4 text-3xl text-white top-1/2 -translate-y-1/2"
-        onClick={onNext}
-        aria-label="Next"
-      >
-        &#8594;
-      </button>
     </div>
   );
 }
