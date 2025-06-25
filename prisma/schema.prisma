@@ -1,7 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
-
 }
 
 datasource db {
@@ -78,15 +77,40 @@ model ProjectMaterial {
   project    Project  @relation("MaterialToProject", fields: [projectId], references: [id])
 }
 
+enum CIRCULAR_TYPOLOGY {
+  RECLAIMED
+  REPURPOSED
+  RECYCLED
+  REUSEABLE
+}
+
+enum MATERIAL_TYPOLOGY {
+  BIOBASED
+  BIODEGRADABLE
+  CIRCULAR
+  LOCAL
+}
+
+enum CONSTRUCTION_TYPOLOGY {
+  NEW
+  EXTENSION
+  RENOVATION
+  RESTORATION
+  CONVERSION
+}
+
 enum BUILDING_TYPOLOGY {
   RESIDENTIAL
   COMMERCIAL
+  MIXED_USE
   INDUSTRIAL
   INSTITUTIONAL
+  HEALTHCARE
 }
 
 enum STAKEHOLDER_TYPE {
   ARCHITECT
+  INTERIOR_ARCHITECT
   CONTRACTOR
   ENGINEER
 }
