@@ -17,7 +17,6 @@ export function Sidebar({
 }) {
   console.log("material", materials[0]);
   const MaterialDetails = ({
-    description,
     certifications,
     url,
     usedWhere,
@@ -27,8 +26,6 @@ export function Sidebar({
       <>
         <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
         <p className="mb-2">{usedWhere}</p>
-        <h6 className="text-xs font-semibold mb-1">Description:</h6>
-        <p className="mb-2">{description}</p>
         <a
           href={`${url}?utm_source=marchmaterials.com&utm_medium=MARCH_material_search_for_architects`}
           rel="noopener noreferrer"
@@ -54,7 +51,6 @@ export function Sidebar({
       <p className="text-sm font-light">completed in {project.yearCompleted}</p>
       <h4 className="font-medium mt-4 mb-4">Materials</h4>
       <Collapse items={items} />
-      {/* footer with project description? */}
     </div>
   );
 }
