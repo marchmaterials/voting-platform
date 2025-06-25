@@ -2,8 +2,12 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Gallery } from "./Gallery";
-import { Project, ProjectMaterial } from "@prisma/client";
-import { Images, ProjectMaterials } from "@/types/dashboard";
+import { Project } from "@prisma/client";
+import {
+  Images,
+  ProjectMaterials,
+  EnrichedProjectMaterials,
+} from "@/types/dashboard";
 
 export default function Lightbox({
   images,
@@ -18,7 +22,7 @@ export default function Lightbox({
   open: boolean;
   initialIndex?: number;
   onClose: () => void;
-  materials: Array<ProjectMaterial>;
+  materials: EnrichedProjectMaterials;
   title: string;
   project: Project & Images & ProjectMaterials;
 }) {
@@ -57,7 +61,7 @@ export default function Lightbox({
       <div className="bg-white rounded-lg shadow-lg w-[90vw] h-[80vh] flex flex-col">
         <h2 className="text-2xl p-4 font-extrabold">{title}</h2>
         <div className="flex sm:flex-row flex-col-reverse flex-1 h-0">
-          <div className="h-full w-full sm:w-1/3 sm:max-w-[260px] border-r border-gray-200 overflow-y-auto">
+          <div className="h-full w-full sm:w-1/3 sm:max-w-[320px] border-r border-gray-200 overflow-y-auto">
             <Sidebar materials={materials} project={project} />
           </div>
           <div className="h-full w-2/3 flex">
