@@ -13,8 +13,14 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #dad7cd;
+    --foreground: #ffffff;
   }
+
+  .ant-upload.ant-upload-drag .ant-upload-text,
+  .ant-upload.ant-upload-drag .ant-upload-hint {
+    color: var(--foreground) !important;
+  }
+
 }
 
 body {

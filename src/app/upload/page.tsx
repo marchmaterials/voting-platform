@@ -118,12 +118,15 @@ function ImageUploader() {
         <>
           <ThankYouMessage />
           <Button
-            className="mt-6"
-            type="default"
+            className="m-5 p-4 mt-5"
+            type="primary"
+            // haven't created a test for this yet or maybe we need can use the same test?
+            //data-testid="image-submit-again"
+            loading={loading}
             onClick={resetForm}
             >
-              Submit another project
-              </Button>
+              Submit Another Project
+          </Button>
         </>
       ) : (
         <>
