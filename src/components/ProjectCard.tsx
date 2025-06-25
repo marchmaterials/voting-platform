@@ -43,7 +43,7 @@ export default function ProjectCard({
       </Card>
       <Lightbox
         images={project.images.map((img) => img.url)}
-        materials={project.projectMaterial.map((m) => m)}
+        materials={[...project.projectMaterial.map((m) => m)]}
         title={project.title}
         project={project}
         open={lightboxOpen}

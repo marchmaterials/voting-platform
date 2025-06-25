@@ -1,4 +1,8 @@
-import { Image as PrismaImage, ProjectMaterial } from "@prisma/client";
+import {
+  Material,
+  Image as PrismaImage,
+  ProjectMaterial,
+} from "@prisma/client";
 import { ImageLoaderProps } from "next/image";
 
 export type Images = {
@@ -9,4 +13,10 @@ export interface extendedImageLoaderProps extends ImageLoaderProps {
   height?: number;
 }
 
-export type ProjectMaterials = { projectMaterial: Array<ProjectMaterial> };
+export type EnrichedProjectMaterials = Array<
+  ProjectMaterial & { material: Material }
+>;
+
+export type ProjectMaterials = {
+  projectMaterial: EnrichedProjectMaterials;
+};
