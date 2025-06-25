@@ -94,10 +94,25 @@ function ImageUploader() {
     },
   };
 
+  const resetForm = () => {
+    setFiles([]);
+    setTitleImageUid(null);
+    setSubmittedSuccess(false);
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
       {submittedSuccess ? (
-        <ThankYouMessage />
+        <>
+          <ThankYouMessage />
+          <Button
+            className="mt-6"
+            type="default"
+            onClick={resetForm}
+            >
+              Submit another project
+              </Button>
+        </>
       ) : (
         <>
           <h2 className="font-bold text-3xl p-4">
