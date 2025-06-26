@@ -9,20 +9,24 @@ datasource db {
 }
 
 model Project {
-  id                     String            @id @default(cuid())
-  createdAt              DateTime          @default(now()) @db.Timestamp(6)
+  id                     String                  @id @default(cuid())
+  createdAt              DateTime                @default(now()) @db.Timestamp(6)
   title                  String
   description            String?
   location               String
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY
   authorEmail            String
-  selectedForCompetition Boolean           @default(false)
+  selectedForCompetition Boolean                 @default(false)
   images                 Image[]
-  projectMaterial        ProjectMaterial[] @relation("MaterialToProject")
+  projectMaterial        ProjectMaterial[]       @relation("MaterialToProject")
   materials              Material[]
   stakeholders           Stakeholder[]
-  area                   Int?
+  area                   Int
+  completionYear         Int
+  construction           CONSTRUCTION_TYPOLOGY[]
+  projectLink            String?
+  votes                  Int
 }
 
 model Image {
@@ -39,7 +43,9 @@ model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE
   name        String
+  companyName String
   email       String[]
+  address     String
   phoneNumber String[]
   projects    Project[]
 }
@@ -64,7 +70,7 @@ model Material {
   projectMaterials ProjectMaterial[] @relation("MaterialToProject")
   projects         Project[]
   images           Image[]
-  tags             String[] //characteristics, ex. natural, reused
+  tags             String[] //characteristics, ex. natural, reused, circular
   certifications   String[]
 }
 
@@ -73,22 +79,9 @@ model ProjectMaterial {
   materialId String
   projectId  String
   usedWhere  String
+  percentage Int
   material   Material @relation("MaterialToProject", fields: [materialId], references: [id])
   project    Project  @relation("MaterialToProject", fields: [projectId], references: [id])
-}
-
-enum CIRCULAR_TYPOLOGY {
-  RECLAIMED
-  REPURPOSED
-  RECYCLED
-  REUSEABLE
-}
-
-enum MATERIAL_TYPOLOGY {
-  BIOBASED
-  BIODEGRADABLE
-  CIRCULAR
-  LOCAL
 }
 
 enum CONSTRUCTION_TYPOLOGY {
