@@ -21,6 +21,9 @@ jest.mock("next/navigation", () => ({
       return null;
     },
   }),
+  useRouter: () => ({
+    push: jest.fn(),
+  })
 }));
 jest.mock("../../components/NavBar.tsx", () => ({
   __esModule: true,
@@ -39,7 +42,7 @@ describe("/upload page", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows error if submitting with no files-sumbit images", async () => {
+  it("shows error if submitting with no files", async () => {
     render(<Page />);
     fireEvent.click(screen.getByRole("button", { name: /submit images/i }));
     await waitFor(() =>
@@ -53,15 +56,4 @@ describe("/upload page", () => {
     render(<Page />);
     expect(screen.queryByTestId("navbar")).not.toBeInTheDocument();
   });
- 
-  // it("sumbit another project", async () => {
-  //   render(<Page />);
-  //   fireEvent.click(screen.getByRole("button", { name: /sumbit another project/i }));
-  //   await waitFor(() =>
-  //     expect(
-  //       screen.getByText(/The Final Step! Upload all images/i)
-  //     ).toBeInTheDocument()
-  //   );
-  // });
-
 });
