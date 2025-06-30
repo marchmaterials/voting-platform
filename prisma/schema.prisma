@@ -23,7 +23,6 @@ model Project {
   materials              Material[]
   stakeholders           Stakeholder[]
   area                   Int
-  completionYear         Int
   construction           CONSTRUCTION_TYPOLOGY[]
   projectLink            String?
   votes                  Int

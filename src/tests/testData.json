@@ -116,7 +116,9 @@
       {
         "type": "ARCHITECT",
         "name": "Atelier Vens Vanbelle",
+        "companyName": "Vanbelle",
         "email": ["info@vensvanbelle.be"],
+        "address": "13 Mark Lane",
         "phoneNumber": ["+32 486 65 76 02"]
       }
     ]
@@ -202,7 +204,9 @@
       {
         "type": "ARCHITECT",
         "name": "Van Laethem Architecten",
+        "companyName": "Vanbelle",
         "email": ["info@vanlaethem-architecten.be"],
+        "address": "13 Mark Lane",
         "phoneNumber": ["+32 497 11 64 24"]
       }
     ]
