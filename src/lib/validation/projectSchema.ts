@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE } from "@prisma/client";
+import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE, CONSTRUCTION_TYPOLOGY } from "@prisma/client";
 
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
@@ -35,12 +35,17 @@ export const materialSchema = z.object({
 export const stakeholder = z.object({
   type: z.enum([
     STAKEHOLDER_TYPE.ARCHITECT,
+    STAKEHOLDER_TYPE.INTERIOR_ARCHITECT,
     STAKEHOLDER_TYPE.CONTRACTOR,
     STAKEHOLDER_TYPE.ENGINEER,
   ]),
   name: z.string().min(2),
 
+  companyName: z.string().min(2),
+
   email: z.array(z.string().email()),
+  
+  address: z.string().min(5),
 
   phoneNumber: z.array(z.string().min(8).max(19)),
 });
@@ -65,8 +70,10 @@ export const projectSubmissionSchema = z.object({
   typology: z.enum([
     BUILDING_TYPOLOGY.RESIDENTIAL,
     BUILDING_TYPOLOGY.COMMERCIAL,
+    BUILDING_TYPOLOGY.MIXED_USE,
     BUILDING_TYPOLOGY.INDUSTRIAL,
     BUILDING_TYPOLOGY.INSTITUTIONAL,
+    BUILDING_TYPOLOGY.HEALTHCARE,
   ]),
 
   materials: z
@@ -78,6 +85,14 @@ export const projectSubmissionSchema = z.object({
   area: z.number().int(),
 
   imageCredit: z.string(),
+
+  construction: z.array(z.enum([
+    CONSTRUCTION_TYPOLOGY.NEW,
+    CONSTRUCTION_TYPOLOGY.EXTENSION,
+    CONSTRUCTION_TYPOLOGY.RENOVATION,
+    CONSTRUCTION_TYPOLOGY.RESTORATION,
+    CONSTRUCTION_TYPOLOGY.CONVERSION,
+  ])),
 });
 
 // 👇 Type inference if needed elsewhere
