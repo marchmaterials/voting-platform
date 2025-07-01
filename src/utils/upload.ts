@@ -22,3 +22,13 @@ export const checkImageDimensions = (file: File): Promise<boolean> => {
     });
   });
 };
+
+export const formatImageFileName = (
+  projectTitle: string,
+  email: string,
+  name: string
+): string =>
+  `march-competition.-.${projectTitle.replaceAll(" ", "_")}.-.${email.replace(
+    "@",
+    "--at--"
+  )}.-.${name}`;
