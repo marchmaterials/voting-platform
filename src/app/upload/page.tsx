@@ -9,7 +9,8 @@ import { upload } from "@imagekit/next";
 import { useSearchParams } from "next/navigation";
 import { useLoading } from "@/hooks/useLoading";
 import { UploadResult, FileUploadAntD } from "@/types/upload";
-import { IMAGE_KIT_PUBLIC_KEY } from "@/constants";
+import { IMAGE_KIT_PUBLIC_KEY, TOAST_NOTIFICATION_DURATION } from "@/constants";
+import { checkImageDimensions } from "@/utils/upload";
 
 function ThankYouMessage() {
   return (
@@ -46,13 +47,25 @@ function ImageUploader() {
     style: { maxHeight: "10rem" },
     disabled: submittedSuccess || loading,
     accept: ".jpg, .png, .avif, .gif, .webp",
-    beforeUpload(file) {
+    async beforeUpload(file) {
+      console.log("file", file);
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        message.error("Image must smaller than 2MB");
+        message.error(
+          "Image must smaller than 2MB",
+          TOAST_NOTIFICATION_DURATION
+        );
         return Upload.LIST_IGNORE;
       }
-      return isLt2M;
+      const dimensionsOkay = await checkImageDimensions(file);
+      if (!dimensionsOkay) {
+        message.error(
+          "Image resolution cannot be larger than 25MP",
+          TOAST_NOTIFICATION_DURATION
+        );
+        return Upload.LIST_IGNORE;
+      }
+      return true;
     },
     onChange(info) {
       const { file, fileList } = info;
