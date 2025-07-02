@@ -51,6 +51,8 @@ export function Sidebar({
       <p className="text-sm font-light">completed in {project.yearCompleted}</p>
       <h4 className="font-medium mt-4 mb-4">Materials</h4>
       <Collapse items={items} />
+      <p className="text-md mt-6">About this project:</p>
+      <p className="text-sm font-light mt-2">{project.description}</p>
     </div>
   );
 }
