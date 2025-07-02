@@ -23,6 +23,7 @@ model Project {
   title                  String
   description            String?
   location               Location                @relation(fields: [locationId], references: [id])
+  locationId             String
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY
   authorEmail            String
@@ -34,8 +35,7 @@ model Project {
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
   projectLink            String?
-  votes                  Int
-  locationId             String
+  ProjectVote            ProjectVote[]
 }
 
 model Image {
@@ -57,6 +57,21 @@ model Stakeholder {
   address     String
   phoneNumber String[]
   projects    Project[]
+}
+
+model User {
+  id    String        @id @default(cuid())
+  email String[]
+  votes ProjectVote[]
+}
+
+model ProjectVote {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  vote      Int // or Boolean if just upvote/downvote
 }
 
 model Supplier {
