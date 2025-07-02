@@ -33,8 +33,6 @@ export default function ThankYouPage() {
     };
   }, []);
 
-  // return (
-  //   <div className="min-h-screen flex flex-col justify-center items-center bg-white dark:bg-black">
   return (
     <div
       className="
@@ -43,13 +41,14 @@ export default function ThankYouPage() {
       "
     >
       <ThankYouMessage />
-      
+
       <Button
         className="mt-6"
         type="primary"
         onClick={() => {
           router.push("/upload");  
         }}
+        data-testid="image-submit-again"
       >
         Submit Another Project
       </Button>
