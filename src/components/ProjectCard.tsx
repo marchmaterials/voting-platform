@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
-import { imageKitLoader } from "@/utils/imageKit";
 import { Project } from "@prisma/client";
 
 export default function ProjectCard({
@@ -25,13 +24,6 @@ export default function ProjectCard({
       >
         {Boolean(project.images.length) && (
           <Image
-            loader={() =>
-              imageKitLoader({
-                src: project.images[0].url,
-                height: 280,
-                width: 400,
-              })
-            }
             src={project.images[0].url}
             alt={`image of architectural project titled ${project.title}`}
             width={500}
