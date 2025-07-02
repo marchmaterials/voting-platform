@@ -8,12 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Location {
+  id       String     @id @default(cuid())
+  postcode String
+  country  String
+  city     String
+  Project  Project[]
+  Supplier Supplier[]
+}
+
 model Project {
   id                     String                  @id @default(cuid())
   createdAt              DateTime                @default(now()) @db.Timestamp(6)
   title                  String
   description            String?
-  location               String
+  location               Location                @relation(fields: [locationId], references: [id])
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY
   authorEmail            String
@@ -26,6 +35,7 @@ model Project {
   construction           CONSTRUCTION_TYPOLOGY[]
   projectLink            String?
   votes                  Int
+  locationId             String
 }
 
 model Image {
@@ -53,10 +63,11 @@ model Supplier {
   id          String     @id @default(cuid())
   name        String
   website     String?
-  location    String?
+  location    Location?  @relation(fields: [locationId], references: [id])
   email       String[]
   phoneNumber String[]
   materials   Material[]
+  locationId  String?
 }
 
 model Material {
