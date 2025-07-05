@@ -26,7 +26,11 @@ export const materialSchema = z.object({
 
     phoneNumber: z.array(z.string().min(8).max(25)),
 
-    location: z.string().min(2),
+    location: z.object({
+      city: z.string().min(1, "City is required"),
+      country: z.string().min(1, "Country is required"),
+      postcode: z.string().min(1, "Postcode is required"),
+    }),
   }),
 
   certifications: z.array(z.string()).nullish(),
@@ -59,7 +63,11 @@ export const projectSubmissionSchema = z.object({
     .string()
     .min(10, "Project description should be more detailed"),
 
-  location: z.string().min(2, "Location is required"),
+  location: z.object({
+    city: z.string().min(1, "City is required"),
+    country: z.string().min(1, "Country is required"),
+    postcode: z.string().min(1, "Postcode is required"),
+  }),
 
   yearCompleted: z
     .number()
