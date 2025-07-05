@@ -7,6 +7,7 @@
     "yearCompleted": 2016,
     "typology": "RESIDENTIAL",
     "area": 188,
+    "construction": ["NEW"],
     "imageDirectory": "/Users/alexservie/tech-stuff/March/march-app/local/img/avv",
     "imageCredit": "Tim Van de Velde",
     "materials": [
@@ -132,6 +133,7 @@
     "yearCompleted": 2024,
     "typology": "COMMERCIAL",
     "area": 100,
+    "construction": ["NEW"],
     "imageDirectory": "/Users/alexservie/tech-stuff/March/march-app/local/img/vla",
     "imageCredit": "Tom Frederix",
     "materials": [
