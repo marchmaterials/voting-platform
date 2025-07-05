@@ -8,22 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Location {
-//   id       String     @id @default(cuid())
-//   postcode String
-//   country  String
-//   city     String
-//   Project  Project[]
-//   Supplier Supplier[]
-// }
-
 model Project {
   id                     String                  @id @default(cuid())
   createdAt              DateTime                @default(now()) @db.Timestamp(6)
   title                  String
   description            String?
-  location               String
-  // locationId             String
+  location               Location                @relation(fields: [locationId], references: [id])
+  locationId             String
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY
   authorEmail            String
@@ -35,8 +26,22 @@ model Project {
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
   projectLink            String?
-  // ProjectVote            ProjectVote[]
   votes                  Int
+}
+
+model User {
+  id        String @id @default(cuid())
+  email     String
+  voteCount Int
+}
+
+model Location {
+  id       String     @id @default(cuid())
+  postcode String
+  country  String
+  city     String
+  Project  Project[]
+  Supplier Supplier[]
 }
 
 model Image {
@@ -60,30 +65,15 @@ model Stakeholder {
   projects    Project[]
 }
 
-// model User {
-//   id    String   @id @default(cuid())
-//   email String[]
-//   // votes ProjectVote[]
-// }
-
-// model ProjectVote {
-//   id        String  @id @default(cuid())
-//   user      User    @relation(fields: [userId], references: [id])
-//   userId    String
-//   project   Project @relation(fields: [projectId], references: [id])
-//   projectId String
-//   vote      Int // or Boolean if just upvote/downvote
-// }
-
 model Supplier {
   id          String     @id @default(cuid())
   name        String
   website     String?
-  location    String
+  location    Location?  @relation(fields: [locationId], references: [id])
+  locationId  String?
   email       String[]
   phoneNumber String[]
   materials   Material[]
-  // locationId  String?
 }
 
 model Material {
