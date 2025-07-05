@@ -2,15 +2,16 @@
 import type {
   materialActionState,
   ProjectSubmissionForm,
-} from "../src/types/forms.ts";
-import { projectSubmissionSchema } from "../src/lib/validation/projectSchema.ts";
+} from "../src/types/forms";
+import { projectSubmissionSchema } from "../src/lib/validation/projectSchema";
 import { readFileSync } from "fs";
 const testData = JSON.parse(readFileSync("src/tests/testData.json", "utf-8"));
 const imageData = JSON.parse(
   readFileSync("src/tests/testImages.json", "utf-8")
 );
+const testUsers = JSON.parse(readFileSync("src/tests/testUsers.json", "utf-8"));
 import type { Project } from "@prisma/client";
-import prisma from "../src/lib/prisma.ts";
+import prisma from "../src/lib/prisma";
 import {
   IMAGE_KIT_PUBLIC_KEY,
   IMAGE_KIT_UPLOAD_URL,
@@ -47,13 +48,36 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     const projects = await prisma.project.findMany({
       where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
     });
-    console.log("DB already seeded? :", projects.length === 2);
-    return projects.length === 2;
+    // Type assertion for user model until Prisma client is regenerated
+    const users = await (prisma as any).user.findMany();
+    console.log("DB already seeded? Projects:", projects.length === 2, "Users:", users.length === testUsers.length);
+    return projects.length === 2 && users.length === testUsers.length;
   } catch (err) {
     console.log("error checking if seeded", err);
     return new Error("cannot check if db is already seeded");
   }
 };
+
+async function seedUsers() {
+  try {
+    console.log("Creating users...");
+    const users = await Promise.all(
+      testUsers.map((userData: { email: string; voteCount: number }) =>
+        (prisma as any).user.create({
+          data: {
+            email: userData.email,
+            voteCount: userData.voteCount,
+          },
+        })
+      )
+    );
+    console.log("Users created:", users.length);
+    return users;
+  } catch (err) {
+    console.error("Error creating users:", err);
+    return [];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const uploadImages = async (images: Array<string>, rootDir: string) => {
@@ -99,7 +123,13 @@ async function createMaterialsAndConnections(
                 website: m.supplierContact.url,
                 email: m.supplierContact.email ?? [],
                 phoneNumber: m.supplierContact.phoneNumber,
-                location: m.supplierContact.location,
+                location: {
+                  create: {
+                    postcode: m.supplierContact.location?.postcode,
+                    city: m.supplierContact.location?.city,
+                    country: m.supplierContact.location?.country,
+                  },
+                },
               },
             },
             projectMaterials: {
@@ -139,7 +169,13 @@ const createFullyEnrichedProject = async (
       data: {
         title: validatedData.title,
         description: validatedData.description,
-        location: validatedData.location,
+        location: {
+          create: {
+            postcode: validatedData.location.postcode,
+            country: validatedData.location.country,
+            city: validatedData.location.city,
+          }
+        },
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         authorEmail: validatedData.email,
@@ -147,7 +183,14 @@ const createFullyEnrichedProject = async (
         construction: validatedData.construction,
         votes: 0,   
         stakeholders: {
-          create: validatedData.stakeholders,
+          create: validatedData.stakeholders.map(stakeholder => ({
+            type: stakeholder.type!,
+            name: stakeholder.name!,
+            companyName: stakeholder.companyName!,
+            email: stakeholder.email!,
+            address: stakeholder.address!,
+            phoneNumber: stakeholder.phoneNumber!,
+          })),
         },
         images: {
           create: images,
@@ -182,6 +225,10 @@ export async function main(): Promise<void> {
   try {
     if (await isAlreadySeeded()) return;
     else {
+      // Seed users first
+      await seedUsers();
+      
+      // Then seed projects
       allProjects = await Promise.all(
         testData.map((p: ProjectWithImageFolder) => {
           return createFullyEnrichedProject(p);
@@ -194,11 +241,13 @@ export async function main(): Promise<void> {
   }
 }
 
-try {
-  await main();
-  await prisma.$disconnect();
-} catch (err) {
-  console.error(err);
-  await prisma.$disconnect();
-  process.exit(1);
-}
+(async () => {
+  try {
+    await main();
+    await prisma.$disconnect();
+  } catch (err) {
+    console.error(err);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+})();
