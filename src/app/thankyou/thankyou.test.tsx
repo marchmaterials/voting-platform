@@ -23,21 +23,30 @@ describe("/thankyou page", () => {
 
   it("renders the 'Submit Another Project' button", () => {
     render(<ThankYouPage />);
-    const btn = screen.getByRole("button", {
-      name: /submit another project/i,
-    });
+    const btn = screen.getByTestId("submit-link-again");
     expect(btn).toBeInTheDocument();
-    expect(btn).toHaveAttribute("data-testid", "image-submit-again");
   });
 
-  it("navigates back to /upload when button is clicked", () => {
+  it("navigates to the JotForm when clicked", () => {
     render(<ThankYouPage />);
-    const btn = screen.getByRole("button", {
-      name: /submit another project/i,
+    const btn = screen.getByTestId("submit-link-again");
+
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      writable: true,
+      value: { href: "" },
     });
+
     fireEvent.click(btn);
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/upload");
+
+    expect(window.location.href).toBe(
+      "https://form.jotform.com/251335007801345"
+    );
+
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalLocation,
+    });
   });
 });
 

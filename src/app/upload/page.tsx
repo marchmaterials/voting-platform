@@ -151,8 +151,6 @@ function ImageUploader() {
                 return res;
               } catch (err) {
                 console.error("failed upload", err);
-              } finally {
-                setLoading(false);
               }
             }}
           >
@@ -167,6 +165,10 @@ function ImageUploader() {
                 <p className="ant-upload-hint">
                   Please upload all of the images associated with this project
                   before clicking submit.
+                  <br />
+                  <span className="text-xs italic">
+                    Images must be smaller than 2MB and no larger than 25 megapixels.
+                  </span>
                 </p>
               </Dragger>
             </div>
