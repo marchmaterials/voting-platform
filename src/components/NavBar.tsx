@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 export default function NavBar() {
   const pathname = usePathname();
-  if (pathname === "/upload") return null;
+  if (pathname === "/upload" || pathname === "/thankyou") return null;
   return (
     <div className="w-full flex justify-start">
       <Link href={"/"}>

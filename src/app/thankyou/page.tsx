@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
 import { Button } from "antd";
-import { useRouter } from "next/navigation";
 
-function ThankYouMessage() {
+export default function ThankYouPage() {
   return (
-    <div className="flex flex-col justify-center items-center p-10 text-center">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[var(--background)] text-[var(--foreground)] p-10 text-center">
       <h3 className="text-green-600 text-2xl font-bold">
         Thank you for your submission! Your project details and images have
         successfully been submitted.
@@ -18,37 +16,15 @@ function ThankYouMessage() {
         Payment is only required for the first project you submit. Any
         additional submissions are free of charge.
       </h5>
-    </div>
-  );
-}
-
-export default function ThankYouPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const header = document.querySelector("header");
-    if (header) header.style.display = "none";
-    return () => {
-      if (header) header.style.display = "";
-    };
-  }, []);
-
-  return (
-    <div
-      className="
-      min-h-screen flex flex-col justify-center items-center
-      bg-[var(--background)] text-[var(--foreground)]
-      "
-    >
-      <ThankYouMessage />
 
       <Button
         className="mt-6"
         type="primary"
         onClick={() => {
-          router.push("/upload");  
+          window.location.href =
+            "https://form.jotform.com/251335007801345";
         }}
-        data-testid="image-submit-again"
+        data-testid="submit-link-again"
       >
         Submit Another Project
       </Button>
