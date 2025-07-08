@@ -42,14 +42,28 @@ type ImageData = {
   credit: string;
 };
 
+type UserData = {
+  id: string;
+  email: string;
+  voteCount: number;
+};
+
+// Temporary extended Prisma client type until regeneration
+type ExtendedPrismaClient = typeof prisma & {
+  user: {
+    findMany: () => Promise<UserData[]>;
+    create: (args: { data: { email: string; voteCount: number } }) => Promise<UserData>;
+  };
+};
+
 const isAlreadySeeded = async (): Promise<boolean | Error> => {
   const projectTitles = [testData[0].title, testData[1].title];
   try {
     const projects = await prisma.project.findMany({
       where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
     });
-    // Type assertion for user model until Prisma client is regenerated
-    const users = await (prisma as any).user.findMany();
+    // Use extended type instead of any
+    const users = await (prisma as ExtendedPrismaClient).user.findMany();
     console.log("DB already seeded? Projects:", projects.length === 2, "Users:", users.length === testUsers.length);
     return projects.length === 2 && users.length === testUsers.length;
   } catch (err) {
@@ -63,7 +77,7 @@ async function seedUsers() {
     console.log("Creating users...");
     const users = await Promise.all(
       testUsers.map((userData: { email: string; voteCount: number }) =>
-        (prisma as any).user.create({
+        (prisma as ExtendedPrismaClient).user.create({
           data: {
             email: userData.email,
             voteCount: userData.voteCount,
