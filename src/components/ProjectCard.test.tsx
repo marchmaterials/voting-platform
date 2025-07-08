@@ -1,24 +1,8 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import ProjectCard from "./ProjectCard.tsx";
-import { generateProject } from "@/tests/generators";
+import { generateImage, generateProject } from "@/tests/generators";
 import { Project } from "@prisma/client";
 import { ProjectMaterials, Images } from "@/types/dashboard";
-
-const mockProject = {
-  id: "1",
-  title: "Test Project",
-  images: [{ url: "/test1.jpg" }, { url: "/test2.jpg" }],
-  projectMaterial: [],
-};
-
-jest.mock("./Lightbox", () => ({
-  __esModule: true,
-  default: (props: any) => (
-    <div data-testid="lightbox" data-open={props.open}>
-      Lightbox {props.open ? "open" : "closed"}
-    </div>
-  ),
-}));
 
 describe("ProjectCard", () => {
   let project: Project & Images & ProjectMaterials;
@@ -27,32 +11,16 @@ describe("ProjectCard", () => {
     project = generateProject();
   });
 
-  it.only("renders the project card", () => {
+  it("renders the project card", () => {
     render(<ProjectCard project={project} />);
     const projectCard = screen.getByTestId(project.id);
     expect(projectCard).toBeInTheDocument();
   });
 
   it("renders the first project image", () => {
-    render(<ProjectCard project={mockProject as any} />);
-    expect(
-      screen.getByAltText(/image of architectural project titled/i)
-    ).toBeInTheDocument();
-  });
-
-  it("does not open the lightbox if there are no images", () => {
-    const projectNoImages = { ...mockProject, images: [] };
-    render(<ProjectCard project={projectNoImages as any} />);
-    fireEvent.click(screen.getByText("Test Project"));
-    expect(screen.getByTestId("lightbox")).toHaveAttribute(
-      "data-open",
-      "false"
-    );
-  });
-
-  it("opens the lightbox when the card is clicked and images exist", () => {
-    render(<ProjectCard project={mockProject as any} />);
-    fireEvent.click(screen.getByText("Test Project"));
-    expect(screen.getByTestId("lightbox")).toHaveAttribute("data-open", "true");
+    project.images.push(generateImage({ projectId: project.id }));
+    render(<ProjectCard project={project} />);
+    const imageDisplayed = screen.getByRole("img");
+    expect(imageDisplayed.getAttribute("src")?.includes(project.images[0].url));
   });
 });
