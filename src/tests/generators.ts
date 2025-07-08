@@ -1,30 +1,31 @@
-import { Project, ProjectMaterial, BUILDING_TYPOLOGY } from "@prisma/client";
+import { Project, BUILDING_TYPOLOGY, Material } from "@prisma/client";
 import { Images, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
 import { randomUUID } from "crypto";
 
-const generateMaterial = () =>
-  data.flatMap((mat: (typeof data)[0]) =>
-    mat.materials.map((material, materialIndex) => ({
-      id: randomUUID(),
-      name: material.materialName,
-      description: material.description,
-      url: material.url,
-      supplierId: `${material.supplierName}-${materialIndex}`,
-      supplier: generateSupplier(material, materialIndex),
-      projectMaterials: [],
-      projects: [],
-      images: [],
-      tags: material.tags ?? [],
-      certifications: [],
-    }))
-  );
+const generateMaterial = (): Material => {
+  const mat = data[0].materials[0];
+  return {
+    id: randomUUID(),
+    name: mat.materialName,
+    description: mat.description,
+    url: mat.url,
+    supplierId: randomUUID(),
+    tags: mat.tags ?? ["title-image"],
+    certifications: [],
+  };
+};
 
-const generateProjectMaterial = (): ProjectMaterial => ({
-  id: randomUUID(),
-  materialId: randomUUID(),
-  projectId: randomUUID(),
-  usedWhere: data[0].materials[0].usedWhere,
+const generateProjectMaterial = (): ProjectMaterials => ({
+  projectMaterial: [
+    {
+      id: randomUUID(),
+      materialId: randomUUID(),
+      projectId: randomUUID(),
+      usedWhere: data[0].materials[0].usedWhere,
+      material: generateMaterial(),
+    },
+  ],
 });
 
 export const generateProject = (): Project & Images & ProjectMaterials => {
@@ -40,9 +41,7 @@ export const generateProject = (): Project & Images & ProjectMaterials => {
     authorEmail: projectData.email,
     selectedForCompetition: false,
     images: [],
-    projectMaterial: [generateProjectMaterial()],
-    materials: [],
-    stakeholders: [],
+    ...generateProjectMaterial(),
     area: projectData.area,
   };
 };
