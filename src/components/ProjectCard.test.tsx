@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import ProjectCard from "./ProjectCard";
+import ProjectCard from "./ProjectCard.tsx";
 import { generateProject } from "@/tests/generators";
 import { Project } from "@prisma/client";
 import { ProjectMaterials, Images } from "@/types/dashboard";
@@ -12,12 +12,12 @@ const mockProject = {
 };
 
 jest.mock("./Lightbox", () => ({
-  //   __esModule: true,
-  //   default: (props: any) => (
-  //     <div data-testid="lightbox" data-open={props.open}>
-  //       Lightbox {props.open ? "open" : "closed"}
-  //     </div>
-  //   ),
+  __esModule: true,
+  default: (props: any) => (
+    <div data-testid="lightbox" data-open={props.open}>
+      Lightbox {props.open ? "open" : "closed"}
+    </div>
+  ),
 }));
 
 describe("ProjectCard", () => {
@@ -27,9 +27,10 @@ describe("ProjectCard", () => {
     project = generateProject();
   });
 
-  it("renders the project title", () => {
+  it.only("renders the project card", () => {
     render(<ProjectCard project={project} />);
-    expect(screen.getByTestId()).toBeInTheDocument();
+    const projectCard = screen.getByTestId(project.id);
+    expect(projectCard).toBeInTheDocument();
   });
 
   it("renders the first project image", () => {
