@@ -1,4 +1,4 @@
-import { Project, BUILDING_TYPOLOGY, Material } from "@prisma/client";
+import { Project, BUILDING_TYPOLOGY, Material, Image } from "@prisma/client";
 import { Images, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
 import { randomUUID } from "crypto";
@@ -15,6 +15,16 @@ const generateMaterial = (): Material => {
     certifications: [],
   };
 };
+
+export const generateImage = ({
+  projectId = randomUUID(),
+}: Partial<Image>): Image => ({
+  id: randomUUID(),
+  url: "https://fake-url.com",
+  projectId,
+  aiTags: ["wood", "house", "interior"],
+  credit: "Joe Smith",
+});
 
 const generateProjectMaterial = (): ProjectMaterials => ({
   projectMaterial: [
