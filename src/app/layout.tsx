@@ -25,12 +25,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <AntdRegistry>
-          <header>
-            <NavBar />
-          </header>
-          {children}
-          <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
-          <Analytics />
+            <header>
+              <NavBar />
+            </header>
+            {children}
+            <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
+            <Analytics />
         </AntdRegistry>
       </body>
     </html>

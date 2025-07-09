@@ -1,32 +1,17 @@
 "use client"
 import Image from "next/image";
 import { ConfigProvider, theme as antdTheme } from "antd";
-import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const update = (e: MediaQueryListEvent | MediaQueryList) => {
-      setIsDark(e.matches);
-    };
-
-    update(media);
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-
   return (
     <ConfigProvider
       theme={{
-        algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+        algorithm: antdTheme.defaultAlgorithm,
       }}
     >
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center">
           <Image
-            className="dark:invert"
             src="/icon.png"
             alt="march logo"
             width={100}
@@ -78,7 +63,6 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               <Image
-                className="dark:invert"
                 src="/instagram.svg"
                 alt="instagram logo"
                 width={30}
@@ -92,7 +76,6 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               <Image
-                className="dark:invert"
                 src="/linkedin.svg"
                 alt="linkedin logo"
                 width={30}
@@ -103,7 +86,6 @@ export default function Home() {
           </div>
           <div className="flex flex-row justify-around gap-2 h-10">
             <Image
-              className="dark:invert"
               src="/avant-now.png"
               alt="avant now accelerator fem track logo"
               width={60}
@@ -111,7 +93,6 @@ export default function Home() {
               priority
             />
             <Image
-              className="dark:invert"
               src="https://www.berlin.de/i9f/r1/images/logo_berlin_m_srgb.svg"
               alt="Berlin Senat Logo"
               width={120}
@@ -119,7 +100,6 @@ export default function Home() {
               priority
             />
             <Image
-              className="dark:invert"
               src="/EUlogo.png"
               alt="kofinanziert von der Europäischen Union"
               width={180}
