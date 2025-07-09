@@ -3,15 +3,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import ThankYouPage from "./page";
 
-const mockPush = jest.fn();
-
-jest.mock("next/navigation", () => ({
-  useRouter: () => ({ push: mockPush }),
-}));
-
 describe("/thankyou page", () => {
   beforeEach(() => {
-    mockPush.mockClear();
+    jest.clearAllMocks();
   });
 
   it("renders the thank-you message", () => {
@@ -23,13 +17,13 @@ describe("/thankyou page", () => {
 
   it("renders the 'Submit Another Project' button", () => {
     render(<ThankYouPage />);
-    const btn = screen.getByTestId("submit-link-again");
+    const btn = screen.getByTestId("submit-another-project");
     expect(btn).toBeInTheDocument();
   });
 
   it("navigates to the JotForm when clicked", () => {
     render(<ThankYouPage />);
-    const btn = screen.getByTestId("submit-link-again");
+    const btn = screen.getByTestId("submit-another-project");
 
     const originalLocation = window.location;
     Object.defineProperty(window, "location", {
@@ -49,4 +43,3 @@ describe("/thankyou page", () => {
     });
   });
 });
-
