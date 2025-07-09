@@ -21,10 +21,9 @@ export default function ThankYouPage() {
         className="mt-6"
         type="primary"
         onClick={() => {
-          window.location.href =
-            "https://form.jotform.com/251335007801345";
+          window.location.href = "https://form.jotform.com/251335007801345";
         }}
-        data-testid="submit-link-again"
+        data-testid="submit-another-project"
       >
         Submit Another Project
       </Button>
