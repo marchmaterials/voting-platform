@@ -3,9 +3,6 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Page from "./page";
 
-jest.mock("@imagekit/next", () => ({
-  upload: jest.fn(),
-}));
 jest.mock("../actions/upload", () => ({
   generateImagekitSignature: jest.fn().mockResolvedValue({
     expire: "123",
@@ -13,15 +10,7 @@ jest.mock("../actions/upload", () => ({
     signature: "sig",
   }),
 }));
-jest.mock("next/navigation", () => ({
-  useSearchParams: () => ({
-    get: (key: string) => {
-      if (key === "email") return "test@example.com";
-      if (key === "project") return "Test Project";
-      return null;
-    },
-  }),
-}));
+
 jest.mock("../../components/NavBar.tsx", () => ({
   __esModule: true,
   default: () => <div data-testid="navbar">Navbar</div>,
