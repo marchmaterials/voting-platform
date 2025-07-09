@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
@@ -12,27 +13,9 @@ import { UploadResult, FileUploadAntD } from "@/types/upload";
 import { IMAGE_KIT_PUBLIC_KEY, TOAST_NOTIFICATION_DURATION } from "@/constants";
 import { checkImageDimensions, formatImageFileName } from "@/utils/upload";
 
-function ThankYouMessage() {
-  return (
-    <div className="flex flex-col justify-center items-center p-10 text-center">
-      <h3 className="text-green-600 text-2xl font-bold">
-        Thank you for your submission! Your project details and images have
-        successfully been submitted.
-      </h3>
-      <h1 className="font-semibold text-l m-4">
-        You’ll get a confirmation email with payment details soon.
-      </h1>
-      <h5 className="font-thin">
-        Payment is only required for the first project you submit. Any
-        additional submissions are free of charge.
-      </h5>
-    </div>
-  );
-}
-
 function ImageUploader() {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
-  const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
+  const router = useRouter();
   const [titleImageUid, setTitleImageUid] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -45,7 +28,7 @@ function ImageUploader() {
     name: "file",
     multiple: true,
     style: { maxHeight: "10rem" },
-    disabled: submittedSuccess || loading,
+    disabled: loading,
     accept: ".jpg, .png, .avif, .gif, .webp",
     async beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -93,7 +76,7 @@ function ImageUploader() {
           <Button
             size="small"
             className="ml-2"
-            disabled={loading || submittedSuccess}
+            disabled={loading}
             type={titleImageUid === file.uid ? "primary" : "default"}
             onClick={() => {
               setTitleImageUid(file.uid);
@@ -108,10 +91,7 @@ function ImageUploader() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
-      {submittedSuccess ? (
-        <ThankYouMessage />
-      ) : (
-        <>
+      <>
           <h2 className="font-bold text-3xl p-4">
             The Final Step! Upload all images associated with the project
           </h2>
@@ -182,19 +162,18 @@ function ImageUploader() {
                     } as UploadResult;
                   })
                 );
-                setSubmittedSuccess(true);
+                console.log("everything uploaded", res);
+                router.push("/thankyou");
                 return res;
               } catch (err) {
                 // we should be sending this to a logging service for monitoring
                 console.error("failed upload", err);
-              } finally {
-                setLoading(false);
               }
             }}
           >
-            <div className="mt-6">
+            <div className="mt-6 ">
               <Dragger {...props} data-testid="drag-to-upload">
-                <p className="ant-upload-drag-icon">
+                <p className="ant-upload-drag-icon ">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
@@ -203,6 +182,10 @@ function ImageUploader() {
                 <p className="ant-upload-hint">
                   Please upload all of the images associated with this project
                   before clicking submit.
+                  <br />
+                  <span className="text-xs italic">
+                    Images must be smaller than 2MB and no larger than 25 megapixels.
+                  </span>
                 </p>
               </Dragger>
             </div>
@@ -212,7 +195,7 @@ function ImageUploader() {
                 type="primary"
                 data-testid="image-submit"
                 loading={loading}
-                disabled={loading || submittedSuccess}
+                disabled={loading}
                 htmlType="submit"
               >
                 Submit Images
@@ -220,7 +203,6 @@ function ImageUploader() {
             </div>
           </form>
         </>
-      )}
     </div>
   );
 }
