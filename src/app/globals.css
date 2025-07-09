@@ -16,10 +16,10 @@
     --foreground: #ffffff;
   }
 
-  .ant-upload.ant-upload-drag .ant-upload-text,
+  /* .ant-upload.ant-upload-drag .ant-upload-text,
   .ant-upload.ant-upload-drag .ant-upload-hint {
     color: var(--foreground) !important;
-  }
+  } */
 
 }
 

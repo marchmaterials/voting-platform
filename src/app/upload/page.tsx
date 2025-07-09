@@ -170,9 +170,9 @@ function ImageUploader() {
               }
             }}
           >
-            <div className="mt-6">
+            <div className="mt-6 ">
               <Dragger {...props} data-testid="drag-to-upload">
-                <p className="ant-upload-drag-icon">
+                <p className="ant-upload-drag-icon ">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
