@@ -10,7 +10,8 @@ import { upload } from "@imagekit/next";
 import { useSearchParams } from "next/navigation";
 import { useLoading } from "@/hooks/useLoading";
 import { UploadResult, FileUploadAntD } from "@/types/upload";
-import { IMAGE_KIT_PUBLIC_KEY } from "@/constants";
+import { IMAGE_KIT_PUBLIC_KEY, TOAST_NOTIFICATION_DURATION } from "@/constants";
+import { checkImageDimensions, formatImageFileName } from "@/utils/upload";
 
 function ImageUploader() {
   const [files, setFiles] = useState<Array<FileUploadAntD>>([]);
@@ -29,13 +30,24 @@ function ImageUploader() {
     style: { maxHeight: "10rem" },
     disabled: loading,
     accept: ".jpg, .png, .avif, .gif, .webp",
-    beforeUpload(file) {
+    async beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        message.error("Image must smaller than 2MB");
+        message.error(
+          "Image must smaller than 2MB",
+          TOAST_NOTIFICATION_DURATION
+        );
         return Upload.LIST_IGNORE;
       }
-      return isLt2M;
+      const dimensionsOkay = await checkImageDimensions(file);
+      if (!dimensionsOkay) {
+        message.error(
+          "Image resolution cannot be larger than 25MP",
+          TOAST_NOTIFICATION_DURATION
+        );
+        return Upload.LIST_IGNORE;
+      }
+      return true;
     },
     onChange(info) {
       const { file, fileList } = info;
@@ -117,9 +129,14 @@ function ImageUploader() {
                     const { expire, token, signature } =
                       await generateImagekitSignature();
                     const tags = i.uid === titleImageUid ? ["title-image"] : [];
+                    const fileName = formatImageFileName(
+                      projectTitle,
+                      email,
+                      i.name
+                    );
                     const uploadResponse = await upload({
                       file: i,
-                      fileName: `march-competition.-.${projectTitle}.-.${email}.-.${i.name}`,
+                      fileName,
                       tags,
                       signature,
                       token,
@@ -138,7 +155,6 @@ function ImageUploader() {
                     if (!uploadResponse.fileId || !uploadResponse.url) {
                       throw new Error("Upload failed: missing fileId or url");
                     }
-                    console.log("image upoload:", uploadResponse);
                     return {
                       fileId: uploadResponse.fileId,
                       url: uploadResponse.url,
@@ -150,6 +166,7 @@ function ImageUploader() {
                 router.push("/thankyou");
                 return res;
               } catch (err) {
+                // we should be sending this to a logging service for monitoring
                 console.error("failed upload", err);
               }
             }}
