@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import VoteButton from "./VoteButton";
 
@@ -23,4 +23,11 @@ describe("Votes Button", () => {
         expect(screen.getByText(/enter your email to vote/i)).toBeInTheDocument();
     });
 
+    test("shows error on invalid email", async () => {
+        render(<VoteButton projectId={mockProjectId} />);
+        await userEvent.click(screen.getByRole("button", { name: /vote for this project/i }));
+        const submitButton = screen.getByRole("button", { name: /submit vote/i });
+        await userEvent.click(submitButton);
+        expect(await screen.findByText(/please enter a valid email/i)).toBeInTheDocument();
+    });
 })
