@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const projectsPromise = getAllProjects();
+  const initialProjectsFetch = getAllProjects();
   return (
     <html lang="en">
       <body className="antialiased">
@@ -31,7 +31,9 @@ export default function RootLayout({
           <nav>
             <NavBar />
           </nav>
-          <DataProvider projectsPromise={projectsPromise}>{children}</DataProvider>
+          <DataProvider initialProjectsFetch={initialProjectsFetch}>
+            {children}
+          </DataProvider>
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
           <Analytics />
         </AntdRegistry>
