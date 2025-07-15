@@ -19,9 +19,10 @@ export const getAllProjects = async (): Promise<
   }
 };
 
-export const searchProjects = async ({ searchTerm }: FilterOptions) => {
-  console.log("SEARCHING PROJECTS !!!!", searchTerm);
-  if (!searchTerm) return;
+export const searchProjects = async ({
+  searchTerm,
+}: FilterOptions): Promise<Array<FullyEnrichedProject> | Error> => {
+  if (!searchTerm) return new Error("no search criteria provided");
   try {
     return await prisma.project.findMany({
       where: {
@@ -46,7 +47,7 @@ export const searchProjects = async ({ searchTerm }: FilterOptions) => {
       },
       include: {
         images: true,
-        projectMaterial: true,
+        projectMaterial: { include: { material: true } },
         materials: true,
         stakeholders: true,
       },
