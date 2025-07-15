@@ -8,22 +8,26 @@ type DataContext = {
   setProjects: React.Dispatch<
     React.SetStateAction<Array<FullyEnrichedProject>>
   >;
-  projectsPromise: Promise<Array<FullyEnrichedProject> | Error>;
+  initialProjectsFetch: Promise<Array<FullyEnrichedProject> | Error>;
 };
 
-const DataContext = createContext<DataContext | null>(null);
+const DataContext = createContext<DataContext>({
+  projects: [],
+  setProjects: () => ({}),
+  initialProjectsFetch: Promise.resolve([]),
+});
 
 export function DataProvider({
   children,
-  projectsPromise,
+  initialProjectsFetch,
 }: {
   children: React.ReactNode;
-  projectsPromise: Promise<Array<FullyEnrichedProject> | Error>;
+  initialProjectsFetch: Promise<Array<FullyEnrichedProject> | Error>;
 }) {
   const [projects, setProjects] = useState<Array<FullyEnrichedProject>>([]);
 
   return (
-    <DataContext.Provider value={{ projects, setProjects, projectsPromise }}>
+    <DataContext.Provider value={{ projects, setProjects, initialProjectsFetch }}>
       {children}
     </DataContext.Provider>
   );

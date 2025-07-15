@@ -5,17 +5,13 @@ import { use } from "react";
 import { useDataContext } from "@/app/context/dataContext";
 
 export default function ProjectDashboard() {
-  const dataContext = useDataContext();
-  if (!dataContext || !dataContext.projectsPromise) {
-    return "Error fetching projects, please try again later.";
-  }
-  const projects = use(dataContext.projectsPromise);
-  if (projects instanceof Error)
-    return "Error fetching projects, please try again later.";
+  const { projects, initialProjectsFetch } = useDataContext();
+
+  const projectsToShow = projects.length ?? use(initialProjectsFetch);
 
   return (
     <>
-      {projects.map((p) => (
+      {projectsToShow.map((p) => (
         <ProjectCard key={p.id} project={p} />
       ))}
     </>
