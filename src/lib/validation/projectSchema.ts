@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE, CONSTRUCTION_TYPOLOGY } from "@prisma/client";
+import { countryNames } from "./countries";
 
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
@@ -28,8 +29,7 @@ export const materialSchema = z.object({
 
     location: z.object({
       city: z.string().min(1, "City is required"),
-      country: z.string().min(1, "Country is required"),
-      postcode: z.string().min(1, "Postcode is required"),
+      country: z.enum(countryNames, { required_error: "Country is required"}),
     }),
   }),
 
@@ -43,8 +43,7 @@ export const stakeholder = z.object({
     STAKEHOLDER_TYPE.CONTRACTOR,
     STAKEHOLDER_TYPE.ENGINEER,
   ]),
-  name: z.string().min(2),
-
+  
   companyName: z.string().min(2),
 
   email: z.array(z.string().email()),
@@ -66,7 +65,6 @@ export const projectSubmissionSchema = z.object({
   location: z.object({
     city: z.string().min(1, "City is required"),
     country: z.string().min(1, "Country is required"),
-    postcode: z.string().min(1, "Postcode is required"),
   }),
 
   yearCompleted: z
