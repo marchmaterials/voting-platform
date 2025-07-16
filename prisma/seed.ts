@@ -104,9 +104,9 @@ const uploadImages = async (images: Array<string>, rootDir: string) => {
           fileName: `march-mvp-${index}`,
           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
           useUniqueFileName: true,
-          // extensions: [
-          //   { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
-          // ],
+          extensions: [
+            { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
+          ],
         });
       } catch (err) {
         console.error("failed to upload images", err);
@@ -139,7 +139,6 @@ async function createMaterialsAndConnections(
                 phoneNumber: m.supplierContact.phoneNumber,
                 location: {
                   create: {
-                    postcode: m.supplierContact.location?.postcode,
                     city: m.supplierContact.location?.city,
                     country: m.supplierContact.location?.country,
                   },
@@ -185,7 +184,6 @@ const createFullyEnrichedProject = async (
         description: validatedData.description,
         location: {
           create: {
-            postcode: validatedData.location.postcode,
             country: validatedData.location.country,
             city: validatedData.location.city,
           }
@@ -199,7 +197,6 @@ const createFullyEnrichedProject = async (
         stakeholders: {
           create: validatedData.stakeholders.map(stakeholder => ({
             type: stakeholder.type!,
-            name: stakeholder.name!,
             companyName: stakeholder.companyName!,
             email: stakeholder.email!,
             address: stakeholder.address!,

@@ -25,8 +25,7 @@ model Project {
   stakeholders           Stakeholder[]
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
-  projectLink            String?
-  votes                  Int
+  votes                  Int                     @default(0)
 }
 
 model User {
@@ -37,7 +36,6 @@ model User {
 
 model Location {
   id       String     @id @default(cuid())
-  postcode String
   country  String
   city     String
   Project  Project[]
@@ -57,7 +55,6 @@ model Image {
 model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE
-  name        String
   companyName String
   email       String[]
   address     String
