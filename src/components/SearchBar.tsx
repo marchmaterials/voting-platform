@@ -22,7 +22,6 @@ export default function SearchBar({
       setLoading(false);
       return;
     }
-    console.log("fetched search results:", filteredProjects);
     setFilteredProjects(filteredProjects);
     setLoading(false);
   };
@@ -33,6 +32,7 @@ export default function SearchBar({
         <Search
           placeholder="search projects by name or architect"
           id="search"
+          data-testid="search-bar"
           onSearch={onSearch}
           enterButton
           className="w-1/2"
