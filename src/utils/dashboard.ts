@@ -22,7 +22,6 @@ export const getAllProjects = async (): Promise<
 export const searchProjects = async ({
   searchTerm,
 }: FilterOptions): Promise<Array<FullyEnrichedProject> | Error> => {
-  console.log("SEARCHING THE DB");
   if (!searchTerm) return new Error("no search criteria provided");
   try {
     return await prisma.project.findMany({
