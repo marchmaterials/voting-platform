@@ -14,7 +14,6 @@ export default function SearchBar({
   const { Search } = Input;
   
   const onSearch = async (text: string) => {
-    console.log("onSearch called with:", text);
     setSearch(text);
     if (!text) return;
     setLoading(true);
