@@ -25,9 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <AntdRegistry>
-          <header>
+          <nav>
             <NavBar />
-          </header>
+          </nav>
           {children}
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
           <Analytics />
