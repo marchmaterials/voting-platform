@@ -13,14 +13,20 @@ export default function ProjectDashboard() {
 
   if (projectsToShow instanceof Error) {
     console.error("Error fetching projects:", projectsToShow);
-    return <p>Error loading projects. Please try again later.</p>;
+    return (
+      <p data-testid="error-message">
+        Error loading projects. Please try again later.
+      </p>
+    );
   }
   return (
     <div className="flex flex-col items-center">
       <SearchBar setLoading={setLoading} />
-      {loading && <p>Loading projects...</p>}
+      {loading && <p data-testid="loading-message">Loading projects...</p>}
       {projectsToShow.length === 0 && !loading && (
-        <p>No projects found. Try a different search term.</p>
+        <p data-testid="no-results-message">
+          No projects found. Try a different search term.
+        </p>
       )}
       <div
         data-testid="project-grid"

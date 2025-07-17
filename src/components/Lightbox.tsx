@@ -1,10 +1,8 @@
 "use client";
 import { Sidebar } from "./Sidebar";
 import { Gallery } from "./Gallery";
-import { Project } from "@prisma/client";
 import {
-  Images,
-  ProjectMaterials,
+  FullyEnrichedProject,
   EnrichedProjectMaterials,
 } from "@/types/dashboard";
 import VoteButton from "./VoteButton";
@@ -23,7 +21,7 @@ export default function Lightbox({
   onClose: () => void;
   materials: EnrichedProjectMaterials;
   title: string;
-  project: Project & Images & ProjectMaterials;
+  project: FullyEnrichedProject;
 }) {
   if (!open) return null;
 

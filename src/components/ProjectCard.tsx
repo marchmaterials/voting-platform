@@ -1,16 +1,15 @@
 "use client";
-import { Images, ProjectMaterials } from "@/types/dashboard";
+import { FullyEnrichedProject } from "@/types/dashboard";
 import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
-import { Project } from "@prisma/client";
 import VoteButton from "./VoteButton";
 
 export default function ProjectCard({
   project,
 }: {
-  project: Project & Images & ProjectMaterials;
+  project: FullyEnrichedProject;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
