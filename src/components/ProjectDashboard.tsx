@@ -22,20 +22,23 @@ export default function ProjectDashboard() {
   return (
     <div className="flex flex-col items-center">
       <SearchBar setLoading={setLoading} />
-      {loading && <p data-testid="loading-message">Loading projects...</p>}
       {projectsToShow.length === 0 && !loading && (
         <p data-testid="no-results-message">
           No projects found. Try a different search term.
         </p>
       )}
-      <div
-        data-testid="project-grid"
-        className="flex flex-row m-4 flex-wrap justify-around w-full"
-      >
-        {projectsToShow.map((p) => (
-          <ProjectCard key={p.id} project={p} />
-        ))}
-      </div>
+      {loading ? (
+        <p data-testid="loading-message">Loading projects...</p>
+      ) : (
+        <div
+          data-testid="project-grid"
+          className="flex flex-row m-4 flex-wrap justify-around w-full"
+        >
+          {projectsToShow.map((p) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
