@@ -4,17 +4,21 @@ import { createContext, useContext, useState } from "react";
 import { FullyEnrichedProject } from "@/types/dashboard";
 
 type DataContext = {
-  projects: Array<FullyEnrichedProject>;
-  setProjects: React.Dispatch<
+  filteredProjects: Array<FullyEnrichedProject>;
+  setFilteredProjects: React.Dispatch<
     React.SetStateAction<Array<FullyEnrichedProject>>
   >;
   initialProjectsFetch: Promise<Array<FullyEnrichedProject> | Error>;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const DataContext = createContext<DataContext>({
-  projects: [],
-  setProjects: () => ({}),
+  filteredProjects: [],
+  setFilteredProjects: () => ({}),
   initialProjectsFetch: Promise.resolve([]),
+  search: "",
+  setSearch: () => "",
 });
 
 export function DataProvider({
@@ -24,10 +28,21 @@ export function DataProvider({
   children: React.ReactNode;
   initialProjectsFetch: Promise<Array<FullyEnrichedProject> | Error>;
 }) {
-  const [projects, setProjects] = useState<Array<FullyEnrichedProject>>([]);
+  const [filteredProjects, setFilteredProjects] = useState<
+    Array<FullyEnrichedProject>
+  >([]);
+  const [search, setSearch] = useState<string>("");
 
   return (
-    <DataContext.Provider value={{ projects, setProjects, initialProjectsFetch }}>
+    <DataContext.Provider
+      value={{
+        filteredProjects,
+        setFilteredProjects,
+        initialProjectsFetch,
+        search,
+        setSearch,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );
