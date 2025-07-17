@@ -9,11 +9,14 @@ export default function SearchBar({
 }: {
   setLoading: (loading: boolean) => void;
 }) {
-  const { setFilteredProjects, setSearch } = useDataContext();
+  const { setFilteredProjects, setSearch, search } = useDataContext();
+  
   const { Search } = Input;
-
+  
   const onSearch = async (text: string) => {
+    console.log("onSearch called with:", text);
     setSearch(text);
+    if (!text) return;
     setLoading(true);
     const filteredProjects = await searchProjects({ searchTerm: text });
     if (filteredProjects instanceof Error) {
@@ -22,22 +25,22 @@ export default function SearchBar({
       setLoading(false);
       return;
     }
+    console.log("filtered", filteredProjects);
     setFilteredProjects(filteredProjects);
     setLoading(false);
   };
-
+  
   return (
     <search>
-      <form>
-        <Search
-          placeholder="search projects by name or architect"
-          id="search"
-          data-testid="search-bar"
-          onSearch={onSearch}
-          enterButton
-          className="w-1/2"
-        />
-      </form>
+      <Search
+        placeholder="search projects by name or architect"
+        id="search"
+        data-testid="search-bar"
+        defaultValue={search}
+        onSearch={onSearch}
+        enterButton
+        className="w-1/2"
+      />
     </search>
   );
 }
