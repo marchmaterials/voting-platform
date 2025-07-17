@@ -1,5 +1,5 @@
-import { Project, BUILDING_TYPOLOGY, Material, Image } from "@prisma/client";
-import { Images, ProjectMaterials } from "@/types/dashboard";
+import { BUILDING_TYPOLOGY, Material, Image } from "@prisma/client";
+import { FullyEnrichedProject, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
 import { randomUUID } from "crypto";
 
@@ -38,7 +38,7 @@ const generateProjectMaterial = (): ProjectMaterials => ({
   ],
 });
 
-export const generateProject = (): Project & Images & ProjectMaterials => {
+export const generateProject = (): FullyEnrichedProject => {
   const projectData = data[0];
   return {
     id: randomUUID(),
