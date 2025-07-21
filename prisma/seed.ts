@@ -196,11 +196,11 @@ const createFullyEnrichedProject = async (
         votes: 0,   
         stakeholders: {
           create: validatedData.stakeholders.map(stakeholder => ({
-            type: stakeholder.type!,
-            companyName: stakeholder.companyName!,
-            email: stakeholder.email!,
-            address: stakeholder.address!,
-            phoneNumber: stakeholder.phoneNumber!,
+            type: stakeholder.type,
+            companyName: stakeholder.companyName,
+            email: stakeholder.email,
+            address: stakeholder.address,
+            phoneNumber: stakeholder.phoneNumber,
           })),
         },
         images: {

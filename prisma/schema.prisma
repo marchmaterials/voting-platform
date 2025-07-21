@@ -17,7 +17,8 @@ model Project {
   locationId             String
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY
-  authorEmail            String
+  authorId               String
+  author                 User                    @relation(fields: [authorId], references: [id])
   selectedForCompetition Boolean                 @default(false)
   images                 Image[]
   projectMaterial        ProjectMaterial[]       @relation("MaterialToProject")
@@ -29,17 +30,21 @@ model Project {
 }
 
 model User {
-  id        String @id @default(cuid())
-  email     String @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   voteCount Int
+  projects  Project[]
 }
 
 model Location {
-  id       String     @id @default(cuid())
-  country  String
-  city     String
-  Project  Project[]
-  Supplier Supplier[]
+  id          String        @id @default(cuid())
+  country     String
+  city        String
+  street      String?
+  postcode    String?
+  Project     Project[]
+  Supplier    Supplier[]
+  Stakeholder Stakeholder[]
 }
 
 model Image {
@@ -56,8 +61,9 @@ model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE
   companyName String
-  email       String[]
-  address     String
+  email       String[] //one of these emails may map to a user
+  addressId   String
+  address     Location         @relation(fields: [addressId], references: [id])
   phoneNumber String[]
   projects    Project[]
 }
