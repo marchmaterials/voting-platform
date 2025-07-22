@@ -1,6 +1,17 @@
 import { z } from "zod";
-import { BUILDING_TYPOLOGY, STAKEHOLDER_TYPE, CONSTRUCTION_TYPOLOGY } from "@prisma/client";
+import {
+  BUILDING_TYPOLOGY,
+  STAKEHOLDER_TYPE,
+  CONSTRUCTION_TYPOLOGY,
+} from "@prisma/client";
 import { countryNames } from "./countries";
+
+const location = z.object({
+  city: z.string().min(1, "City is required"),
+  country: z.enum(countryNames, { required_error: "Country is required" }),
+  street: z.string().optional(),
+  postcode: z.string().optional(),
+});
 
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
@@ -27,10 +38,7 @@ export const materialSchema = z.object({
 
     phoneNumber: z.array(z.string().min(8).max(25)),
 
-    location: z.object({
-      city: z.string().min(1, "City is required"),
-      country: z.enum(countryNames, { required_error: "Country is required"}),
-    }),
+    location,
   }),
 
   certifications: z.array(z.string()).nullish(),
@@ -43,12 +51,12 @@ export const stakeholder = z.object({
     STAKEHOLDER_TYPE.CONTRACTOR,
     STAKEHOLDER_TYPE.ENGINEER,
   ]),
-  
+
   companyName: z.string().min(2),
 
   email: z.array(z.string().email()),
-  
-  address: z.string().min(5),
+
+  location,
 
   phoneNumber: z.array(z.string().min(8).max(19)),
 });
@@ -62,10 +70,7 @@ export const projectSubmissionSchema = z.object({
     .string()
     .min(10, "Project description should be more detailed"),
 
-  location: z.object({
-    city: z.string().min(1, "City is required"),
-    country: z.string().min(1, "Country is required"),
-  }),
+  location,
 
   yearCompleted: z
     .number()
@@ -92,15 +97,13 @@ export const projectSubmissionSchema = z.object({
 
   imageCredit: z.string(),
 
-  construction: z.array(z.enum([
-    CONSTRUCTION_TYPOLOGY.NEW,
-    CONSTRUCTION_TYPOLOGY.EXTENSION,
-    CONSTRUCTION_TYPOLOGY.RENOVATION,
-    CONSTRUCTION_TYPOLOGY.RESTORATION,
-    CONSTRUCTION_TYPOLOGY.CONVERSION,
-  ])),
+  construction: z.array(
+    z.enum([
+      CONSTRUCTION_TYPOLOGY.NEW,
+      CONSTRUCTION_TYPOLOGY.EXTENSION,
+      CONSTRUCTION_TYPOLOGY.RENOVATION,
+      CONSTRUCTION_TYPOLOGY.RESTORATION,
+      CONSTRUCTION_TYPOLOGY.CONVERSION,
+    ])
+  ),
 });
-
-// 👇 Type inference if needed elsewhere
-export type ProjectSubmission = z.infer<typeof projectSubmissionSchema>;
-export type Material = z.infer<typeof materialSchema>;
