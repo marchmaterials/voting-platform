@@ -255,10 +255,12 @@
           "url": "https://www.woonder.be",
           "email": ["info@woonder.be"],
           "phoneNumber": [],
-          "location": {
-            "city": "Ghent",
-            "country": "Belgium"
-          }
+          "locations": [
+            {
+              "city": "Ghent",
+              "country": "Belgium"
+            }
+          ]
         }
       }
     ],
