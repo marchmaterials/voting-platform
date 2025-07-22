@@ -72,8 +72,7 @@ model Supplier {
   id          String     @id @default(cuid())
   name        String
   website     String?
-  location    Location?  @relation(fields: [locationId], references: [id])
-  locationId  String?
+  locations    Location[]
   email       String[]
   phoneNumber String[]
   materials   Material[]
