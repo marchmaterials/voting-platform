@@ -8,7 +8,7 @@ import { countryNames } from "./countries";
 
 const location = z.object({
   city: z.string().min(1, "City is required"),
-  country: z.enum(countryNames, { required_error: "Country is required" }),
+  country: z.enum(countryNames, "Country is required"),
   street: z.string().optional(),
   postcode: z.string().optional(),
 });
@@ -25,14 +25,16 @@ export const materialSchema = z.object({
       "Please describe where the material is used. Interior / Exterior and on which surface (facade, flooring, etc.)"
     ),
 
-  url: z.string().url("Must be a valid URL"),
+  percentage: z.int().min(1).max(100).optional(),
+
+  url: z.url("Must be a valid URL").optional(),
 
   tags: z.array(z.string()),
 
   supplierName: z.string().min(1, "Supplier name is required"),
 
   supplierContact: z.object({
-    url: z.string().url("Must be a valid URL"),
+    url: z.url("Must be a valid URL"),
 
     email: z.array(z.string().email()).nullish(),
 
@@ -62,7 +64,7 @@ export const stakeholder = z.object({
 });
 
 export const projectSubmissionSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
 
   title: z.string().min(1, "Project title is required"),
 
