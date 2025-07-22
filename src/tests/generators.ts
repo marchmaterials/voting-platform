@@ -34,6 +34,7 @@ const generateProjectMaterial = (): ProjectMaterials => ({
       projectId: randomUUID(),
       usedWhere: data[0].materials[0].usedWhere,
       material: generateMaterial(),
+      percentage: Math.floor(Math.random()) * 100,
     },
   ],
 });
