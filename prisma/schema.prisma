@@ -45,6 +45,8 @@ model Location {
   Project     Project[]
   Supplier    Supplier[]
   Stakeholder Stakeholder[]
+
+  @@unique([city, country])
 }
 
 model Image {
@@ -83,7 +85,7 @@ model Material {
   id               String            @id @default(cuid())
   name             String
   description      String
-  url              String
+  url              String?
   supplierId       String
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
   projectMaterials ProjectMaterial[] @relation("MaterialToProject")
@@ -98,7 +100,7 @@ model ProjectMaterial {
   materialId String
   projectId  String
   usedWhere  String
-  percentage Int
+  percentage Int?
   material   Material @relation("MaterialToProject", fields: [materialId], references: [id])
   project    Project  @relation("MaterialToProject", fields: [projectId], references: [id])
 }
