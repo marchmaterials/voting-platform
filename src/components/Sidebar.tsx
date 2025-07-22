@@ -1,10 +1,9 @@
 "use client";
 
-import { ProjectMaterial, Project, Material } from "@prisma/client";
+import { ProjectMaterial, Material } from "@prisma/client";
 import {
-  Images,
   EnrichedProjectMaterials,
-  ProjectMaterials,
+  FullyEnrichedProject,
 } from "@/types/dashboard";
 import { Collapse, Tag } from "antd";
 
@@ -13,7 +12,7 @@ export function Sidebar({
   project,
 }: {
   materials: EnrichedProjectMaterials;
-  project: Project & Images & ProjectMaterials;
+  project: FullyEnrichedProject;
 }) {
   console.log("material", materials[0]);
   const MaterialDetails = ({
