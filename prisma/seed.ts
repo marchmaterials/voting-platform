@@ -1,6 +1,6 @@
 "use server";
 import type {
-  materialActionState,
+  materialSubmission,
   ProjectSubmissionForm,
 } from "../src/types/forms";
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema";
@@ -17,6 +17,7 @@ import {
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
 import ImageKit from "imagekit";
+import { create } from "domain";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
@@ -52,7 +53,9 @@ type UserData = {
 type ExtendedPrismaClient = typeof prisma & {
   user: {
     findMany: () => Promise<UserData[]>;
-    create: (args: { data: { email: string; voteCount: number } }) => Promise<UserData>;
+    create: (args: {
+      data: { email: string; voteCount: number };
+    }) => Promise<UserData>;
   };
 };
 
@@ -64,7 +67,12 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     });
     // Use extended type instead of any
     const users = await (prisma as ExtendedPrismaClient).user.findMany();
-    console.log("DB already seeded? Projects:", projects.length === 2, "Users:", users.length === testUsers.length);
+    console.log(
+      "DB already seeded? Projects:",
+      projects.length === 2,
+      "Users:",
+      users.length === testUsers.length
+    );
     return projects.length === 2 && users.length === testUsers.length;
   } catch (err) {
     console.log("error checking if seeded", err);
@@ -117,7 +125,7 @@ const uploadImages = async (images: Array<string>, rootDir: string) => {
 };
 
 async function createMaterialsAndConnections(
-  materialData: Array<materialActionState>,
+  materialData: Array<materialSubmission>,
   projectId: string
 ) {
   return Promise.all(
@@ -138,9 +146,13 @@ async function createMaterialsAndConnections(
                 email: m.supplierContact.email ?? [],
                 phoneNumber: m.supplierContact.phoneNumber,
                 location: {
-                  create: {
-                    city: m.supplierContact.location?.city,
-                    country: m.supplierContact.location?.country,
+                  createOrConnect: {
+                    where: {
+                      ...m.supplierContact.location,
+                    },
+                    create: {
+                      ...m.supplierContact.location,
+                    },
                   },
                 },
               },
@@ -149,7 +161,7 @@ async function createMaterialsAndConnections(
               create: {
                 usedWhere: m.usedWhere,
                 projectId: projectId,
-                percentage: 40, 
+                percentage: 40,
               },
             },
           },
@@ -183,23 +195,36 @@ const createFullyEnrichedProject = async (
         title: validatedData.title,
         description: validatedData.description,
         location: {
-          create: {
-            country: validatedData.location.country,
-            city: validatedData.location.city,
-          }
+          connectOrCreate: {
+            where: {
+              ...validatedData.location,
+            },
+            create: {
+              ...validatedData.location,
+            },
+          },
         },
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         authorEmail: validatedData.email,
         area: validatedData.area,
         construction: validatedData.construction,
-        votes: 0,   
+        votes: 0,
         stakeholders: {
-          create: validatedData.stakeholders.map(stakeholder => ({
+          create: validatedData.stakeholders.map((stakeholder) => ({
             type: stakeholder.type,
             companyName: stakeholder.companyName,
             email: stakeholder.email,
-            address: stakeholder.address,
+            location: {
+              connectOrCreate: {
+                where: {
+                  ...stakeholder.location,
+                },
+                create: {
+                  ...stakeholder.location,
+                },
+              },
+            },
             phoneNumber: stakeholder.phoneNumber,
           })),
         },
@@ -238,7 +263,7 @@ export async function main(): Promise<void> {
     else {
       // Seed users first
       await seedUsers();
-      
+
       // Then seed projects
       allProjects = await Promise.all(
         testData.map((p: ProjectWithImageFolder) => {

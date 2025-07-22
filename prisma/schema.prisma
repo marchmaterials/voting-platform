@@ -32,7 +32,7 @@ model Project {
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
-  voteCount Int
+  voteCount Int       @default(0)
   projects  Project[]
 }
 
@@ -61,9 +61,9 @@ model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE
   companyName String
-  email       String[] //one of these emails may map to a user
-  addressId   String
-  address     Location         @relation(fields: [addressId], references: [id])
+  email       String[] 
+  location    Location         @relation(fields: [locationId], references: [id])
+  locationId  String
   phoneNumber String[]
   projects    Project[]
 }

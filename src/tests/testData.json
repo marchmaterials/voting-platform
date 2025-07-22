@@ -134,9 +134,14 @@
     "stakeholders": [
       {
         "type": "ARCHITECT",
-        "companyName": "Vanbelle",
+        "companyName": "Atelier Vens Vanbelle",
         "email": ["info@vensvanbelle.be"],
-        "address": "13 Mark Lane",
+        "location": {
+          "country": "Belgium",
+          "city": "Ghent",
+          "street": "Fonteineplein 32",
+          "postcode": "9000"
+        },
         "phoneNumber": ["+32 486 65 76 02"]
       }
     ]
@@ -184,7 +189,6 @@
       },
       {
         "materialName": "MISAPOR",
-        "description": "MISAPOR® is more than a special building material for every foundation/floor construction. MISAPOR® glass foam granulate is a high-quality product that consists of 98% recycled bottle glass and 2% mineral additives and thus makes a significant contribution to the protection of our environment.\nMISAPOR® meets all the requirements of a solid, permanently stable foundation. MISAPOR® is pressure-distributing and highly resistant to ageing, rotting, bacteria, acids, water and rodents. Fire and frost also stand no chance. Thanks to its low weight of 150 kg/m3, MISAPOR® is also quick and easy to process.\nMISAPOR® glass foam granulate protects against rising damp and is also water-repellent. In this way, it takes over the drainage function of the substructure. At the same time, MISAPOR® is an excellent solution for a cold-bridge-free foundation construction.",
         "usedWhere": "floor insulation",
         "tags": [
           "glass foam granulate",
@@ -234,9 +238,14 @@
     "stakeholders": [
       {
         "type": "ARCHITECT",
-        "companyName": "Vanbelle",
+        "companyName": "Van Laethem Architecten",
         "email": ["info@vanlaethem-architecten.be"],
-        "address": "13 Mark Lane",
+        "location": {
+          "country": "Belgium",
+          "city": "Alken",
+          "street": "Steenweg 379",
+          "postcode": "3570"
+        },
         "phoneNumber": ["+32 497 11 64 24"]
       }
     ]
