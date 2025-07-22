@@ -46,7 +46,7 @@ export const generateProject = (): FullyEnrichedProject => {
     createdAt: new Date(),
     title: projectData.title,
     description: projectData.description,
-    location: projectData.location,
+    location: { ...projectData.location, id: randomUUID() },
     yearCompleted: projectData.yearCompleted,
     typology: BUILDING_TYPOLOGY.COMMERCIAL,
     authorEmail: projectData.email,
