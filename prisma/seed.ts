@@ -17,7 +17,7 @@ import {
   IMAGE_KIT_UPLOAD_URL,
 } from "../src/constants.js";
 import ImageKit from "imagekit";
-import { create } from "domain";
+import { cidrv4 } from "zod";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
@@ -146,13 +146,8 @@ async function createMaterialsAndConnections(
                 email: m.supplierContact.email ?? [],
                 phoneNumber: m.supplierContact.phoneNumber,
                 location: {
-                  createOrConnect: {
-                    where: {
-                      ...m.supplierContact.location,
-                    },
-                    create: {
-                      ...m.supplierContact.location,
-                    },
+                  create: {
+                    ...m.supplierContact.location,
                   },
                 },
               },
@@ -195,18 +190,13 @@ const createFullyEnrichedProject = async (
         title: validatedData.title,
         description: validatedData.description,
         location: {
-          connectOrCreate: {
-            where: {
-              ...validatedData.location,
-            },
-            create: {
-              ...validatedData.location,
-            },
+          create: {
+            ...validatedData.location,
           },
         },
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
-        authorEmail: validatedData.email,
+        author: { create: { email: validatedData.email } },
         area: validatedData.area,
         construction: validatedData.construction,
         votes: 0,
@@ -216,13 +206,8 @@ const createFullyEnrichedProject = async (
             companyName: stakeholder.companyName,
             email: stakeholder.email,
             location: {
-              connectOrCreate: {
-                where: {
-                  ...stakeholder.location,
-                },
-                create: {
-                  ...stakeholder.location,
-                },
+              create: {
+                ...stakeholder.location,
               },
             },
             phoneNumber: stakeholder.phoneNumber,
@@ -261,10 +246,6 @@ export async function main(): Promise<void> {
   try {
     if (await isAlreadySeeded()) return;
     else {
-      // Seed users first
-      await seedUsers();
-
-      // Then seed projects
       allProjects = await Promise.all(
         testData.map((p: ProjectWithImageFolder) => {
           return createFullyEnrichedProject(p);

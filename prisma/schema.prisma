@@ -45,8 +45,6 @@ model Location {
   Project     Project[]
   Supplier    Supplier[]
   Stakeholder Stakeholder[]
-
-  @@unique([city, country])
 }
 
 model Image {
