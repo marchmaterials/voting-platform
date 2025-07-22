@@ -4,6 +4,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { DataProvider } from "./context/dataContext";
+import { getAllProjects } from "@/utils/dashboard";
 
 export const metadata: Metadata = {
   title: "MARCH",
@@ -21,6 +23,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialProjectsFetch = getAllProjects();
   return (
     <html lang="en">
       <body className="antialiased">
@@ -28,7 +31,9 @@ export default function RootLayout({
           <nav>
             <NavBar />
           </nav>
-          {children}
+          <DataProvider initialProjectsFetch={initialProjectsFetch}>
+            {children}
+          </DataProvider>
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
           <Analytics />
         </AntdRegistry>
