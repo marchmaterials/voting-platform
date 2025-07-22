@@ -36,11 +36,11 @@ export const materialSchema = z.object({
   supplierContact: z.object({
     url: z.url("Must be a valid URL"),
 
-    email: z.array(z.string().email()).nullish(),
+    email: z.array(z.email()).nullish(),
 
     phoneNumber: z.array(z.string().min(8).max(25)),
 
-    location,
+    locations: z.array(location),
   }),
 
   certifications: z.array(z.string()).nullish(),
@@ -56,7 +56,7 @@ export const stakeholder = z.object({
 
   companyName: z.string().min(2),
 
-  email: z.array(z.string().email()),
+  email: z.array(z.email()),
 
   location,
 

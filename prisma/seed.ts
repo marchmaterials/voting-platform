@@ -12,18 +12,17 @@ const imageData = JSON.parse(
 const testUsers = JSON.parse(readFileSync("src/tests/testUsers.json", "utf-8"));
 import type { Project } from "@prisma/client";
 import prisma from "../src/lib/prisma";
-import {
-  IMAGE_KIT_PUBLIC_KEY,
-  IMAGE_KIT_UPLOAD_URL,
-} from "../src/constants.js";
-import ImageKit from "imagekit";
-import { cidrv4 } from "zod";
+// import {
+//   IMAGE_KIT_PUBLIC_KEY,
+//   IMAGE_KIT_UPLOAD_URL,
+// } from "../src/constants.js";
+// import ImageKit from "imagekit";
 
-const imagekit = new ImageKit({
-  publicKey: IMAGE_KIT_PUBLIC_KEY,
-  privateKey: process.env.IMAGEKIT_API_TOKEN || "",
-  urlEndpoint: IMAGE_KIT_UPLOAD_URL,
-});
+// const imagekit = new ImageKit({
+//   publicKey: IMAGE_KIT_PUBLIC_KEY,
+//   privateKey: process.env.IMAGEKIT_API_TOKEN || "",
+//   urlEndpoint: IMAGE_KIT_UPLOAD_URL,
+// });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface UploadResult {
@@ -65,8 +64,7 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     const projects = await prisma.project.findMany({
       where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
     });
-    // Use extended type instead of any
-    const users = await (prisma as ExtendedPrismaClient).user.findMany();
+    const users = await prisma.user.findMany();
     console.log(
       "DB already seeded? Projects:",
       projects.length === 2,
@@ -102,27 +100,27 @@ async function seedUsers() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const uploadImages = async (images: Array<string>, rootDir: string) => {
-  return Promise.all(
-    images.map((i, index) => {
-      const file = readFileSync(`${rootDir}/${i}`).toString("base64");
-      try {
-        return imagekit.upload({
-          file,
-          fileName: `march-mvp-${index}`,
-          responseFields: "metadata, embeddedMetadata, customMetadata, tags",
-          useUniqueFileName: true,
-          extensions: [
-            { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
-          ],
-        });
-      } catch (err) {
-        console.error("failed to upload images", err);
-        return err;
-      }
-    })
-  );
-};
+// const uploadImages = async (images: Array<string>, rootDir: string) => {
+//   return Promise.all(
+//     images.map((i, index) => {
+//       const file = readFileSync(`${rootDir}/${i}`).toString("base64");
+//       try {
+//         return imagekit.upload({
+//           file,
+//           fileName: `march-mvp-${index}`,
+//           responseFields: "metadata, embeddedMetadata, customMetadata, tags",
+//           useUniqueFileName: true,
+//           extensions: [
+//             { name: "google-auto-tagging", maxTags: 5, minConfidence: 40 },
+//           ],
+//         });
+//       } catch (err) {
+//         console.error("failed to upload images", err);
+//         return err;
+//       }
+//     })
+//   );
+// };
 
 async function createMaterialsAndConnections(
   materialData: Array<materialSubmission>,
@@ -145,10 +143,8 @@ async function createMaterialsAndConnections(
                 website: m.supplierContact.url,
                 email: m.supplierContact.email ?? [],
                 phoneNumber: m.supplierContact.phoneNumber,
-                location: {
-                  create: {
-                    ...m.supplierContact.location,
-                  },
+                locations: {
+                  create: [...m.supplierContact.locations],
                 },
               },
             },
@@ -241,7 +237,7 @@ const createFullyEnrichedProject = async (
 };
 
 export async function main(): Promise<void> {
-  console.info("SEEDING");
+  console.info("SEEDING", testData.length);
   let allProjects: Array<Project>;
   try {
     if (await isAlreadySeeded()) return;
