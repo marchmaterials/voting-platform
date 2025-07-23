@@ -1,4 +1,10 @@
-import { BUILDING_TYPOLOGY, Material, Image } from "@prisma/client";
+import {
+  BUILDING_TYPOLOGY,
+  Material,
+  Image,
+  Location,
+  CONSTRUCTION_TYPOLOGY,
+} from "@prisma/client";
 import { FullyEnrichedProject, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
 import { randomUUID } from "crypto";
@@ -41,18 +47,22 @@ const generateProjectMaterial = (): ProjectMaterials => ({
 
 export const generateProject = (): FullyEnrichedProject => {
   const projectData = data[0];
+  const locationId = randomUUID();
   return {
     id: randomUUID(),
     createdAt: new Date(),
     title: projectData.title,
     description: projectData.description,
-    location: { ...projectData.location, id: randomUUID() },
+    locationId,
+    location: { ...projectData.location, id: locationId } as Location,
     yearCompleted: projectData.yearCompleted,
     typology: BUILDING_TYPOLOGY.COMMERCIAL,
-    authorEmail: projectData.email,
+    authorId: randomUUID(),
     selectedForCompetition: false,
     images: [],
     ...generateProjectMaterial(),
     area: projectData.area,
+    construction: CONSTRUCTION_TYPOLOGY.NEW,
+    votes: 10,
   };
 };
