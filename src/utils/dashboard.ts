@@ -37,7 +37,7 @@ export const searchProjects = async ({
           {
             stakeholders: {
               some: {
-                name: {
+                companyName: {
                   contains: searchTerm,
                   mode: "insensitive",
                 },
