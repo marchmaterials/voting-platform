@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc",
-    "postinstall": "prisma migrate reset --force && prisma generate && prisma migrate deploy",
+    "postinstall": "prisma generate && prisma migrate deploy",
     "test": "jest",
     "test:watch": "jest --watch"
   },
