@@ -44,7 +44,7 @@ describe("searchProjects", () => {
             expect.objectContaining({
               stakeholders: expect.objectContaining({
                 some: expect.objectContaining({
-                  name: expect.objectContaining({
+                  companyName: expect.objectContaining({
                     contains: "Jane Doe",
                     mode: "insensitive",
                   }),
