@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
+import { castVote } from "@/app/actions/vote";
 import VoteButton from "./VoteButton";
 
 export default function ProjectCard({
@@ -33,7 +34,7 @@ export default function ProjectCard({
           />
         )}
         <div className="mt-4">
-          <VoteButton projectId={project.id} />
+          <VoteButton projectId={project.id} onVote={castVote} />
         </div>
       </Card>
       
@@ -44,6 +45,7 @@ export default function ProjectCard({
         project={project}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
+        onVote={castVote}
       />
     </>
   );
