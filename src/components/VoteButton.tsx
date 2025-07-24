@@ -1,80 +1,58 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { Button, Modal, Input, message } from "antd";
+import { castVote as CastVoteFn } from "@/app/actions/vote";
 
-export default function VoteButton({ projectId }: { projectId: string }) {
-  const [votes, setVotes] = useState(0);
-  const [emailModalOpen, setEmailModalOpen] = useState(false);
-  const [email, setEmail] = useState("");
+type Props = {
+  projectId: string;
+  onVote: typeof CastVoteFn;
+  votes: number;
+}
 
-  useEffect(() => {
-    const storedVotes = JSON.parse(localStorage.getItem("votes") || "{}");
-    let voteCount = 0;
+export default function VoteButton({ projectId, onVote }: Props) {
+  const [votes, setVotes] = useState<number>(0);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
 
-    for (const [, projectIds] of Object.entries(storedVotes)) {
-      if ((projectIds as string[]).includes(projectId)) {
-        voteCount += 1;
+  const handleSubmit = async () => {
+    try {
+      const { projectVotes } = await onVote(projectId, email);
+      setVotes(projectVotes);
+      message.success("Thanks for voting!");
+    } catch (err: unknown) {
+      console.error(err);
+      if (err instanceof Error) {
+        message.error(err.message);
+      } else {
+        message.error("Vote failed");
       }
-    }
-    setVotes(voteCount);
-  }, [projectId]);
-
-  const handleVoteClick = () => {
-    setEmailModalOpen(true);
-  };
-
-  const handleEmailSubmit = () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      message.error("Please enter a valid email.");
-      return;
-    }
-
-    const storedVotes = JSON.parse(localStorage.getItem("votes") || "{}");
-
-    if (storedVotes[email]?.includes(projectId)) {
-      message.warning("You've already voted for this project.");
-      setEmailModalOpen(false);
+    } finally {
+      setModalOpen(false);
       setEmail("");
-      return;
     }
-
-    const updatedVotes = {
-      ...storedVotes,
-      [email]: [...(storedVotes[email] || []), projectId],
-    };
-
-    localStorage.setItem("votes", JSON.stringify(updatedVotes));
-
-    const voteCount = Object.values(updatedVotes).filter((ids) =>
-        (ids as string[]).includes(projectId)
-    ).length;
-    setVotes(voteCount);
-    setEmailModalOpen(false);
-    setEmail("");
-    message.success("Your vote was recorded!");
   };
 
   return (
     <>
-      <div className="flex flex-col items-start gap-1">
-        <h3 className="text-lg font-semibold">{`Votes: ${votes}`}</h3>
-        <Button type="primary" onClick={handleVoteClick}>
-          Vote For This Project
-        </Button>
+      <div className="flex items-center justify-between">
+        <strong>Votes: {votes}</strong>
+        <Button onClick={() => setModalOpen(true)}>Vote</Button>
       </div>
-
       <Modal
-        title="Enter Your Email to Vote"
-        open={emailModalOpen}
-        onOk={handleEmailSubmit}
-        onCancel={() => setEmailModalOpen(false)}
+        title="Enter your email"
+        open={modalOpen}
+        onOk={handleSubmit}
+        onCancel={() => setModalOpen(false)}
         okText="Submit Vote"
       >
-        <Input
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <Input
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            className="w-full p-2 border rounded"
+          />
       </Modal>
     </>
   );
