@@ -1,6 +1,6 @@
 "use client";
 import { FullyEnrichedProject } from "@/types/dashboard";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
@@ -13,6 +13,18 @@ export default function ProjectCard({
   project: FullyEnrichedProject;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [votes, setVotes] = useState<number>(project.votes);
+
+  useEffect(() => {
+    fetch(`/api/projects/${project.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.votes == "number"){
+          setVotes(data.votes);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch votes:", err));
+  }, [project.id]);
 
   return (
     <>
@@ -34,7 +46,7 @@ export default function ProjectCard({
           />
         )}
         <div className="mt-4">
-          <VoteButton projectId={project.id} onVote={castVote} />
+          <VoteButton projectId={project.id} onVote={castVote} votes={votes}/>
         </div>
       </Card>
       
@@ -43,6 +55,7 @@ export default function ProjectCard({
         materials={[...project.projectMaterial.map((m) => m)]}
         title={project.title}
         project={project}
+        votes={votes}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
         onVote={castVote}

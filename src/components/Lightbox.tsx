@@ -15,6 +15,7 @@ export default function Lightbox({
   materials,
   title,
   project,
+  votes,
   onVote,
 }: {
   images: string[];
@@ -24,6 +25,7 @@ export default function Lightbox({
   materials: EnrichedProjectMaterials;
   title: string;
   project: FullyEnrichedProject;
+  votes: number;
   onVote: (projectID: string, email: string) => Promise<{ projectVotes: number; userVotes: number; }>;
 }) {
   if (!open) return null;
@@ -49,7 +51,7 @@ export default function Lightbox({
           </div>
         </div>
         <div className="p-4 border-t mt-auto">
-          <VoteButton projectId={project.id} onVote={onVote} votes={project.votes} />
+          <VoteButton projectId={project.id} onVote={onVote} votes={votes} />
         </div>
         <Modal
           title="Enter Your Email to Vote"
