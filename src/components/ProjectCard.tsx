@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
-import { castVote } from "@/app/actions/vote";
 
 export default function ProjectCard({
   project,
@@ -12,7 +11,7 @@ export default function ProjectCard({
   project: FullyEnrichedProject;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [voteCount, setVoteCount] = useState(project.votes ?? 0);
+  const [voteCount, setVoteCount] = useState(project.votes);
 
   return (
     <>
@@ -34,9 +33,7 @@ export default function ProjectCard({
             loading="lazy"
           />
         )}
-        <div className="mt-4 text-sm text-gray-700">
-          Votes: {voteCount}
-        </div>
+        <div className="mt-4 text-sm text-gray-700">Votes: {voteCount}</div>
       </Card>
       <Lightbox
         images={project.images.map((img) => img.url)}
@@ -47,7 +44,6 @@ export default function ProjectCard({
         setVotes={setVoteCount}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
-        onVote={castVote}
       />
     </>
   );
