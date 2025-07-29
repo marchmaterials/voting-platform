@@ -3,21 +3,20 @@
 import { useState } from "react";
 import { Button, Modal, Input, message } from "antd";
 import { z } from "zod";
-import { castVote as CastVoteFn } from "@/app/actions/vote";
+import { castVote } from "@/app/actions/vote";
 
 type Props = {
   projectId: string;
-  onVote: typeof CastVoteFn;
-  setVotes:  (votes: number) => void;
-}
+  setVotes: (votes: number) => void;
+};
 
-export default function VoteButton({ projectId, onVote, setVotes}: Props) {
+export default function VoteButton({ projectId, setVotes }: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async () => {
-    const emailSchema = z.string().email("Invalid email address");
+    const emailSchema = z.email("Invalid email address");
     const parseResult = emailSchema.safeParse(email);
     if (!parseResult.success) {
       message.error(parseResult.error.issues[0].message);
@@ -27,15 +26,13 @@ export default function VoteButton({ projectId, onVote, setVotes}: Props) {
     setLoading(true);
 
     try {
-      const { projectVotes } = await onVote(projectId, email);
+      const { projectVotes } = await castVote(projectId, email);
       setVotes(projectVotes);
       message.success("Thanks for voting!");
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(err);
       if (err instanceof Error) {
         message.error(err.message);
-      } else {
-        message.error("Vote failed");
       }
     } finally {
       setLoading(false);
@@ -47,7 +44,9 @@ export default function VoteButton({ projectId, onVote, setVotes}: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Button onClick={() => setModalOpen(true)}>Vote</Button>
+        <Button onClick={() => setModalOpen(true)}>
+          Vote for this project
+        </Button>
       </div>
       <Modal
         title="Enter your email"
@@ -57,15 +56,15 @@ export default function VoteButton({ projectId, onVote, setVotes}: Props) {
         okText="Submit Vote"
         confirmLoading={loading}
       >
-          <Input
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
+        <Input
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
       </Modal>
     </>
   );
