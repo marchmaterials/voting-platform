@@ -2,28 +2,29 @@
 
 import { useState } from "react";
 import { Button, Modal, Input, message } from "antd";
-// import { z } from "zod";
+import { z } from "zod";
 import { castVote as CastVoteFn } from "@/app/actions/vote";
 
 type Props = {
   projectId: string;
   onVote: typeof CastVoteFn;
-  votes: number;
+  setVotes:  (votes: number) => void;
 }
 
-export default function VoteButton({ projectId, onVote }: Props) {
-  const [votes, setVotes] = useState<number>(0);
+export default function VoteButton({ projectId, onVote, setVotes}: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    const emailSchema = z.string().email("Invalid email address");
+    const parseResult = emailSchema.safeParse(email);
+    if (!parseResult.success) {
+      message.error(parseResult.error.issues[0].message);
+      return;
+    }
 
-    // const emailSchema = z.string().email("Invalid email address");
-    // const parseResult = emailSchema.safeParse(email);
-    // if (!parseResult.success) {
-    //   message.error(parseResult.error.errors[0].message);
-    //   return;
-    // }
+    setLoading(true);
 
     try {
       const { projectVotes } = await onVote(projectId, email);
@@ -37,6 +38,7 @@ export default function VoteButton({ projectId, onVote }: Props) {
         message.error("Vote failed");
       }
     } finally {
+      setLoading(false);
       setModalOpen(false);
       setEmail("");
     }
@@ -45,7 +47,6 @@ export default function VoteButton({ projectId, onVote }: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <strong>Votes: {votes}</strong>
         <Button onClick={() => setModalOpen(true)}>Vote</Button>
       </div>
       <Modal
@@ -54,12 +55,15 @@ export default function VoteButton({ projectId, onVote }: Props) {
         onOk={handleSubmit}
         onCancel={() => setModalOpen(false)}
         okText="Submit Vote"
+        confirmLoading={loading}
       >
           <Input
             type="email"
             name="email"
             placeholder="your@email.com"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border rounded"
           />
       </Modal>

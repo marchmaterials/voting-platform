@@ -1,11 +1,10 @@
 "use client";
 import { FullyEnrichedProject } from "@/types/dashboard";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
 import { castVote } from "@/app/actions/vote";
-import VoteButton from "./VoteButton";
 
 export default function ProjectCard({
   project,
@@ -13,18 +12,7 @@ export default function ProjectCard({
   project: FullyEnrichedProject;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [votes, setVotes] = useState<number>(project.votes);
-
-  useEffect(() => {
-    fetch(`/api/vote?projectId=${project.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (typeof data.votes == "number"){
-          setVotes(data.votes);
-        }
-      })
-      .catch((err) => console.error("Failed to fetch votes:", err));
-  }, [project.id]);
+  const [voteCount, setVoteCount] = useState(project.votes ?? 0);
 
   return (
     <>
@@ -45,17 +33,17 @@ export default function ProjectCard({
             loading="lazy"
           />
         )}
-        <div className="mt-4">
-          <VoteButton projectId={project.id} onVote={castVote} votes={votes}/>
+        <div className="mt-4 text-sm text-gray-700">
+          Votes: {voteCount}
         </div>
       </Card>
-      
       <Lightbox
         images={project.images.map((img) => img.url)}
         materials={[...project.projectMaterial.map((m) => m)]}
         title={project.title}
         project={project}
-        votes={votes}
+        votes={voteCount}
+        setVotes={setVoteCount}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
         onVote={castVote}

@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 export async function castVote(projectID: string, email: string){
     const user = await prisma.user.upsert({
         where: { email },
-        create: { email, voteCount: 0 },
+        create: { email },
         update: {},
     });
 
