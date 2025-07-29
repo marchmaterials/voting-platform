@@ -30,6 +30,7 @@ export default function ProjectCard({
     <>
       <Card
         key={project.id}
+        data-testid={project.id}
         className="max-w-sm cursor-pointer"
         title={project.title}
         onClick={() => project.images.length && setLightboxOpen(true)}
