@@ -16,7 +16,7 @@ export default function ProjectCard({
   const [votes, setVotes] = useState<number>(project.votes);
 
   useEffect(() => {
-    fetch(`/api/projects/${project.id}`)
+    fetch(`/api/vote?projectId=${project.id}`)
       .then((res) => res.json())
       .then((data) => {
         if (typeof data.votes == "number"){

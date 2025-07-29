@@ -5,8 +5,7 @@ import {
   FullyEnrichedProject,
   EnrichedProjectMaterials,
 } from "@/types/dashboard";
-import { useState } from "react";
-import { Button, Modal, Input, message } from "antd";
+import VoteButton from "./VoteButton";
 
 export default function Lightbox({
   images,
@@ -53,19 +52,6 @@ export default function Lightbox({
         <div className="p-4 border-t mt-auto">
           <VoteButton projectId={project.id} onVote={onVote} votes={votes} />
         </div>
-        <Modal
-          title="Enter Your Email to Vote"
-          open={emailModalOpen}
-          onOk={handleEmailSubmit}
-          onCancel={() => setEmailModalOpen(false)}
-          okText="Submit Vote"
-        >
-          <Input
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Modal>
       </div>
     </div>
   );
