@@ -15,6 +15,7 @@ export default function Lightbox({
   title,
   project,
   votes,
+  setVotes,
   onVote,
 }: {
   images: string[];
@@ -25,6 +26,7 @@ export default function Lightbox({
   title: string;
   project: FullyEnrichedProject;
   votes: number;
+  setVotes: React.Dispatch<React.SetStateAction<number>>;
   onVote: (projectID: string, email: string) => Promise<{ projectVotes: number; userVotes: number; }>;
 }) {
   if (!open) return null;
@@ -50,7 +52,10 @@ export default function Lightbox({
           </div>
         </div>
         <div className="p-4 border-t mt-auto">
-          <VoteButton projectId={project.id} onVote={onVote} votes={votes} />
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-gray-600">Votes: {votes}</div>
+            <VoteButton projectId={project.id} onVote={onVote} setVotes={setVotes} />
+          </div>
         </div>
       </div>
     </div>
