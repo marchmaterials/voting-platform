@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, Modal, Input, message } from "antd";
+// import { z } from "zod";
 import { castVote as CastVoteFn } from "@/app/actions/vote";
 
 type Props = {
@@ -16,6 +17,14 @@ export default function VoteButton({ projectId, onVote }: Props) {
   const [email, setEmail] = useState<string>("");
 
   const handleSubmit = async () => {
+
+    // const emailSchema = z.string().email("Invalid email address");
+    // const parseResult = emailSchema.safeParse(email);
+    // if (!parseResult.success) {
+    //   message.error(parseResult.error.errors[0].message);
+    //   return;
+    // }
+
     try {
       const { projectVotes } = await onVote(projectId, email);
       setVotes(projectVotes);
