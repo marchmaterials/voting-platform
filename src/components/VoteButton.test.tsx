@@ -26,7 +26,7 @@ describe("Votes Button", () => {
   it("opens the modal when the button is clicked", async () => {
     render(<VoteButton projectId="123" setVotes={mockSetVotes} />);
     fireEvent.click(screen.getByRole("button", { name: /vote/i }));
-    expect(await screen.findByText(/enter your email/i)).toBeInTheDocument();
+    expect(await screen.findByTestId("email-input")).toBeInTheDocument();
   });
 
   it("shows an error for invalid email", async () => {
@@ -46,7 +46,7 @@ describe("Votes Button", () => {
     render(<VoteButton projectId="123" setVotes={mockSetVotes} />);
     fireEvent.click(screen.getByRole("button", { name: /vote/i }));
 
-    const emailInput = screen.getByPlaceholderText(/your@email.com/i);
+    const emailInput = screen.getByTestId("email-input");
     await userEvent.type(emailInput, "user@example.com");
 
     const submitButton = screen.getByRole("button", { name: /submit vote/i });
