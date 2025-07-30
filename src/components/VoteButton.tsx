@@ -59,6 +59,7 @@ export default function VoteButton({ projectId, setVotes }: Props) {
         <Input
           type="email"
           name="email"
+          data-testid="email-input"
           placeholder="your@email.com"
           required
           value={email}
