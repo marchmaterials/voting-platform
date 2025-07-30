@@ -40,12 +40,9 @@ export default function Lightbox({
           </div>
         </div>
         <div className="p-4 border-t mt-auto">
-          <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div className="text-sm text-gray-600">Votes: {votes}</div>
-            <VoteButton
-              projectId={project.id}
-              setVotes={setVotes}
-            />
+            <VoteButton projectId={project.id} setVotes={setVotes} />
           </div>
         </div>
       </div>
