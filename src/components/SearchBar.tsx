@@ -10,9 +10,9 @@ export default function SearchBar({
   setLoading: (loading: boolean) => void;
 }) {
   const { setFilteredProjects, setSearch, search } = useDataContext();
-  
+
   const { Search } = Input;
-  
+
   const onSearch = async (text: string) => {
     setSearch(text);
     if (!text) return;
@@ -24,13 +24,12 @@ export default function SearchBar({
       setLoading(false);
       return;
     }
-    console.log("filtered", filteredProjects);
     setFilteredProjects(filteredProjects);
     setLoading(false);
   };
-  
+
   return (
-    <search>
+    <search className="w-4/5">
       <Search
         placeholder="search projects by name or architect"
         id="search"
@@ -38,7 +37,6 @@ export default function SearchBar({
         defaultValue={search}
         onSearch={onSearch}
         enterButton
-        className="w-1/2"
       />
     </search>
   );

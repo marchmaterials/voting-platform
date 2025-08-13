@@ -11,6 +11,7 @@ export default function ProjectCard({
   project: FullyEnrichedProject;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [voteCount, setVoteCount] = useState(project.votes);
 
   return (
     <>
@@ -32,12 +33,15 @@ export default function ProjectCard({
             loading="lazy"
           />
         )}
+        <div className="mt-4 text-sm text-gray-700">Votes: {voteCount}</div>
       </Card>
       <Lightbox
         images={project.images.map((img) => img.url)}
         materials={[...project.projectMaterial.map((m) => m)]}
         title={project.title}
         project={project}
+        votes={voteCount}
+        setVotes={setVoteCount}
         open={lightboxOpen}
         onClose={useCallback(() => setLightboxOpen(false), [])}
       />

@@ -5,6 +5,7 @@ import {
   FullyEnrichedProject,
   EnrichedProjectMaterials,
 } from "@/types/dashboard";
+import VoteButton from "./VoteButton";
 
 export default function Lightbox({
   images,
@@ -13,15 +14,9 @@ export default function Lightbox({
   materials,
   title,
   project,
-}: {
-  images: string[];
-  open: boolean;
-  initialIndex?: number;
-  onClose: () => void;
-  materials: EnrichedProjectMaterials;
-  title: string;
-  project: FullyEnrichedProject;
-}) {
+  votes,
+  setVotes,
+}: Props) {
   if (!open) return null;
 
   return (
@@ -33,6 +28,7 @@ export default function Lightbox({
       >
         &times;
       </button>
+
       <div className="bg-white rounded-lg shadow-lg w-[90vw] h-[80vh] flex flex-col">
         <h2 className="text-2xl p-4 font-extrabold">{title}</h2>
         <div className="flex sm:flex-row flex-col-reverse flex-1 h-0 justify-around">
@@ -43,7 +39,25 @@ export default function Lightbox({
             <Gallery images={images} />
           </div>
         </div>
+        <div className="p-4 border-t mt-auto">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600">Votes: {votes}</div>
+            <VoteButton projectId={project.id} setVotes={setVotes} />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
+type Props = {
+  images: string[];
+  open: boolean;
+  initialIndex?: number;
+  onClose: () => void;
+  materials: EnrichedProjectMaterials;
+  title: string;
+  project: FullyEnrichedProject;
+  votes: number;
+  setVotes: React.Dispatch<React.SetStateAction<number>>;
+};
