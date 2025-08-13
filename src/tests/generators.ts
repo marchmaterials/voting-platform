@@ -4,6 +4,8 @@ import {
   Image,
   Location,
   CONSTRUCTION_TYPOLOGY,
+  Stakeholder,
+  STAKEHOLDER_TYPE,
 } from "@prisma/client";
 import { FullyEnrichedProject, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
@@ -45,6 +47,15 @@ const generateProjectMaterial = (): ProjectMaterials => ({
   ],
 });
 
+const generateStakeholder = (): Stakeholder => ({
+  id: randomUUID(),
+  type: STAKEHOLDER_TYPE.ARCHITECT,
+  companyName: data[0].stakeholders[0].companyName,
+  email: data[0].stakeholders[0].email,
+  phoneNumber: data[0].stakeholders[0].phoneNumber,
+  locationId: randomUUID(),
+});
+
 export const generateProject = (): FullyEnrichedProject => {
   const projectData = data[0];
   const locationId = randomUUID();
@@ -64,5 +75,6 @@ export const generateProject = (): FullyEnrichedProject => {
     area: projectData.area,
     construction: CONSTRUCTION_TYPOLOGY.NEW,
     votes: 10,
+    stakeholders: [generateStakeholder()],
   };
 };
