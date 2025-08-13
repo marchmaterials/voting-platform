@@ -4,6 +4,7 @@ import {
   ProjectMaterial,
   Project,
   Location,
+  Stakeholder,
 } from "@prisma/client";
 import { ImageLoaderProps } from "next/image";
 
@@ -27,6 +28,10 @@ export type FilterOptions = {
   searchTerm: string;
 };
 
+export type Stakeholders = {
+  stakeholders: Array<Stakeholder>;
+};
+
 export type FullyEnrichedProject = Project &
   Images &
-  ProjectMaterials & { location: Location };
+  ProjectMaterials & { location: Location } & Stakeholders;
