@@ -12,6 +12,7 @@ export const getAllProjects = async (): Promise<
         images: true,
         projectMaterial: { include: { material: true } },
         location: true,
+        stakeholders: true,
       },
     });
   } catch (err) {
