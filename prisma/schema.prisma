@@ -16,7 +16,7 @@ model Project {
   location               Location                @relation(fields: [locationId], references: [id])
   locationId             String
   yearCompleted          Int
-  typology               BUILDING_TYPOLOGY
+  typology               BUILDING_TYPOLOGY[]
   authorId               String
   author                 User                    @relation(fields: [authorId], references: [id])
   selectedForCompetition Boolean                 @default(false)
@@ -25,7 +25,7 @@ model Project {
   materials              Material[]
   stakeholders           Stakeholder[]
   area                   Int
-  construction           CONSTRUCTION_TYPOLOGY
+  construction           CONSTRUCTION_TYPOLOGY[]
   votes                  Int                     @default(0)
 }
 
@@ -66,6 +66,7 @@ model Stakeholder {
   locationId  String
   phoneNumber String[]
   projects    Project[]
+  url         String?
 }
 
 model Supplier {
@@ -117,6 +118,7 @@ enum BUILDING_TYPOLOGY {
   INDUSTRIAL
   INSTITUTIONAL
   HEALTHCARE
+  OTHER
 }
 
 enum STAKEHOLDER_TYPE {
