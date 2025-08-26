@@ -59,10 +59,10 @@ model Image {
 
 model Stakeholder {
   id          String           @id @default(cuid())
-  type        STAKEHOLDER_TYPE
+  type        STAKEHOLDER_TYPE[]
   companyName String
   email       String[] 
-  location    Location         @relation(fields: [locationId], references: [id])
+  location    Location?        @relation(fields: [locationId], references: [id])
   locationId  String
   phoneNumber String[]
   projects    Project[]
@@ -82,7 +82,7 @@ model Supplier {
 model Material {
   id               String            @id @default(cuid())
   name             String
-  description      String
+  description      String?
   url              String?
   supplierId       String
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
