@@ -16,7 +16,7 @@ const location = z.object({
 export const materialSchema = z.object({
   materialName: z.string().min(1, "Material name is required"),
 
-  description: z.string().min(5, "Description is required."),
+  description: z.string().optional(),
 
   usedWhere: z
     .string()

@@ -122,7 +122,7 @@ async function seedUsers() {
 //   );
 // };
 
-async function createMaterialsAndConnections(
+export async function createMaterialsAndConnections(
   materialData: Array<materialSubmission>,
   projectId: string
 ) {
