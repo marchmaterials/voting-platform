@@ -61,6 +61,8 @@ export const stakeholder = z.object({
   location,
 
   phoneNumber: z.array(z.string().min(8).max(19)),
+
+  url: z.url("Must be a valid URL").optional(),
 });
 
 export const projectSubmissionSchema = z.object({
@@ -80,14 +82,17 @@ export const projectSubmissionSchema = z.object({
     .gte(1900, "Year must be later than 1900")
     .lte(new Date().getFullYear(), "Year cannot be in the future"),
 
-  typology: z.enum([
-    BUILDING_TYPOLOGY.RESIDENTIAL,
-    BUILDING_TYPOLOGY.COMMERCIAL,
-    BUILDING_TYPOLOGY.MIXED_USE,
-    BUILDING_TYPOLOGY.INDUSTRIAL,
-    BUILDING_TYPOLOGY.INSTITUTIONAL,
-    BUILDING_TYPOLOGY.HEALTHCARE,
-  ]),
+  typology: z.array(
+    z.enum([
+      BUILDING_TYPOLOGY.RESIDENTIAL,
+      BUILDING_TYPOLOGY.COMMERCIAL,
+      BUILDING_TYPOLOGY.MIXED_USE,
+      BUILDING_TYPOLOGY.INDUSTRIAL,
+      BUILDING_TYPOLOGY.INSTITUTIONAL,
+      BUILDING_TYPOLOGY.HEALTHCARE,
+      BUILDING_TYPOLOGY.OTHER,
+    ])
+  ),
 
   materials: z
     .array(materialSchema)
@@ -99,11 +104,13 @@ export const projectSubmissionSchema = z.object({
 
   imageCredit: z.string(),
 
-  construction: z.enum([
-    CONSTRUCTION_TYPOLOGY.NEW,
-    CONSTRUCTION_TYPOLOGY.EXTENSION,
-    CONSTRUCTION_TYPOLOGY.RENOVATION,
-    CONSTRUCTION_TYPOLOGY.RESTORATION,
-    CONSTRUCTION_TYPOLOGY.CONVERSION,
-  ]),
+  construction: z.array(
+    z.enum([
+      CONSTRUCTION_TYPOLOGY.NEW,
+      CONSTRUCTION_TYPOLOGY.EXTENSION,
+      CONSTRUCTION_TYPOLOGY.RENOVATION,
+      CONSTRUCTION_TYPOLOGY.RESTORATION,
+      CONSTRUCTION_TYPOLOGY.CONVERSION,
+    ])
+  ),
 });
