@@ -96,25 +96,25 @@ export async function createMaterialsAndConnections(
         // const supplierBaseUrl = new URL(m.url).hostname;
         return prisma.material.create({
           data: {
-            name: m.materialName,
-            description: m.description,
-            url: m.url,
-            tags: m.tags,
+            name: m?.materialName ?? "unknown",
+            description: m?.description,
+            url: m?.url,
+            tags: m?.tags,
             certifications: [],
             supplier: {
               create: {
-                name: m.supplierName,
-                website: m.supplierContact.url,
-                email: m.supplierContact.email ?? [],
-                phoneNumber: m.supplierContact.phoneNumber ?? [],
-                locations: m.supplierContact?.locations ?? [],
+                name: m?.supplierName ?? "unknown",
+                website: m?.supplierContact.url,
+                email: m?.supplierContact.email ?? [],
+                phoneNumber: m?.supplierContact.phoneNumber ?? [],
+                locations: m?.supplierContact?.locations ?? [],
               },
             },
             projectMaterials: {
               create: {
-                usedWhere: m.usedWhere,
+                usedWhere: m?.usedWhere ?? "unknown",
                 projectId,
-                percentage: m.percentage,
+                percentage: m?.percentage,
               },
             },
           },
