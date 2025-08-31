@@ -56,15 +56,13 @@ export function Sidebar({
   const stakeholderList = project.stakeholders
     .map((s) => ({
       key: s.id,
-      label: s.type,
+      label: s.type[0],
       children: <div className="text-sm font-light">{s.companyName}</div>,
     }))
     .concat(comingSoonStakeholders);
   return (
     <div className="pl-4 pr-4 pb-4">
-      <h4 className="text-sm font-light">
-        {project.location.city}, {project.location.country}
-      </h4>
+      <h4 className="text-sm font-light">{project.location}</h4>
       <p className="text-sm font-light">{project.area}sqm</p>
       <p className="text-sm font-light">completed in {project.yearCompleted}</p>
       <h4 className="font-medium mt-4 mb-4">Materials</h4>

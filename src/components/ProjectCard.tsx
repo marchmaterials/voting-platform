@@ -18,9 +18,9 @@ export default function ProjectCard({
       <Card
         key={project.id}
         data-testid={project.id}
-        className="max-w-sm cursor-pointer"
+        className="w-[400px] h-[300px] cursor-pointer"
         title={project.title}
-        onClick={() => project.images.length && setLightboxOpen(true)}
+        onClick={() => setLightboxOpen(true)}
         hoverable
       >
         {Boolean(project.images.length) && (
