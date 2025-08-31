@@ -12,7 +12,7 @@ const imageData = JSON.parse(
 const testUsers = JSON.parse(readFileSync("src/tests/testUsers.json", "utf-8"));
 import type { Project } from "@prisma/client";
 import prisma from "../src/lib/prisma";
-import { importProjects } from "./migrate";
+// import { importProjects } from "./migrate";
 // import {
 //   IMAGE_KIT_PUBLIC_KEY,
 //   IMAGE_KIT_UPLOAD_URL,
@@ -43,22 +43,6 @@ type ImageData = {
   credit: string;
 };
 
-type UserData = {
-  id: string;
-  email: string;
-  voteCount: number;
-};
-
-// Temporary extended Prisma client type until regeneration
-type ExtendedPrismaClient = typeof prisma & {
-  user: {
-    findMany: () => Promise<UserData[]>;
-    create: (args: {
-      data: { email: string; voteCount: number };
-    }) => Promise<UserData>;
-  };
-};
-
 const isAlreadySeeded = async (): Promise<boolean | Error> => {
   const projectTitles = [testData[0].title, testData[1].title];
   try {
@@ -78,27 +62,6 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     return new Error("cannot check if db is already seeded");
   }
 };
-
-async function seedUsers() {
-  try {
-    console.log("Creating users...");
-    const users = await Promise.all(
-      testUsers.map((userData: { email: string; voteCount: number }) =>
-        (prisma as ExtendedPrismaClient).user.create({
-          data: {
-            email: userData.email,
-            voteCount: userData.voteCount,
-          },
-        })
-      )
-    );
-    console.log("Users created:", users.length);
-    return users;
-  } catch (err) {
-    console.error("Error creating users:", err);
-    return [];
-  }
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // const uploadImages = async (images: Array<string>, rootDir: string) => {

@@ -44,7 +44,7 @@ export default function VoteButton({ projectId, setVotes }: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Button onClick={() => setModalOpen(true)}>
+        <Button type="primary" onClick={() => setModalOpen(true)}>
           Vote for this project
         </Button>
       </div>
