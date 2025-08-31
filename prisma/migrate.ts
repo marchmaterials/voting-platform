@@ -20,8 +20,8 @@ export async function importProjects(csvPath: string) {
     delimiter: ";",
     skip_empty_lines: true,
   });
-
-  for (const row of records) {
+  const typedRecords = records as Array<Record<string, string>>;
+  for (const row of typedRecords) {
     try {
       const email = row["Email"];
       const title = row["Project Name"];
