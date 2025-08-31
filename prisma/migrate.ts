@@ -1,4 +1,3 @@
-import { BUILDING_TYPOLOGY } from "@prisma/client";
 import { parse } from "csv-parse/sync";
 import fs from "fs";
 import path from "path";
@@ -9,10 +8,12 @@ import {
   parseMaterials,
   parseConstruction,
   parseStakeholder,
+  parseTypology,
 } from "./parseData";
 import { createMaterialsAndConnections } from "./seed";
 
-async function importProjects(csvPath: string) {
+export async function importProjects(csvPath: string) {
+  console.log("IMPORT BEGIN");
   const raw = fs.readFileSync(csvPath, "utf-8");
   const records = parse(raw, {
     columns: true,
@@ -22,53 +23,41 @@ async function importProjects(csvPath: string) {
 
   for (const row of records) {
     try {
-      // --- Map CSV → Prisma-compatible shape ---
-      const [city, country] = (row["Project Location (Europe or UK)"] || "")
-        .split(" ")
-        .map((s) => s.trim());
-      const addressParts = row["Address"].split(",").map((s) => s.trim());
-      const street = addressParts[0] || null;
-      const postcode = addressParts.length > 1 ? addressParts[1] : null;
-
-      const typologyRaw = (
-        row["Project Typology (select all that apply)"] || ""
-      )
-        .split(",")
-        .map((t) => t.trim().toUpperCase())
-        .filter(Boolean);
-
-      const typology = typologyRaw.map((t) => {
-        if (
-          Object.values(BUILDING_TYPOLOGY).includes(
-            t.toUpperCase() as BUILDING_TYPOLOGY
-          )
-        ) {
-          return t as BUILDING_TYPOLOGY;
-        }
-        return BUILDING_TYPOLOGY.OTHER;
+      const email = row["Email"];
+      const title = row["Project Name"];
+      const existingRecord = await prisma.project.findFirst({
+        where: {
+          AND: [{ author: { email } }, { title }],
+        },
       });
-
+      if (existingRecord) {
+        console.log(
+          `Record with email ${email} and title ${title} already exists`
+        );
+        continue;
+      }
       // Prepare the object for validation
       const submission = {
-        email: row["Email"],
-        title: row["Project Name"],
+        email,
+        title,
         description: row["Short Project Description"],
-        location: {
-          city,
-          country,
-          street,
-          postcode,
-        },
-        yearCompleted: parseInt(row["Year of Project Completion"]),
-        typology,
+        location: row["Project Location (Europe or UK)"],
+        yearCompleted: parseInt(row["Year of Project Completion"])
+          ? parseInt(row["Year of Project Completion"])
+          : 2025,
+        typology: parseTypology(
+          row["Project Typology (select all that apply)"]
+        ),
         materials: parseMaterials(row["List Materials"]),
-        stakeholders: parseStakeholder(row as Record<string, string>),
+        stakeholders: [parseStakeholder(row as Record<string, string>)],
         area: parseInt(row["Project Built Area"]),
-        imageCredit: row["Image Credits"],
+        imageCredit: row["Photographer"],
+        photographerUrl: row["Photographer URL"],
         construction: parseConstruction(
           row["Construction Type (select all that apply)"]
         ),
       };
+      console.log("submission:", submission.construction);
 
       // --- Validate with Zod ---
       const validated = projectSubmissionSchema.parse(submission);
@@ -80,16 +69,6 @@ async function importProjects(csvPath: string) {
         create: { email: validated.email },
       });
 
-      // --- Upsert location ---
-      const location = await prisma.location.create({
-        data: {
-          city: validated.location.city,
-          country: validated.location.country,
-          street: validated.location.street,
-          postcode: validated.location.postcode,
-        },
-      });
-
       // --- Create project ---
       const project = await prisma.project.create({
         data: {
@@ -99,21 +78,17 @@ async function importProjects(csvPath: string) {
           typology: validated.typology,
           area: validated.area,
           construction: validated.construction,
-          locationId: location.id,
+          location: validated.location,
           authorId: user.id,
+          imageCredit: validated.imageCredit,
+          photographerUrl: validated.photographerUrl,
+          stakeholders: {
+            create: [...validated.stakeholders],
+          },
         },
       });
 
       await createMaterialsAndConnections(validated.materials, project.id);
-      await prisma.stakeholder.create({
-        data: {
-          companyName: submission.stakeholders.companyName,
-          email: submission.stakeholders.email,
-          type: submission.stakeholders.type,
-          projects: { connect: { id: project.id } },
-        },
-      });
-      
 
       console.log(`Imported project: ${validated.title}`);
     } catch (error) {

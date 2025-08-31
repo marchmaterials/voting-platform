@@ -12,6 +12,7 @@ const imageData = JSON.parse(
 const testUsers = JSON.parse(readFileSync("src/tests/testUsers.json", "utf-8"));
 import type { Project } from "@prisma/client";
 import prisma from "../src/lib/prisma";
+import { importProjects } from "./migrate";
 // import {
 //   IMAGE_KIT_PUBLIC_KEY,
 //   IMAGE_KIT_UPLOAD_URL,
@@ -126,7 +127,7 @@ export async function createMaterialsAndConnections(
   materialData: Array<materialSubmission>,
   projectId: string
 ) {
-  return Promise.all(
+  return await Promise.allSettled(
     materialData.map((m) => {
       try {
         // const supplierBaseUrl = new URL(m.url).hostname;
@@ -142,17 +143,15 @@ export async function createMaterialsAndConnections(
                 name: m.supplierName,
                 website: m.supplierContact.url,
                 email: m.supplierContact.email ?? [],
-                phoneNumber: m.supplierContact.phoneNumber,
-                locations: {
-                  create: [...m.supplierContact.locations],
-                },
+                phoneNumber: m.supplierContact.phoneNumber ?? [],
+                locations: m.supplierContact?.locations ?? [],
               },
             },
             projectMaterials: {
               create: {
                 usedWhere: m.usedWhere,
-                projectId: projectId,
-                percentage: 40,
+                projectId,
+                percentage: m.percentage,
               },
             },
           },
@@ -185,11 +184,7 @@ const createFullyEnrichedProject = async (
       data: {
         title: validatedData.title,
         description: validatedData.description,
-        location: {
-          create: {
-            ...validatedData.location,
-          },
-        },
+        location: validatedData.location,
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         author: { create: { email: validatedData.email } },
@@ -197,17 +192,17 @@ const createFullyEnrichedProject = async (
         construction: validatedData.construction,
         votes: 0,
         stakeholders: {
-          create: validatedData.stakeholders.map((stakeholder) => ({
-            type: stakeholder.type,
-            companyName: stakeholder.companyName,
-            email: stakeholder.email,
-            location: {
-              create: {
-                ...stakeholder.location,
-              },
-            },
-            phoneNumber: stakeholder.phoneNumber,
-          })),
+          // create: validatedData.stakeholders.map((stakeholder) => ({
+          //   type: stakeholder.type,
+          //   companyName: stakeholder.companyName,
+          //   email: stakeholder.email,
+          //   location: {
+          //     create: {
+          //       ...stakeholder.location,
+          //     },
+          //   },
+          //   phoneNumber: stakeholder.phoneNumber,
+          // })),
         },
         images: {
           create: images,
@@ -254,13 +249,13 @@ export async function main(): Promise<void> {
   }
 }
 
-(async () => {
-  try {
-    await main();
-    await prisma.$disconnect();
-  } catch (err) {
-    console.error(err);
-    await prisma.$disconnect();
-    process.exit(1);
-  }
-})();
+// (async () => {
+//   try {
+//     await importProjects();
+//     await prisma.$disconnect();
+//   } catch (err) {
+//     console.error(err);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   }
+// })();

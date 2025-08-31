@@ -13,8 +13,7 @@ model Project {
   createdAt              DateTime                @default(now()) @db.Timestamp(6)
   title                  String
   description            String?
-  location               Location                @relation(fields: [locationId], references: [id])
-  locationId             String
+  location               String?
   yearCompleted          Int
   typology               BUILDING_TYPOLOGY[]
   authorId               String
@@ -27,6 +26,8 @@ model Project {
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
   votes                  Int                     @default(0)
+  imageCredit            String?
+  photographerUrl        String?
 }
 
 model User {
@@ -34,17 +35,6 @@ model User {
   email     String    @unique
   voteCount Int       @default(0)
   projects  Project[]
-}
-
-model Location {
-  id          String        @id @default(cuid())
-  country     String
-  city        String
-  street      String?
-  postcode    String?
-  Project     Project[]
-  Supplier    Supplier[]
-  Stakeholder Stakeholder[]
 }
 
 model Image {
@@ -62,8 +52,7 @@ model Stakeholder {
   type        STAKEHOLDER_TYPE[]
   companyName String
   email       String[] 
-  location    Location?        @relation(fields: [locationId], references: [id])
-  locationId  String
+  location    String?
   phoneNumber String[]
   projects    Project[]
   url         String?
@@ -73,7 +62,7 @@ model Supplier {
   id          String     @id @default(cuid())
   name        String
   website     String?
-  locations    Location[]
+  locations    String[]
   email       String[]
   phoneNumber String[]
   materials   Material[]
