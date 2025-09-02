@@ -32,7 +32,7 @@ export default function ProjectDashboard() {
       ) : (
         <div
           data-testid="project-grid"
-          className="flex flex-row m-4 flex-wrap justify-around w-full"
+          className="flex flex-row m-4 flex-wrap justify-around w-full gap-2"
         >
           {projectsToShow.map((p) => (
             <ProjectCard key={p.id} project={p} />

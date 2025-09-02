@@ -12,6 +12,7 @@ const imageData = JSON.parse(
 const testUsers = JSON.parse(readFileSync("src/tests/testUsers.json", "utf-8"));
 import type { Project } from "@prisma/client";
 import prisma from "../src/lib/prisma";
+// import { importProjects } from "./migrate";
 // import {
 //   IMAGE_KIT_PUBLIC_KEY,
 //   IMAGE_KIT_UPLOAD_URL,
@@ -42,22 +43,6 @@ type ImageData = {
   credit: string;
 };
 
-type UserData = {
-  id: string;
-  email: string;
-  voteCount: number;
-};
-
-// Temporary extended Prisma client type until regeneration
-type ExtendedPrismaClient = typeof prisma & {
-  user: {
-    findMany: () => Promise<UserData[]>;
-    create: (args: {
-      data: { email: string; voteCount: number };
-    }) => Promise<UserData>;
-  };
-};
-
 const isAlreadySeeded = async (): Promise<boolean | Error> => {
   const projectTitles = [testData[0].title, testData[1].title];
   try {
@@ -77,27 +62,6 @@ const isAlreadySeeded = async (): Promise<boolean | Error> => {
     return new Error("cannot check if db is already seeded");
   }
 };
-
-async function seedUsers() {
-  try {
-    console.log("Creating users...");
-    const users = await Promise.all(
-      testUsers.map((userData: { email: string; voteCount: number }) =>
-        (prisma as ExtendedPrismaClient).user.create({
-          data: {
-            email: userData.email,
-            voteCount: userData.voteCount,
-          },
-        })
-      )
-    );
-    console.log("Users created:", users.length);
-    return users;
-  } catch (err) {
-    console.error("Error creating users:", err);
-    return [];
-  }
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // const uploadImages = async (images: Array<string>, rootDir: string) => {
@@ -122,37 +86,35 @@ async function seedUsers() {
 //   );
 // };
 
-async function createMaterialsAndConnections(
+export async function createMaterialsAndConnections(
   materialData: Array<materialSubmission>,
   projectId: string
 ) {
-  return Promise.all(
+  return await Promise.allSettled(
     materialData.map((m) => {
       try {
         // const supplierBaseUrl = new URL(m.url).hostname;
         return prisma.material.create({
           data: {
-            name: m.materialName,
-            description: m.description,
-            url: m.url,
-            tags: m.tags,
+            name: m?.materialName ?? "unknown",
+            description: m?.description,
+            url: m?.url,
+            tags: m?.tags,
             certifications: [],
             supplier: {
               create: {
-                name: m.supplierName,
-                website: m.supplierContact.url,
-                email: m.supplierContact.email ?? [],
-                phoneNumber: m.supplierContact.phoneNumber,
-                locations: {
-                  create: [...m.supplierContact.locations],
-                },
+                name: m?.supplierName ?? "unknown",
+                website: m?.supplierContact.url,
+                email: m?.supplierContact.email ?? [],
+                phoneNumber: m?.supplierContact.phoneNumber ?? [],
+                locations: m?.supplierContact?.locations ?? [],
               },
             },
             projectMaterials: {
               create: {
-                usedWhere: m.usedWhere,
-                projectId: projectId,
-                percentage: 40,
+                usedWhere: m?.usedWhere ?? "unknown",
+                projectId,
+                percentage: m?.percentage,
               },
             },
           },
@@ -185,11 +147,7 @@ const createFullyEnrichedProject = async (
       data: {
         title: validatedData.title,
         description: validatedData.description,
-        location: {
-          create: {
-            ...validatedData.location,
-          },
-        },
+        location: validatedData.location,
         yearCompleted: validatedData.yearCompleted,
         typology: validatedData.typology,
         author: { create: { email: validatedData.email } },
@@ -197,17 +155,17 @@ const createFullyEnrichedProject = async (
         construction: validatedData.construction,
         votes: 0,
         stakeholders: {
-          create: validatedData.stakeholders.map((stakeholder) => ({
-            type: stakeholder.type,
-            companyName: stakeholder.companyName,
-            email: stakeholder.email,
-            location: {
-              create: {
-                ...stakeholder.location,
-              },
-            },
-            phoneNumber: stakeholder.phoneNumber,
-          })),
+          // create: validatedData.stakeholders.map((stakeholder) => ({
+          //   type: stakeholder.type,
+          //   companyName: stakeholder.companyName,
+          //   email: stakeholder.email,
+          //   location: {
+          //     create: {
+          //       ...stakeholder.location,
+          //     },
+          //   },
+          //   phoneNumber: stakeholder.phoneNumber,
+          // })),
         },
         images: {
           create: images,
@@ -254,13 +212,13 @@ export async function main(): Promise<void> {
   }
 }
 
-(async () => {
-  try {
-    await main();
-    await prisma.$disconnect();
-  } catch (err) {
-    console.error(err);
-    await prisma.$disconnect();
-    process.exit(1);
-  }
-})();
+// (async () => {
+//   try {
+//     await importProjects();
+//     await prisma.$disconnect();
+//   } catch (err) {
+//     console.error(err);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   }
+// })();
