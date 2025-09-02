@@ -2,6 +2,7 @@ import { IMAGE_KIT_PUBLIC_KEY, IMAGE_KIT_BASE_URL } from "../src/constants.js";
 import ImageKit from "imagekit";
 import "dotenv/config";
 import prisma from "../src/lib/prisma.ts";
+import { fail } from "node:assert";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
@@ -114,8 +115,10 @@ async function fetchFileMetadata(skip, limit) {
   }
 }
 
-const main = async (skip = 0, limit = 30) => {
+const main = async (skip = 0, limit = 100) => {
   let totalUploaded = 0;
+  let totalFailed = 0;
+  const failedImages = [];
 
   while (true) {
     try {
@@ -133,10 +136,9 @@ const main = async (skip = 0, limit = 30) => {
       );
       const errors = newImages.filter((result) => result.status === "rejected");
 
-      console.info(`${successes.length} files uploaded successfully`);
-      console.error(`${errors.length} files failed to upload`);
-
       totalUploaded += successes.length;
+      totalFailed += errors.length;
+      failedImages.push(...errors);
     } catch (err) {
       console.error("Error occurred while processing images:", err);
     }
@@ -144,6 +146,8 @@ const main = async (skip = 0, limit = 30) => {
   }
 
   console.log("Total uploaded files: ", totalUploaded);
+  console.log("Total failed files: ", totalFailed);
+  console.log("Failed images details: ", failedImages);
 };
 
 main();
