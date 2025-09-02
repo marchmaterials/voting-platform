@@ -145,6 +145,8 @@ const main = async (skip = 0, limit = 100) => {
     skip += limit;
   }
 
+  await prisma.$disconnect();
+  
   console.log("Total uploaded files: ", totalUploaded);
   console.log("Total failed files: ", totalFailed);
   console.log("Failed images details: ", failedImages);
