@@ -14,6 +14,9 @@ export default function ProjectCard({
   const [voteCount, setVoteCount] = useState(project.votes);
   const [loading, setLoading] = useState(true);
 
+  const titleImage = project.images.find((i) =>
+    i.aiTags.includes("title-image")
+  );
   return (
     <>
       <Card
@@ -27,7 +30,7 @@ export default function ProjectCard({
         cover={
           Boolean(project.images.length) && (
             <Image
-              src={project.images[0].url}
+              src={titleImage?.url ?? project.images[0].url}
               alt={`image of architectural project titled ${project.title}`}
               width={400}
               height={300}
