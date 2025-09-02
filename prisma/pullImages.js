@@ -22,7 +22,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
     });
     if (existingImage) {
       console.log(`Image already uploaded: ${url}`);
-      throw new Error("Image already uploaded");
+      return;
     }
 
     // Find the user first (since Project is linked to User by authorId)
@@ -61,7 +61,6 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
         credit: project.imageCredit,
       },
     });
-    console.log("IMAGE UPLOADED:", image);
     return image;
   } catch (error) {
     console.error("Error creating connected image:", error);
