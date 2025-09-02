@@ -43,7 +43,7 @@ model Image {
   projectId String
   project   Project    @relation(fields: [projectId], references: [id])
   aiTags    String[]
-  materials Material[]
+  materials Material[] //will be empty for now
   credit    String?
 }
 
