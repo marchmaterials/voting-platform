@@ -2,7 +2,6 @@ import { IMAGE_KIT_PUBLIC_KEY, IMAGE_KIT_BASE_URL } from "../src/constants.js";
 import ImageKit from "imagekit";
 import "dotenv/config";
 import prisma from "../src/lib/prisma.ts";
-import { fail } from "node:assert";
 
 const imagekit = new ImageKit({
   publicKey: IMAGE_KIT_PUBLIC_KEY,
@@ -14,7 +13,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
   console.info(`creating image for ${projectTitle} by ${email}`);
   if (!projectTitle || !email || !url) {
     console.error("Missing required fields");
-    return;
+    throw new Error("Missing required fields", { projectTitle, email, url });
   }
   try {
     // first check image is not already uploaded
@@ -23,7 +22,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
     });
     if (existingImage) {
       console.log(`Image already uploaded: ${url}`);
-      return;
+      throw new Error("Image already uploaded");
     }
 
     // Find the user first (since Project is linked to User by authorId)
@@ -33,7 +32,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
 
     if (!user) {
       console.warn(`No user found with email: ${email}`);
-      return;
+      throw new Error("No user found", { email });
     }
 
     // Find the corresponding project by title & authorId
@@ -48,7 +47,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
       console.warn(
         `No project found with title: ${projectTitle} for user: ${email}`
       );
-      return;
+      throw new Error("No project found", { projectTitle, email });
     }
 
     // Create the image and connect it to the project
@@ -146,7 +145,7 @@ const main = async (skip = 0, limit = 100) => {
   }
 
   await prisma.$disconnect();
-  
+
   console.log("Total uploaded files: ", totalUploaded);
   console.log("Total failed files: ", totalFailed);
   console.log("Failed images details: ", failedImages);
