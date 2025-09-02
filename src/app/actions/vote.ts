@@ -2,8 +2,13 @@
 
 import prisma from "@/lib/prisma";
 
-// this is one day, in millesconds
-const lastVoteInterval = 3600 * 1000 * 24
+function isSameDate(d1: Date, d2: Date): boolean {
+    return (
+        d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate()
+    )
+}
 
 export async function castVote(projectID: string, email: string) {
     const [user] = await prisma.$transaction([prisma.user.findFirst({ where: { email } })]);
@@ -24,11 +29,8 @@ export async function castVote(projectID: string, email: string) {
         }
     } else {
         const now = new Date();
-        const diff = now - user.lastVote;
-        if (diff < lastVoteInterval) {
-            const waitingTime = lastVoteInterval - diff
-            console.log(waitingTime)
-            const msg = `You voted too recently! Wait another ${(waitingTime / (3600 * 1000)).toFixed(0)} hours to vote again!`
+        if (isSameDate(now, user.lastVote)) {
+            const msg = `You voted too recently! Please wait until tomorrow to vote again`
             console.error(msg)
             throw new Error(msg)
         } else {
@@ -38,6 +40,7 @@ export async function castVote(projectID: string, email: string) {
                     data: { votes: { increment: 1 } },
                 }),
                 prisma.user.update({
+                    where: { email },
                     data: { voteCount: { increment: 1 }, email, lastVote: new Date() }
                 })
             ]);
