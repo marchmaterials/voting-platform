@@ -29,7 +29,7 @@ export async function castVote(projectID: string, email: string) {
         }
     } else {
         const now = new Date();
-        if (isSameDate(now, user.lastVote)) {
+        if (user.lastVote !== null && isSameDate(now, user.lastVote)) {
             const msg = `You voted too recently! Please wait until tomorrow to vote again`
             console.error(msg)
             throw new Error(msg)
