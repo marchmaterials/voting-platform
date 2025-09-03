@@ -33,13 +33,13 @@ export const searchProjects = async ({
     let filter;
     switch (sanitizedSearchTerm) {
       case "small":
-        filter = { area: { lt: 100 } }
+        filter = { area: { lte: 100 } }
         break
       case "medium":
-        filter = { area: { gte: 100, lt: 500 } }
+        filter = { area: { gt: 100, lte: 500 } }
         break
       case "large":
-        filter = { area: { gte: 500 } }
+        filter = { area: { gt: 500 } }
         break
       default:
         filter = {
