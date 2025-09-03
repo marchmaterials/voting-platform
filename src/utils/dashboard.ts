@@ -60,6 +60,18 @@ export const searchProjects = async ({
                 },
               },
             },
+            {
+              projectMaterial: {
+                some: {
+                  material: {
+                    name: {
+                      contains: searchTerm,
+                      mode: "insensitive"
+                    }
+                  }
+                }
+              }
+            }
           ],
         }
     }
