@@ -11,7 +11,6 @@ export const getAllProjects = async (): Promise<
       include: {
         images: true,
         projectMaterial: { include: { material: true } },
-        location: true,
         stakeholders: true,
       },
     });
@@ -82,7 +81,6 @@ export const searchProjects = async ({
         images: true,
         projectMaterial: { include: { material: true } },
         stakeholders: true,
-        location: true,
       },
     });
   } catch (err) {

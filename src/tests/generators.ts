@@ -2,7 +2,6 @@ import {
   BUILDING_TYPOLOGY,
   Material,
   Image,
-  Location,
   CONSTRUCTION_TYPOLOGY,
   Stakeholder,
   STAKEHOLDER_TYPE,
@@ -49,32 +48,33 @@ const generateProjectMaterial = (): ProjectMaterials => ({
 
 const generateStakeholder = (): Stakeholder => ({
   id: randomUUID(),
-  type: STAKEHOLDER_TYPE.ARCHITECT,
+  type: [STAKEHOLDER_TYPE.ARCHITECT],
   companyName: data[0].stakeholders[0].companyName,
   email: data[0].stakeholders[0].email,
   phoneNumber: data[0].stakeholders[0].phoneNumber,
-  locationId: randomUUID(),
+  location: "Berlin, Germany",
+  url: "www.architect.com",
 });
 
 export const generateProject = (): FullyEnrichedProject => {
   const projectData = data[0];
-  const locationId = randomUUID();
   return {
     id: randomUUID(),
     createdAt: new Date(),
     title: projectData.title,
     description: projectData.description,
-    locationId,
-    location: { ...projectData.location, id: locationId } as Location,
+    location: "123 Main Street",
     yearCompleted: projectData.yearCompleted,
-    typology: BUILDING_TYPOLOGY.COMMERCIAL,
+    typology: [BUILDING_TYPOLOGY.COMMERCIAL],
     authorId: randomUUID(),
     selectedForCompetition: false,
     images: [],
     ...generateProjectMaterial(),
     area: projectData.area,
-    construction: CONSTRUCTION_TYPOLOGY.NEW,
+    construction: [CONSTRUCTION_TYPOLOGY.NEW],
     votes: 10,
     stakeholders: [generateStakeholder()],
+    photographerUrl: "www.photos.com",
+    imageCredit: "Joe Smith",
   };
 };
