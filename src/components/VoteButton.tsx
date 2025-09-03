@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Modal, Input, message } from "antd";
+import { Button, Modal, Input, message, ConfigProvider } from "antd";
 import { z } from "zod";
 import { castVote } from "@/app/actions/vote";
 
@@ -44,10 +44,22 @@ export default function VoteButton({ projectId, setVotes }: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Button onClick={() => setModalOpen(true)}>
-          <div className="text-l font-extrabold">Vote for this project</div>
-        </Button>
-      </div>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                defaultBorderColor: "#000",
+                lineWidth: 2,
+              }
+            }
+          }}
+        >
+          <Button onClick={() => setModalOpen(true)}>
+            <div className="text-xl font-extrabold">Vote</div>
+          </Button>
+
+        </ConfigProvider>
+      </div >
       <Modal
         title="Enter your email"
         open={modalOpen}
