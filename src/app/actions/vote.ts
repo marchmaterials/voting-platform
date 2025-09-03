@@ -12,7 +12,6 @@ function isSameDate(d1: Date, d2: Date): boolean {
 
 export async function castVote(projectID: string, email: string) {
     const [user] = await prisma.$transaction([prisma.user.findFirst({ where: { email } })]);
-    console.log(user)
     if (user === null) {
         const [project, user] = await prisma.$transaction([
             prisma.project.update({
