@@ -21,32 +21,51 @@ export const getAllProjects = async (): Promise<
   }
 };
 
+
 export const searchProjects = async ({
   searchTerm,
 }: FilterOptions): Promise<Array<FullyEnrichedProject> | Error> => {
+
   if (!searchTerm) return new Error("no search criteria provided");
   try {
-    return await prisma.project.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: searchTerm,
-              mode: "insensitive",
+    const sanitizedSearchTerm = searchTerm.toLowerCase().trim()
+    console.log(`sanitizedSearchTerm=${sanitizedSearchTerm}`)
+    let filter;
+    switch (sanitizedSearchTerm) {
+      case "small":
+        filter = { area: { lt: 100 } }
+        break
+      case "medium":
+        filter = { area: { gte: 100, lt: 500 } }
+        break
+      case "large":
+        filter = { area: { gte: 500 } }
+        break
+      default:
+        filter = {
+          OR: [
+            {
+              title: {
+                contains: searchTerm,
+                mode: "insensitive",
+              },
             },
-          },
-          {
-            stakeholders: {
-              some: {
-                companyName: {
-                  contains: searchTerm,
-                  mode: "insensitive",
+            {
+              stakeholders: {
+                some: {
+                  companyName: {
+                    contains: searchTerm,
+                    mode: "insensitive",
+                  },
                 },
               },
             },
-          },
-        ],
-      },
+          ],
+        }
+    }
+    console.log(filter)
+    return await prisma.project.findMany({
+      where: filter,
       include: {
         images: true,
         projectMaterial: { include: { material: true } },
