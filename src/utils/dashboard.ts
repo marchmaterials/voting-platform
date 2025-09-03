@@ -28,7 +28,6 @@ export const searchProjects = async ({
   if (!searchTerm) return new Error("no search criteria provided");
   try {
     const sanitizedSearchTerm = searchTerm.toLowerCase().trim()
-    console.log(`sanitizedSearchTerm=${sanitizedSearchTerm}`)
     let filter;
     switch (sanitizedSearchTerm) {
       case "small":
@@ -74,7 +73,6 @@ export const searchProjects = async ({
           ],
         }
     }
-    console.log(filter)
     return await prisma.project.findMany({
       where: filter,
       include: {
