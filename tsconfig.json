@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/constants.js"
-  ],
+, "prisma/pullImages.js"  ],
   "exclude": ["node_modules"]
 }

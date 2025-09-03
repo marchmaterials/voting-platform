@@ -3,7 +3,6 @@ import {
   Image as PrismaImage,
   ProjectMaterial,
   Project,
-  Location,
   Stakeholder,
 } from "@prisma/client";
 import { ImageLoaderProps } from "next/image";
@@ -34,4 +33,5 @@ export type Stakeholders = {
 
 export type FullyEnrichedProject = Project &
   Images &
-  ProjectMaterials & { location: Location } & Stakeholders;
+  ProjectMaterials &
+  Stakeholders;

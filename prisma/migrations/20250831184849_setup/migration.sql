@@ -2,7 +2,7 @@
 CREATE TYPE "CONSTRUCTION_TYPOLOGY" AS ENUM ('NEW', 'EXTENSION', 'RENOVATION', 'RESTORATION', 'CONVERSION');
 
 -- CreateEnum
-CREATE TYPE "BUILDING_TYPOLOGY" AS ENUM ('RESIDENTIAL', 'COMMERCIAL', 'MIXED_USE', 'INDUSTRIAL', 'INSTITUTIONAL', 'HEALTHCARE');
+CREATE TYPE "BUILDING_TYPOLOGY" AS ENUM ('RESIDENTIAL', 'COMMERCIAL', 'MIXED_USE', 'INDUSTRIAL', 'INSTITUTIONAL', 'HEALTHCARE', 'OTHER');
 
 -- CreateEnum
 CREATE TYPE "STAKEHOLDER_TYPE" AS ENUM ('ARCHITECT', 'INTERIOR_ARCHITECT', 'CONTRACTOR', 'ENGINEER');
@@ -13,14 +13,16 @@ CREATE TABLE "Project" (
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "locationId" TEXT NOT NULL,
+    "location" TEXT,
     "yearCompleted" INTEGER NOT NULL,
-    "typology" "BUILDING_TYPOLOGY" NOT NULL,
+    "typology" "BUILDING_TYPOLOGY"[],
     "authorId" TEXT NOT NULL,
     "selectedForCompetition" BOOLEAN NOT NULL DEFAULT false,
     "area" INTEGER NOT NULL,
-    "construction" "CONSTRUCTION_TYPOLOGY" NOT NULL,
+    "construction" "CONSTRUCTION_TYPOLOGY"[],
     "votes" INTEGER NOT NULL DEFAULT 0,
+    "imageCredit" TEXT,
+    "photographerUrl" TEXT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -32,17 +34,6 @@ CREATE TABLE "User" (
     "voteCount" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Location" (
-    "id" TEXT NOT NULL,
-    "country" TEXT NOT NULL,
-    "city" TEXT NOT NULL,
-    "street" TEXT,
-    "postcode" TEXT,
-
-    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -59,11 +50,12 @@ CREATE TABLE "Image" (
 -- CreateTable
 CREATE TABLE "Stakeholder" (
     "id" TEXT NOT NULL,
-    "type" "STAKEHOLDER_TYPE" NOT NULL,
+    "type" "STAKEHOLDER_TYPE"[],
     "companyName" TEXT NOT NULL,
     "email" TEXT[],
-    "locationId" TEXT NOT NULL,
+    "location" TEXT,
     "phoneNumber" TEXT[],
+    "url" TEXT,
 
     CONSTRAINT "Stakeholder_pkey" PRIMARY KEY ("id")
 );
@@ -73,6 +65,7 @@ CREATE TABLE "Supplier" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "website" TEXT,
+    "locations" TEXT[],
     "email" TEXT[],
     "phoneNumber" TEXT[],
 
@@ -83,7 +76,7 @@ CREATE TABLE "Supplier" (
 CREATE TABLE "Material" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "url" TEXT,
     "supplierId" TEXT NOT NULL,
     "tags" TEXT[],
@@ -112,14 +105,6 @@ CREATE TABLE "_ProjectToStakeholder" (
 );
 
 -- CreateTable
-CREATE TABLE "_LocationToSupplier" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
-
-    CONSTRAINT "_LocationToSupplier_AB_pkey" PRIMARY KEY ("A","B")
-);
-
--- CreateTable
 CREATE TABLE "_ImageToMaterial" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -142,25 +127,16 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE INDEX "_ProjectToStakeholder_B_index" ON "_ProjectToStakeholder"("B");
 
 -- CreateIndex
-CREATE INDEX "_LocationToSupplier_B_index" ON "_LocationToSupplier"("B");
-
--- CreateIndex
 CREATE INDEX "_ImageToMaterial_B_index" ON "_ImageToMaterial"("B");
 
 -- CreateIndex
 CREATE INDEX "_MaterialToProject_B_index" ON "_MaterialToProject"("B");
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Image" ADD CONSTRAINT "Image_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Stakeholder" ADD CONSTRAINT "Stakeholder_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Material" ADD CONSTRAINT "Material_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -176,12 +152,6 @@ ALTER TABLE "_ProjectToStakeholder" ADD CONSTRAINT "_ProjectToStakeholder_A_fkey
 
 -- AddForeignKey
 ALTER TABLE "_ProjectToStakeholder" ADD CONSTRAINT "_ProjectToStakeholder_B_fkey" FOREIGN KEY ("B") REFERENCES "Stakeholder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_LocationToSupplier" ADD CONSTRAINT "_LocationToSupplier_A_fkey" FOREIGN KEY ("A") REFERENCES "Location"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_LocationToSupplier" ADD CONSTRAINT "_LocationToSupplier_B_fkey" FOREIGN KEY ("B") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ImageToMaterial" ADD CONSTRAINT "_ImageToMaterial_A_fkey" FOREIGN KEY ("A") REFERENCES "Image"("id") ON DELETE CASCADE ON UPDATE CASCADE;
