@@ -2,51 +2,68 @@
 
 import prisma from "@/lib/prisma";
 
-function isSameDate(d1: Date, d2: Date): boolean {
-    return (
-        d1.getFullYear() === d2.getFullYear() &&
-        d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate()
-    )
+
+function getMidnightToday(): Date {
+    let midnightToday = new Date()
+    midnightToday.setHours(0, 0, 0, 0)
+    return midnightToday
 }
 
 export async function castVote(projectID: string, email: string) {
-    const [user] = await prisma.$transaction([prisma.user.findFirst({ where: { email } })]);
-    if (user === null) {
-        const [project, user] = await prisma.$transaction([
-            prisma.project.update({
-                where: { id: projectID },
-                data: { votes: { increment: 1 } },
-            }),
-            prisma.user.create({
-                data: { voteCount: 1, email, lastVote: new Date() }
+    const midnightToday = getMidnightToday()
+    const res = await prisma.$transaction(
+        async (tx) => {
+            const { count } = await tx.user.updateMany({
+                where: {
+                    email,
+                    OR: [
+                        { lastVote: null },
+                        { lastVote: { lt: midnightToday } }
+                    ]
+                },
+                data: { voteCount: { increment: 1 }, lastVote: new Date() }
             })
-        ]);
-        return {
-            projectVotes: project.votes,
-            userVotes: user.voteCount,
-        }
-    } else {
-        const now = new Date();
-        if (user.lastVote !== null && isSameDate(now, user.lastVote)) {
-            const msg = `You voted too recently! Please wait until tomorrow to vote again`
-            console.error(msg)
-            throw new Error(msg)
-        } else {
-            const [project, user] = await prisma.$transaction([
-                prisma.project.update({
+            console.log(`count=${count}`)
+            // if we updated, then update the project counts 
+            if (count === 1) {
+                const project = await tx.project.update({
                     where: { id: projectID },
                     data: { votes: { increment: 1 } },
-                }),
-                prisma.user.update({
-                    where: { email },
-                    data: { voteCount: { increment: 1 }, email, lastVote: new Date() }
+                    select: { votes: true }
                 })
-            ]);
-            return {
-                projectVotes: project.votes,
-                userVotes: user.voteCount,
+                const user = await tx.user.findUnique({ where: { email }, select: { voteCount: true } })
+
+                return {
+                    projectVotes: project.votes,
+                    userVotes: user?.voteCount,
+                }
             }
+            // now we need to figure out why we couldn't update; is it because we've already voted today or because the user doesn't exist? 
+            const user = await tx.user.findUnique({ where: { email } });
+            console.log(user)
+
+            if (user === null) {
+                // user doesn't exist, let's update the project counts and create the new user 
+                const project = await tx.project.update({
+                    where: { id: projectID },
+                    data: { votes: { increment: 1 } },
+                    select: { votes: true }
+                })
+                const user = await tx.user.create({ data: { voteCount: 1, lastVote: new Date(), email }, select: { voteCount: true } })
+
+                return {
+                    projectVotes: project.votes,
+                    userVotes: user?.voteCount,
+                }
+            }
+            // user existed but voted too recently, return an error 
+            return new Error(`You voted too recently! Please wait until tomorrow to vote again`)
         }
+    )
+
+    if (res instanceof Error) {
+        throw res
     }
+    return res
+
 }
