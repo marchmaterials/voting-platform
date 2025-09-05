@@ -36,8 +36,12 @@ export const searchProjects = async ({
     const sanitizedSearchTerm = searchTerm.toLowerCase().trim()
     let filter;
     switch (sanitizedSearchTerm) {
+      // special case requested by Marie
+      case "pavilion":
+        filter = { area: { lte: 50 } }
+        break
       case "small":
-        filter = { area: { lte: 100 } }
+        filter = { area: { gt: 50, lte: 100 } }
         break
       case "medium":
         filter = { area: { gt: 100, lte: 500 } }
