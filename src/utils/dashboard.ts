@@ -13,6 +13,12 @@ export const getAllProjects = async (): Promise<
         projectMaterial: { include: { material: true } },
         stakeholders: true,
       },
+      orderBy: [{
+        votes: "desc"
+      },
+      {
+        title: "asc"
+      }],
     });
   } catch (err) {
     console.error(err);
@@ -80,6 +86,12 @@ export const searchProjects = async ({
         projectMaterial: { include: { material: true } },
         stakeholders: true,
       },
+      orderBy: [{
+        votes: "desc"
+      },
+      {
+        title: "asc"
+      }],
     });
   } catch (err) {
     console.error(err);
