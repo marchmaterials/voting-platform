@@ -30,8 +30,8 @@ export default function Lightbox({
       </button>
 
       <div className="bg-white rounded-lg shadow-lg w-[90vw] h-[80vh] flex flex-col">
-        <div className="flex">
-          <h2 className="text-2xl p-4 font-extrabold">{title}</h2>
+        <div className="flex flex-row items-center max-h-fit p-4">
+          <h2 className="text-2xl font-extrabold pr-4">{title}</h2>
           <VoteButton projectId={project.id} setVotes={setVotes} />
         </div>
         <div className="flex sm:flex-row flex-col-reverse flex-1 h-0 justify-around">

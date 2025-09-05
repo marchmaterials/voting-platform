@@ -43,11 +43,9 @@ export default function VoteButton({ projectId, setVotes }: Props) {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <button className="bg-green px-4 pb-0 pt-1 hover:opacity-75 rounded-md font-bold" onClick={() => setModalOpen(true)}>
-          <div className="text-xl font-extrabold">Vote</div>
-        </button>
-      </div >
+      <button className="bg-green px-4 py-2 hover:opacity-75 rounded-md flex items-baseline justify-center" onClick={() => setModalOpen(true)}>
+        <span className="text-xl font-extrabold leading-none">Vote</span>
+      </button>
       <Modal
         title="Enter your email"
         open={modalOpen}
