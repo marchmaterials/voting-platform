@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 
 function getMidnightToday(): Date {
-    let midnightToday = new Date()
+    const midnightToday = new Date()
     midnightToday.setHours(0, 0, 0, 0)
     return midnightToday
 }
