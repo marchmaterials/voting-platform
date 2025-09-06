@@ -29,7 +29,8 @@ export const getAllProjects = async (): Promise<
 
 export const searchProjects = async ({
   searchTerm,
-}: FilterOptions): Promise<Array<FullyEnrichedProject> | Error> => {
+}: FilterOptions): Promise<
+  Array<FullyEnrichedProject> | Error> => {
 
   if (!searchTerm) return new Error("no search criteria provided");
   try {
