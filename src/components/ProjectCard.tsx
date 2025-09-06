@@ -46,7 +46,7 @@ export default function ProjectCard({
       >
         <div className="flex flex-row justify-between items-center">
           <div className="text-sm text-gray-700">Votes: {voteCount}</div>
-          <VoteButton projectId={project.id} setVotes={setVoteCount}></VoteButton>
+          <VoteButton projectId={project.id} setVotes={setVoteCount} antdAdjustment={false}></VoteButton>
         </div>
       </Card>
       <Lightbox

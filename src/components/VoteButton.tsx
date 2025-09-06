@@ -8,9 +8,10 @@ import { castVote } from "@/app/actions/vote";
 type Props = {
   projectId: string;
   setVotes: (votes: number) => void;
+  antdAdjustment: boolean;
 };
 
-export default function VoteButton({ projectId, setVotes }: Props) {
+export default function VoteButton({ projectId, setVotes, antdAdjustment }: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -41,11 +42,13 @@ export default function VoteButton({ projectId, setVotes }: Props) {
     }
   };
 
+  const verticalSpacing = antdAdjustment ? "py-1 pt-2 mb-1" : "py-2"
+
   return (
     <>
-      <button className="bg-green px-4 py-2 hover:opacity-75 rounded-md flex items-baseline justify-center" onClick={() => setModalOpen(true)}>
+      <button className={`px-4 border-2 border-black ${verticalSpacing} hover:opacity-75 hover:border-opacity-75 rounded-md flex items-baseline justify-center`} onClick={() => setModalOpen(true)}>
         <span className="text-xl font-extrabold leading-none">Vote</span>
-      </button>
+      </button >
       <Modal
         title="Enter your email"
         open={modalOpen}
