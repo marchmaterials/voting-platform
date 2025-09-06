@@ -43,7 +43,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Create Projects in DB
 
-make sure you have the connection string in the env vars as described above
+make sure you have the connection string in the env vars as described above. Also make sure that you have the .csv file containing all the project information.
 
 ```
 npx ts-node prisma/migrate.ts
