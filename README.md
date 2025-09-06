@@ -52,5 +52,5 @@ npx ts-node prisma/migrate.ts
 To connect the images that are stored on Imagekit, use the main() function
 
 ```
-node prisma/pullImages.js
+npx ts-node prisma/pullImages.js
 ```
