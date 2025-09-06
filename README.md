@@ -20,3 +20,16 @@ bun run dev
 
 Now the app should be running on `http://localhost:3000`. 
 
+## Create Projects in DB
+
+make sure you have the connection string in the env vars as described above. Also make sure that you have the .csv file containing all the project information.
+
+```
+npx ts-node prisma/migrate.ts
+```
+
+To connect the images that are stored on Imagekit, use the main() function
+
+```
+npx ts-node prisma/pullImages.js
+```
