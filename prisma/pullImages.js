@@ -58,17 +58,17 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
     // });
     const normalizedTitle = normalize(projectTitle);
     console.log("NORMALIZED TITLE:", normalizedTitle);
-    const project = await prisma.$queryRaw`
+    const projects = await prisma.$queryRaw`
       SELECT *
       FROM "Project"
       WHERE "authorId" = ${user.id}
-      AND LOWER(REGEXP_REPLACE("title", '["''_\-\s]', '', 'g')) = ${normalizedTitle}
+      AND LOWER(REGEXP_REPLACE("title", '["''_\\-\\s]', '', 'g')) = ${normalizedTitle}
       LIMIT 1;
     `;
 
-    if (!project.id) {
+    if (projects.length == 0) {
       console.warn(
-        `No project id found with title: ${projectTitle} for user: ${email}`
+        `No project id found with title: ${projectTitle} for user: ${email} with id ${user.id}`
       );
       throw new Error("No project found", {
         projectTitle,
@@ -76,6 +76,7 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
         status: "rejected",
       });
     }
+    const project = projects[0]
 
     // Create the image and connect it to the project
     const image = await prisma.image.create({
@@ -169,7 +170,6 @@ const main = async (skip = 0, limit = 100) => {
       const newImages = await Promise.allSettled(
         extracted.map(createConnectedImage)
       );
-
       const successes = newImages.filter(
         (result) => result.status === "fulfilled"
       );
@@ -209,7 +209,7 @@ const importMissingImages = async () => {
   failedImages.push(...errors);
 };
 
-await main();
+main();
 console.log("failed:", failedImages);
 
 // importMissingImages();
