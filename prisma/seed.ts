@@ -44,15 +44,11 @@ type ImageData = {
 };
 
 const isAlreadySeeded = async (): Promise<boolean | Error> => {
-  console.info("isAlreadySeeded")
   const projectTitles = [testData[0].title, testData[1].title];
-  console.info(projectTitles)
   try {
-    console.log("hello")
     const projects = await prisma.project.findMany({
       where: { OR: [{ title: projectTitles[0] }, { title: projectTitles[1] }] },
     });
-    console.log(projects)
     const users = await prisma.user.findMany();
     console.log(
       "DB already seeded? Projects:",
@@ -134,7 +130,6 @@ const createFullyEnrichedProject = async (
   projectData: ProjectWithImageFolder
 ) => {
   try {
-    console.log("createFullyEnrichedProject")
     const validatedData: ProjectSubmissionForm =
       projectSubmissionSchema.parse(projectData);
     const images = imageData
@@ -204,10 +199,8 @@ export async function main(): Promise<void> {
   let allProjects: Array<Project>;
   try {
     if (await isAlreadySeeded()) {
-      console.info("Data already seeded")
       return
     } else {
-      console.info("main: here")
       allProjects = await Promise.all(
         testData.map((p: ProjectWithImageFolder) => {
           return createFullyEnrichedProject(p);
