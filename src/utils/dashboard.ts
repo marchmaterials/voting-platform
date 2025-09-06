@@ -84,7 +84,12 @@ export const searchProjects = async ({
           ],
         }
     }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return await prisma.project.findMany({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       where: filter,
       include: {
         images: true,
