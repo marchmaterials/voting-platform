@@ -65,7 +65,9 @@ export function parseMaterial(entry: string): MaterialInput | z.ZodError {
       certifications: [],
     });
   } catch (error) {
-    return error
+    if (error instanceof z.ZodError) {
+      return error
+    }
   }
 }
 
