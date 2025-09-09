@@ -57,7 +57,6 @@ async function createConnectedImage({ projectTitle, email, url, tags }) {
     //   },
     // });
     const normalizedTitle = normalize(projectTitle);
-    console.log("NORMALIZED TITLE:", normalizedTitle);
     const projects = await prisma.$queryRaw`
       SELECT *
       FROM "Project"
@@ -193,23 +192,77 @@ const main = async (skip = 0, limit = 100) => {
 };
 
 const importMissingImages = async () => {
-  const images = await Promise.all(
-    missingProjectImages.default.map((i) => fetchImageByNamePart(i.title))
-  );
-  const extracted = await extractProjectInfo(images);
-  const newImages = await Promise.allSettled(
-    extracted.map(createConnectedImage)
-  );
+  const projectsWithoutImages = await prisma.project.findMany({
+    where: {
+      images: {
+        none: {}
+      }
+    },
+    include: {
+      images: true
+    }
+  });
 
-  const successes = newImages.filter((result) => result.status === "fulfilled");
-  const errors = newImages.filter((result) => result.status === "rejected");
+  const specialCaseMap = {
+    "cmfcznmaw00yuys8m1ut34ri6": "les promenades",
+    "cmfczodft016yys8mw4d2la5o": "chalet",
+  }
+  let images = []
+  let errors = []
+  for (const project of projectsWithoutImages) {
+    let searchTerm
+    if (project.id in specialCaseMap) {
+      searchTerm = specialCaseMap[project.id]
+    } else {
+      const title = project.title
+      const normalizedTitle = normalize(title)
+      searchTerm = normalizedTitle
+    }
+    console.log(searchTerm)
+    try {
+      const files = await imagekit.listFiles({
+        searchQuery: `name HAS "${searchTerm}"`,
+        limit: 100,
+        skip: 0
+      })
+      for (const file of files) {
+        const existingImage = await prisma.image.findFirst({
+          where: { url: file.url },
+        });
+        if (existingImage) {
+          console.log(`Image already uploaded: ${url}`);
+          continue;
+        }
+        const tags = [
+          ...(file.tags ?? []),
+          ...(file.AITags ? file.AITags.map((t) => t.name) : []),
+        ]
+        const image = await prisma.image.create({
+          data: {
+            url: file.url,
+            project: {
+              connect: { id: project.id },
+            },
+            aiTags: tags,
+            credit: project.imageCredit ?? null,
+          },
+        })
+        images.push(image)
+      }
+    } catch (error) {
+      console.error(error)
+      errors.push(error)
+    }
+  }
+  console.log(`Created ${images.length} new images`)
+  if (errors.length > 0) {
+    console.error("oops!")
+  }
 
-  totalUploaded += successes.length;
-  totalFailed += errors.length;
-  failedImages.push(...errors);
+
 };
 
-main();
-console.log("failed:", failedImages);
+// main();
+// console.log("failed:", failedImages);
 
-// importMissingImages();
+importMissingImages();
