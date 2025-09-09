@@ -1,10 +1,9 @@
 "use client";
 
-import { ProjectMaterial, STAKEHOLDER_TYPE } from "@prisma/client";
+import { STAKEHOLDER_TYPE } from "@prisma/client";
 import {
   EnrichedProjectMaterials,
   FullyEnrichedProject,
-  EnrichedMaterial
 } from "@/types/dashboard";
 import { Collapse, Tag } from "antd";
 const comingSoonStakeholders = [
