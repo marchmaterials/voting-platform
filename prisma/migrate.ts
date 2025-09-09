@@ -21,7 +21,7 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
     skip_empty_lines: true,
   });
   const typedRecords = records as Array<Record<string, string>>;
-  let failedValidations = []
+  let failedValidations: [Record<string, string>, z.ZodError][] = []
 
   const validatedSubmissions = typedRecords.flatMap(row => {
     try {
@@ -64,7 +64,7 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
     const [totalMaterials, materialsWithNoUrl] = validatedSubmissions.reduce((acc, project) => project.materials.reduce((acc, material) => {
       let [t, u] = acc;
       t += 1
-      if (!material.supplierContact.url) { u += 1 }
+      if (!material?.supplierContact.url) { u += 1 }
       return [t, u]
 
     }, acc), [0, 0])
