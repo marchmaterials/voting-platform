@@ -3,12 +3,11 @@
 import Script from "next/script";
 
 export default function HotjarAnalytics() {
-    const HOTJAR_ID = process.env.HOTJAR_ID;
+    const HOTJAR_ID = process.env.NEXT_PUBLIC_HOTJAR_ID;
     if (!HOTJAR_ID) return null
     return (
-        <div>
-            <Script id="hotjar-snippet">
-                {`
+        <Script id="hotjar-snippet" strategy="afterInteractive">
+            {`
           (function(h,o,t,j,a,r){
               h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
               h._hjSettings={hjid:${HOTJAR_ID},hjsv:6};
@@ -18,7 +17,6 @@ export default function HotjarAnalytics() {
               a.appendChild(r);
           })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
         `}
-            </Script>
-        </div>
+        </Script>
     );
 };
