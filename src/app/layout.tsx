@@ -5,7 +5,7 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { DataProvider } from "./context/dataContext";
-import { HotjarAnalytics } from "@/components/Hotjar"
+import HotjarAnalytics from "@/components/Hotjar"
 import { getAllProjects } from "@/utils/dashboard";
 
 export const metadata: Metadata = {
