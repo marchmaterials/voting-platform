@@ -87,7 +87,7 @@ const constructionMap: Record<string, CONSTRUCTION_TYPOLOGY> = {
 };
 
 export const parseConstruction = (raw: string): CONSTRUCTION_TYPOLOGY[] => {
-  console.log("parsing Construction", raw);
+  // console.log("parsing Construction", raw);
   return raw
     .split("\n")
     .map((v) => v.trim())

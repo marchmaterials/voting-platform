@@ -1,6 +1,7 @@
 import { parse } from "csv-parse/sync";
 import fs from "fs";
 import path from "path";
+import cliProgress from 'cli-progress';
 import { projectSubmissionSchema } from "../src/lib/validation/projectSchema"; // your Zod schema
 import { z } from "zod";
 import prisma from "../src/lib/prisma";
@@ -13,7 +14,6 @@ import {
 import { createMaterialsAndConnections } from "./seed";
 
 export async function importProjects(csvPath: string, dryRun: boolean) {
-  console.log("IMPORT BEGIN");
   const raw = fs.readFileSync(csvPath, "utf-8");
   const records = parse(raw, {
     columns: true,
@@ -86,7 +86,8 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
 
   let failedDbTransactions = []
   let projects = []
-
+  const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar.start(validatedSubmissions.length, 0);
   for (const validated of validatedSubmissions) {
     try {
       // const existingRecord = await prisma.project.findFirst({
@@ -128,11 +129,12 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
 
       await createMaterialsAndConnections(validated.materials, project.id);
       projects.push(project)
+      bar.increment()
     } catch (error) {
       failedDbTransactions.push(error)
     }
   }
-
+  bar.stop()
   if (failedDbTransactions.length > 0) {
     for (const failedDbTransaction of failedDbTransactions) {
       console.error(failedDbTransaction)
