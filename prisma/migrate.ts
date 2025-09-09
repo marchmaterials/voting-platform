@@ -12,7 +12,7 @@ import {
 } from "./parseData";
 import { createMaterialsAndConnections } from "./seed";
 
-export async function importProjects(csvPath: string) {
+export async function importProjects(csvPath: string, dryRun: boolean) {
   console.log("IMPORT BEGIN");
   const raw = fs.readFileSync(csvPath, "utf-8");
   const records = parse(raw, {
@@ -21,22 +21,12 @@ export async function importProjects(csvPath: string) {
     skip_empty_lines: true,
   });
   const typedRecords = records as Array<Record<string, string>>;
-  for (const row of typedRecords) {
+  let failedValidations = []
+
+  const validatedSubmissions = typedRecords.flatMap(row => {
     try {
       const email = row["Email"];
       const title = row["Project Name"];
-      const existingRecord = await prisma.project.findFirst({
-        where: {
-          AND: [{ author: { email } }, { title }],
-        },
-      });
-      if (existingRecord) {
-        console.log(
-          `Record with email ${email} and title ${title} already exists`
-        );
-        continue;
-      }
-      // Prepare the object for validation
       const submission = {
         email,
         title,
@@ -57,19 +47,67 @@ export async function importProjects(csvPath: string) {
           row["Construction Type (select all that apply)"]
         ),
       };
-      console.log("submission:", submission.construction);
-
-      // --- Validate with Zod ---
       const validated = projectSubmissionSchema.parse(submission);
+      return [validated]
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        failedValidations.push([row, error])
+      } else {
+        console.error("Failed to import row:", row["Project Name"], error);
+      }
+      return []
+    }
+  })
 
-      // --- Upsert user ---
+  if (dryRun) {
+    fs.writeFileSync("validatedSubmissions.json", JSON.stringify(validatedSubmissions, null, 2))
+    const [totalMaterials, materialsWithNoUrl] = validatedSubmissions.reduce((acc, project) => project.materials.reduce((acc, material) => {
+      let [t, u] = acc;
+      t += 1
+      if (!material.supplierContact.url) { u += 1 }
+      return [t, u]
+
+    }, acc), [0, 0])
+    console.log(`totalMaterials=${totalMaterials}, materialsWithNoUrl=${materialsWithNoUrl}`)
+    console.log(`validation failed for ${failedValidations.length} projects`)
+    for (const failedValidation of failedValidations) {
+      console.log(failedValidation)
+    }
+    return
+  }
+
+  if (failedValidations.length > 0) {
+    console.error("Validation failed for some projects; not inserting data!")
+    for (const failedValidation of failedValidations) {
+      console.error(failedValidation)
+    }
+    return
+  }
+
+  let failedDbTransactions = []
+  let projects = []
+
+  for (const validated of validatedSubmissions) {
+    try {
+      // const existingRecord = await prisma.project.findFirst({
+      //   where: {
+      //     AND: [{ author: { email } }, { title }],
+      //   },
+      // });
+      // if (existingRecord) {
+      //   console.log(
+      //     `Record with email ${email} and title ${title} already exists`
+      //   );
+      //   continue;
+      // }
+      // --- Upsert user-- -
       const user = await prisma.user.upsert({
         where: { email: validated.email },
         update: {},
         create: { email: validated.email },
       });
 
-      // --- Create project ---
+      // --- Create project-- -
       const project = await prisma.project.create({
         data: {
           title: validated.title,
@@ -89,20 +127,22 @@ export async function importProjects(csvPath: string) {
       });
 
       await createMaterialsAndConnections(validated.materials, project.id);
-
-      console.log(`Imported project: ${validated.title}`);
+      projects.push(project)
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.error("Validation failed for row:", row["Project Name"], error);
-      } else {
-        console.error("Failed to import row:", row["Project Name"], error);
-      }
+      failedDbTransactions.push(error)
     }
   }
 
+  if (failedDbTransactions.length > 0) {
+    for (const failedDbTransaction of failedDbTransactions) {
+      console.error(failedDbTransaction)
+    }
+  }
+
+  console.log(`inserted ${projects.length} projects`)
   await prisma.$disconnect();
 }
 
 // Run script
 const csvFile = path.resolve(process.argv[2] || "jotformData.csv");
-importProjects(csvFile);
+importProjects(csvFile, false);
