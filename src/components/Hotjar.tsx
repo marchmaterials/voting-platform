@@ -4,7 +4,7 @@ import Script from "next/script";
 
 export default function HotjarAnalytics() {
     const HOTJAR_ID = process.env.HOTJAR_ID;
-    if (HOTJAR_ID) return null
+    if (!HOTJAR_ID) return null
     return (
         <div>
             <Script id="hotjar-snippet">
