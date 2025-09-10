@@ -53,7 +53,6 @@ export function Sidebar({
       </>
     );
   };
-  console.log(materials)
   const materialList = materials.map((m) => ({
     key: m.material.id,
     label: `${m.material.name} ${m.percentage}%`,
