@@ -4,6 +4,7 @@ import ProjectCard from "@/components/ProjectCard";
 import { useDataContext } from "@/app/context/dataContext";
 import { use, useState } from "react";
 import SearchBar from "@/components/SearchBar";
+import Masonry from "react-masonry-css";
 
 export default function ProjectDashboard() {
   const { filteredProjects, initialProjectsFetch, search } = useDataContext();
@@ -30,14 +31,16 @@ export default function ProjectDashboard() {
       {loading ? (
         <p data-testid="loading-message">Loading projects...</p>
       ) : (
-        <div
+        <Masonry
           data-testid="project-grid"
-          className="flex flex-row m-4 flex-wrap justify-around w-full gap-2"
+          breakpointCols={{ default: 3, 1300: 2, 900: 1 }}
+          className="flex w-auto m-4"
+          columnClassName="pl-4 bg-clip-padding"
         >
           {projectsToShow.map((p) => (
             <ProjectCard key={p.id} project={p} />
           ))}
-        </div>
+        </Masonry>
       )}
     </div>
   );
