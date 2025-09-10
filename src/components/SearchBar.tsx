@@ -1,16 +1,15 @@
 "use client";
 
-import { searchProjects } from "@/utils/dashboard";
 import { useDataContext } from "@/app/context/dataContext";
 import { useState } from "react";
-
+import searchProjects from "@/utils/search";
 
 export default function SearchBar({
   setLoading,
 }: {
   setLoading: (loading: boolean) => void;
 }) {
-  const { setFilteredProjects, setSearch } = useDataContext();
+  const { setFilteredProjects, setSearch, allProjects } = useDataContext();
   const [searchText, setSearchText] = useState("");
 
   const onSearch = async (e: React.FormEvent) => {
@@ -18,13 +17,10 @@ export default function SearchBar({
     setSearch(searchText);
     if (!searchText) return;
     setLoading(true);
-    const filteredProjects = await searchProjects({ searchTerm: searchText });
-    if (filteredProjects instanceof Error) {
-      console.error("Error fetching search results:", filteredProjects);
-      setFilteredProjects([]);
-      setLoading(false);
-      return;
-    }
+
+    console.log(`allProjects.length=${allProjects.length}`)
+    const filteredProjects = searchProjects(allProjects, searchText)
+    console.log(`filteredProjects.length=${filteredProjects.length}`)
     setFilteredProjects(filteredProjects);
     setLoading(false);
   };

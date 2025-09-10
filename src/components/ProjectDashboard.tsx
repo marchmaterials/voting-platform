@@ -2,24 +2,16 @@
 
 import ProjectCard from "@/components/ProjectCard";
 import { useDataContext } from "@/app/context/dataContext";
-import { use, useState } from "react";
+import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import Masonry from "react-masonry-css";
 
 export default function ProjectDashboard() {
-  const { filteredProjects, initialProjectsFetch, search } = useDataContext();
+  const { filteredProjects, allProjects, search } = useDataContext();
   const [loading, setLoading] = useState(false);
 
-  const projectsToShow = search ? filteredProjects : use(initialProjectsFetch);
+  const projectsToShow = search ? filteredProjects : allProjects;
 
-  if (projectsToShow instanceof Error) {
-    console.error("Error fetching projects:", projectsToShow);
-    return (
-      <p data-testid="error-message">
-        Error loading projects. Please try again later.
-      </p>
-    );
-  }
   return (
     <div className="flex flex-col items-center">
       <SearchBar setLoading={setLoading} />
