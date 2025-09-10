@@ -33,14 +33,14 @@ export function Sidebar({
     tags,
   }: { certifications: string[], url: string | null, supplierName: string | null, usedWhere: string, tags: string[] }) => {
     const certificationTags = certifications.map((c) => <Tag key={c}>{c}</Tag>);
-    const imageTags = tags.map(t => <p key={t} className="mb-2 text-sm font-light pr-1">{t}</p>)
+    const imageTags = tags.join(", ")
     return (
       <>
         <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
         <p className="mb-2 text-sm font-light">{usedWhere}</p>
         <h6 className="text-xs font-semibold mb-1">Material Categories:</h6>
         <div className="flex flex-wrap">
-          {imageTags}
+          <p className="mb-2 text-sm font-light">{imageTags}</p>
         </div>
         {(url === null ? null : <a
           href={`${url}?utm_source=marchmaterials.com&utm_medium=MARCH_material_search_for_architects`}
