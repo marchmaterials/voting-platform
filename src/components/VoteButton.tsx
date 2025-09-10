@@ -50,7 +50,7 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
 
   return (
     <>
-      <button className={`px-4 border-2 border-black ${verticalSpacing} hover:opacity-75 hover:border-opacity-75 rounded-md flex items-baseline justify-center`} onClick={() => setModalOpen(true)}>
+      <button className={`px-4 border-2 border-black bg-black text-white ${verticalSpacing} hover:opacity-75 hover:border-opacity-75 rounded-md flex items-baseline justify-center`} onClick={() => setModalOpen(true)}>
         <span className="text-xl font-extrabold leading-none">Vote</span>
       </button >
       <Modal

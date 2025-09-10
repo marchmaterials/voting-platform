@@ -55,7 +55,7 @@ export function Sidebar({
   };
   const materialList = materials.map((m) => ({
     key: m.material.id,
-    label: `${m.material.name} ${m.percentage}%`,
+    label: `${m.percentage}% ${m.material.name}`,
     children: (
       <MaterialDetails {...{ usedWhere: m.usedWhere, supplierName: m.material.supplier.name, ...m.material }} />
     ),
