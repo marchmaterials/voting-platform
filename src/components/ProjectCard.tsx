@@ -24,7 +24,7 @@ export default function ProjectCard({
       <Card
         key={project.id}
         data-testid={project.id}
-        className="w-[400px] max-h-fit cursor-pointer"
+        className="w-[350px] sm:w-[400px] max-h-fit cursor-pointer !mb-2"
         title={project.title}
         onClick={() => setLightboxOpen(true)}
         hoverable
@@ -38,7 +38,7 @@ export default function ProjectCard({
               height={300}
               layout="responsive"
               loading="lazy"
-              className="w-100"
+              className="!rounded-none"
               onLoad={() => setLoading(false)}
             />
           )
