@@ -27,9 +27,13 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
     setLoading(true);
 
     try {
-      const { projectVotes } = await castVote(projectId, email);
-      setVotes(projectVotes);
-      message.success("Thanks for voting!");
+      const res = await castVote(projectId, email);
+      if (res.type == "success") {
+        setVotes(res.projectVotes);
+        message.success("Thanks for voting!");
+      } else {
+        message.info(res.message)
+      }
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
