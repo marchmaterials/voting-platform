@@ -9,7 +9,19 @@ function getMidnightToday(): Date {
     return midnightToday
 }
 
-export async function castVote(projectID: string, email: string) {
+interface VoteSuccess {
+    type: "success",
+    projectVotes: number,
+    userVotes: number
+}
+
+interface VoteFailure {
+    type: "failure",
+    message: string
+}
+
+
+export async function castVote(projectID: string, email: string): Promise<VoteSuccess | VoteFailure> {
     const midnightToday = getMidnightToday()
     const res = await prisma.$transaction(
         async (tx) => {
@@ -31,10 +43,12 @@ export async function castVote(projectID: string, email: string) {
                     select: { votes: true }
                 })
                 const user = await tx.user.findUnique({ where: { email }, select: { voteCount: true } })
-
+                if (user === null) {
+                    throw new Error(`Unreachable; couldn't find user with email=${email}`)
+                }
                 return {
                     projectVotes: project.votes,
-                    userVotes: user?.voteCount,
+                    userVotes: user.voteCount,
                 }
             }
             // now we need to figure out why we couldn't update; is it because we've already voted today or because the user doesn't exist? 
@@ -52,7 +66,7 @@ export async function castVote(projectID: string, email: string) {
 
                 return {
                     projectVotes: project.votes,
-                    userVotes: user?.voteCount,
+                    userVotes: user.voteCount,
                 }
             }
             // user existed but voted too recently, return an error 
@@ -61,8 +75,8 @@ export async function castVote(projectID: string, email: string) {
     )
 
     if (res instanceof Error) {
-        throw res
+        return { message: res.message, type: "failure" }
     }
-    return res
+    return { type: "success", ...res }
 
 }
