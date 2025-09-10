@@ -17,10 +17,7 @@ export default function SearchBar({
     setSearch(searchText);
     if (!searchText) return;
     setLoading(true);
-
-    console.log(`allProjects.length=${allProjects.length}`)
     const filteredProjects = searchProjects(allProjects, searchText)
-    console.log(`filteredProjects.length=${filteredProjects.length}`)
     setFilteredProjects(filteredProjects);
     setLoading(false);
   };
