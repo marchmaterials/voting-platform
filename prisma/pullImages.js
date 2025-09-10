@@ -249,7 +249,7 @@ const main = async (skip = 0, limit = 100) => {
     skip += limit;
   }
   const [missingImages, _errors] = await importMissingImages()
-  console.log(f`Added ${missingImages.length} images from projects with no images`)
+  console.log(`Added ${missingImages.length} images from projects with no images`)
   await prisma.$disconnect();
   console.log("Total uploaded files: ", totalUploaded);
   console.log("Total failed files: ", totalFailed);
