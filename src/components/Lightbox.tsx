@@ -31,7 +31,7 @@ export default function Lightbox({
       </button>
 
       <div className=" bg-white rounded-lg shadow-lg w-[90vw] h-[85vh] flex flex-col">
-        <div className="flex flex-row items-center max-h-fit p-4">
+        <div className="flex flex-row items-center max-h-fit p-4 justify-between">
           <h2 className="text-md sm:text-2xl font-extrabold pr-4">{title}</h2>
           <VoteButton projectId={project.id} setVotes={setVotes} antdAdjustment={true} />
         </div>
