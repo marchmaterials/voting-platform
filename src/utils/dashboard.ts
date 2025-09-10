@@ -10,7 +10,7 @@ export const getAllProjects = async (): Promise<
     return prisma.project.findMany({
       include: {
         images: true,
-        projectMaterial: { include: { material: true } },
+        projectMaterial: { include: { material: { include: { supplier: true } } } },
         stakeholders: true,
       },
       orderBy: [{

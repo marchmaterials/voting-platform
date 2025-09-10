@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectMaterial, Material, STAKEHOLDER_TYPE } from "@prisma/client";
+import { STAKEHOLDER_TYPE } from "@prisma/client";
 import {
   EnrichedProjectMaterials,
   FullyEnrichedProject,
@@ -28,9 +28,19 @@ export function Sidebar({
   const MaterialDetails = ({
     certifications,
     url,
+    supplierName,
     usedWhere,
-  }: Material & Partial<ProjectMaterial>) => {
+  }: { certifications: string[], url: string | null, supplierName: string | null, usedWhere: string }) => {
     const certificationTags = certifications.map((c) => <Tag key={c}>{c}</Tag>);
+    if (url === null) {
+      return (
+        <>
+          <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
+          <p className="mb-2 text-sm font-light">{usedWhere}</p>
+          {certificationTags}
+        </>
+      )
+    }
     return (
       <>
         <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
@@ -40,7 +50,7 @@ export function Sidebar({
           rel="noopener noreferrer"
           target="_blank"
         >
-          Go to supplier
+          {supplierName}
         </a>
         {certificationTags}
       </>
@@ -50,7 +60,7 @@ export function Sidebar({
     key: m.material.id,
     label: `${m.material.name} ${m.percentage}%`,
     children: (
-      <MaterialDetails {...{ usedWhere: m.usedWhere, ...m.material }} />
+      <MaterialDetails {...{ usedWhere: m.usedWhere, supplierName: m.material.supplier.name, ...m.material }} />
     ),
   }));
   const stakeholderList = project.stakeholders
