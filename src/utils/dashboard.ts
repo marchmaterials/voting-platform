@@ -93,7 +93,7 @@ export const searchProjects = async ({
       where: filter,
       include: {
         images: true,
-        projectMaterial: { include: { material: true } },
+        projectMaterial: { include: { material: { include: { supplier: true } } } },
         stakeholders: true,
       },
       orderBy: [{
