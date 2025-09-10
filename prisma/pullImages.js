@@ -166,16 +166,17 @@ const importMissingImages = async () => {
     }
   });
 
+  console.log(`Found ${projectsWithoutImages.length} projects with no images`)
   const specialCaseMap = {
-    "cmfcznmaw00yuys8m1ut34ri6": "les promenades",
-    "cmfczodft016yys8mw4d2la5o": "chalet",
+    "Les promenades d'Icare": "les promenades",
+    "Chalet Dahu - Low-impact hempcrete self-build": "chalet",
   }
   let images = []
   let errors = []
   for (const project of projectsWithoutImages) {
     let searchTerm
-    if (project.id in specialCaseMap) {
-      searchTerm = specialCaseMap[project.id]
+    if (project.title in specialCaseMap) {
+      searchTerm = specialCaseMap[project.title]
     } else {
       const title = project.title
       const normalizedTitle = normalize(title)
