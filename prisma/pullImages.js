@@ -215,7 +215,7 @@ const importMissingImages = async () => {
       errors.push(error)
     }
   }
-  return images, errors
+  return [images, errors]
 };
 
 
