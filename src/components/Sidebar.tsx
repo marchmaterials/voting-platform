@@ -30,32 +30,30 @@ export function Sidebar({
     url,
     supplierName,
     usedWhere,
-  }: { certifications: string[], url: string | null, supplierName: string | null, usedWhere: string }) => {
+    tags,
+  }: { certifications: string[], url: string | null, supplierName: string | null, usedWhere: string, tags: string[] }) => {
     const certificationTags = certifications.map((c) => <Tag key={c}>{c}</Tag>);
-    if (url === null) {
-      return (
-        <>
-          <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
-          <p className="mb-2 text-sm font-light">{usedWhere}</p>
-          {certificationTags}
-        </>
-      )
-    }
+    const imageTags = tags.map(t => <p key={t} className="mb-2 text-sm font-light pr-1">{t}</p>)
     return (
       <>
         <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
         <p className="mb-2 text-sm font-light">{usedWhere}</p>
-        <a
+        <h6 className="text-xs font-semibold mb-1">Material Categories:</h6>
+        <div className="flex flex-wrap">
+          {imageTags}
+        </div>
+        {(url === null ? null : <a
           href={`${url}?utm_source=marchmaterials.com&utm_medium=MARCH_material_search_for_architects`}
           rel="noopener noreferrer"
           target="_blank"
         >
           {supplierName}
-        </a>
+        </a>)}
         {certificationTags}
       </>
     );
   };
+  console.log(materials)
   const materialList = materials.map((m) => ({
     key: m.material.id,
     label: `${m.material.name} ${m.percentage}%`,
