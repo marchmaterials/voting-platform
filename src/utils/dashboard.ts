@@ -26,6 +26,9 @@ export const getAllProjects = async (): Promise<
   }
 };
 
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
 
 export const searchProjects = async ({
   searchTerm,
@@ -35,6 +38,8 @@ export const searchProjects = async ({
   if (!searchTerm) return new Error("no search criteria provided");
   try {
     const sanitizedSearchTerm = searchTerm.toLowerCase().trim()
+    // for now, material categories are stored as capitalized strings 
+    const materialCategorySearchTerm = capitalize(sanitizedSearchTerm)
     let filter;
     switch (sanitizedSearchTerm) {
       // special case requested by Marie
@@ -80,11 +85,19 @@ export const searchProjects = async ({
                   }
                 }
               }
-            }
+            },
+            {
+              projectMaterial: {
+                some: {
+                  material: {
+                    tags: { has: materialCategorySearchTerm }
+                  }
+                }
+              }
+            },
           ],
         }
     }
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return await prisma.project.findMany({
