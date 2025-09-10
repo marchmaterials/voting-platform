@@ -35,7 +35,7 @@ export default function ProjectDashboard() {
           data-testid="project-grid"
           breakpointCols={{ default: 3, 1300: 2, 900: 1 }}
           className="flex w-auto m-4"
-          columnClassName="pl-4 bg-clip-padding"
+          columnClassName="sm:pl-4 bg-clip-padding"
         >
           {projectsToShow.map((p) => (
             <ProjectCard key={p.id} project={p} />
