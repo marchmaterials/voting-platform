@@ -154,43 +154,6 @@ async function fetchImageByNamePart(fileNamePart) {
   }
 }
 
-const failedImages = [];
-const main = async (skip = 0, limit = 100) => {
-  let totalUploaded = 0;
-  let totalFailed = 0;
-
-  while (true) {
-    try {
-      const data = await fetchFileMetadata(skip, limit);
-
-      if (data.length === 0) break;
-
-      const extracted = await extractProjectInfo(data);
-      const newImages = await Promise.allSettled(
-        extracted.map(createConnectedImage)
-      );
-      const successes = newImages.filter(
-        (result) => result.status === "fulfilled"
-      );
-      const errors = newImages.filter((result) => result.status === "rejected");
-
-      totalUploaded += successes.length;
-      totalFailed += errors.length;
-      failedImages.push(...errors);
-    } catch (err) {
-      console.error("Error occurred while processing images:", err);
-      failedImages.push(err);
-    }
-    skip += limit;
-  }
-
-  await prisma.$disconnect();
-
-  console.log("Total uploaded files: ", totalUploaded);
-  console.log("Total failed files: ", totalFailed);
-  console.log("Failed images details: ", failedImages);
-};
-
 const importMissingImages = async () => {
   const projectsWithoutImages = await prisma.project.findMany({
     where: {
@@ -218,7 +181,6 @@ const importMissingImages = async () => {
       const normalizedTitle = normalize(title)
       searchTerm = normalizedTitle
     }
-    console.log(searchTerm)
     try {
       const files = await imagekit.listFiles({
         searchQuery: `name HAS "${searchTerm}"`,
@@ -230,7 +192,6 @@ const importMissingImages = async () => {
           where: { url: file.url },
         });
         if (existingImage) {
-          console.log(`Image already uploaded: ${url}`);
           continue;
         }
         const tags = [
@@ -254,15 +215,46 @@ const importMissingImages = async () => {
       errors.push(error)
     }
   }
-  console.log(`Created ${images.length} new images`)
-  if (errors.length > 0) {
-    console.error("oops!")
-  }
-
-
+  return images, errors
 };
 
-// main();
-// console.log("failed:", failedImages);
 
-importMissingImages();
+const main = async (skip = 0, limit = 100) => {
+  const failedImages = [];
+  let totalUploaded = 0;
+  let totalFailed = 0;
+
+  while (true) {
+    try {
+      const data = await fetchFileMetadata(skip, limit);
+
+      if (data.length === 0) break;
+
+      const extracted = await extractProjectInfo(data);
+      const newImages = await Promise.allSettled(
+        extracted.map(createConnectedImage)
+      );
+      const successes = newImages.filter(
+        (result) => result.status === "fulfilled"
+      );
+      const errors = newImages.filter((result) => result.status === "rejected");
+
+      totalUploaded += successes.length;
+      totalFailed += errors.length;
+      failedImages.push(...errors);
+    } catch (err) {
+      console.error("Error occurred while processing images:", err);
+      failedImages.push(err);
+    }
+    skip += limit;
+  }
+  const [missingImages, _errors] = await importMissingImages()
+  console.log(f`Added ${missingImages.length} images from projects with no images`)
+  await prisma.$disconnect();
+  console.log("Total uploaded files: ", totalUploaded);
+  console.log("Total failed files: ", totalFailed);
+  console.log("Failed images details: ", failedImages);
+};
+
+
+main();
