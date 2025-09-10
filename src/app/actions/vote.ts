@@ -23,7 +23,6 @@ export async function castVote(projectID: string, email: string) {
                 },
                 data: { voteCount: { increment: 1 }, lastVote: new Date() }
             })
-            console.log(`count=${count}`)
             // if we updated, then update the project counts 
             if (count === 1) {
                 const project = await tx.project.update({
