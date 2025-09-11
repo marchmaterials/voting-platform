@@ -129,6 +129,25 @@ export function parseStakeholder(
   };
 }
 
+export function parsePhotographer(
+  row: Record<string, string>
+): Array<Partial<Stakeholder>> {
+  const nameSplit = row["Photographer"].split(",")
+  const urlSplit = row["Photographer URL"].split(/,\s*(?=http)/)
+  const photographers = nameSplit.map((name, idx) => {
+    const url = urlSplit[idx].trim()
+    return {
+      type: [STAKEHOLDER_TYPE.PHOTOGRAPHER],
+      companyName: name.trim(),
+      email: [],
+      url,
+      location: null,
+      phoneNumber: []
+    }
+  })
+  return photographers
+}
+
 const typologyMap: Record<string, BUILDING_TYPOLOGY> = {
   Residential: BUILDING_TYPOLOGY.RESIDENTIAL,
   Commercial: BUILDING_TYPOLOGY.COMMERCIAL,
