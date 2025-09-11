@@ -77,11 +77,11 @@ export function Sidebar({
       const key = sArray.map(s => s.id).join(",")
       const children = sArray.map(s => {
         if (s.url !== null) {
-          return <div className="text-sm font-light"><a href={s.url} rel="noopener noreferrer"
+          return <div key={`${s.id}_`} className="text-sm font-light"><a href={s.url} rel="noopener noreferrer"
             target="_blank"
           >{s.companyName}</a></div>
         } else {
-          <div className="text-sm font-light">{s.companyName}</div>
+          <div key={`${s.id}_`} className="text-sm font-light">{s.companyName}</div>
         }
       })
       return {
