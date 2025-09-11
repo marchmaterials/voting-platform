@@ -11,6 +11,7 @@ import {
   parseConstruction,
   parseStakeholder,
   parseTypology,
+  parsePhotographer
 } from "./parseData";
 import { createMaterialsAndConnections } from "./seed";
 
@@ -40,10 +41,9 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
           row["Project Typology (select all that apply)"]
         ),
         materials: parseMaterials(row["List Materials"]),
-        stakeholders: [parseStakeholder(row as Record<string, string>)],
+        stakeholders: [parseStakeholder(row)].concat(parsePhotographer(row)),
         area: parseInt(row["Project Built Area"]),
-        imageCredit: row["Photographer"],
-        photographerUrl: row["Photographer URL"],
+        imageCredit: row["Image Rights"],
         construction: parseConstruction(
           row["Construction Type (select all that apply)"]
         ),
@@ -121,7 +121,6 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
           location: validated.location,
           authorId: user.id,
           imageCredit: validated.imageCredit,
-          photographerUrl: validated.photographerUrl,
           stakeholders: {
             create: [...validated.stakeholders],
           },
