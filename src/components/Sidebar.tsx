@@ -1,6 +1,6 @@
 "use client";
 
-import { STAKEHOLDER_TYPE } from "@prisma/client";
+import { Stakeholder, STAKEHOLDER_TYPE } from "@prisma/client";
 import {
   EnrichedProjectMaterials,
   FullyEnrichedProject,
@@ -18,6 +18,9 @@ const comingSoonStakeholders = [
     children: <div className="text-sm font-light">Coming soon</div>,
   },
 ];
+
+type StakeholderRecord = Record<STAKEHOLDER_TYPE, Array<Stakeholder>>;
+
 export function Sidebar({
   materials,
   project,
@@ -60,12 +63,33 @@ export function Sidebar({
       <MaterialDetails {...{ usedWhere: m.usedWhere, supplierName: m.material.supplier.name, ...m.material }} />
     ),
   }));
-  const stakeholderList = project.stakeholders
-    .map((s) => ({
-      key: s.id,
-      label: s.type[0],
-      children: <div className="text-sm font-light">{s.companyName}</div>,
-    }))
+
+
+  const stakeholdersMap: StakeholderRecord = project.stakeholders.reduce((acc, s) => {
+    const key = s.type[0]
+    if (!key) { return acc }
+    (acc[key] ??= []).push(s);
+    return acc
+  }, {} as Partial<StakeholderRecord>) as StakeholderRecord
+
+  const stakeholderList = Object.entries(stakeholdersMap)
+    .map(([type, sArray]) => {
+      const key = sArray.map(s => s.id).join(",")
+      const children = sArray.map(s => {
+        if (s.url !== null) {
+          return <div key={`${s.id}_`} className="text-sm font-light"><a href={s.url} rel="noopener noreferrer"
+            target="_blank"
+          >{s.companyName}</a></div>
+        } else {
+          <div key={`${s.id}_`} className="text-sm font-light">{s.companyName}</div>
+        }
+      })
+      return {
+        key: key,
+        label: type,
+        children: <div>{children}</div>
+      }
+    })
     .concat(comingSoonStakeholders);
   return (
     <div className="pl-4 pr-4 pb-4">

@@ -82,7 +82,6 @@ export const generateProject = (): FullyEnrichedProject => {
     construction: [CONSTRUCTION_TYPOLOGY.NEW],
     votes: 10,
     stakeholders: [generateStakeholder()],
-    photographerUrl: "www.photos.com",
     imageCredit: "Joe Smith",
   };
 };
