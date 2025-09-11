@@ -18,7 +18,7 @@ async function main() {
     const titles = projectChanges.map(update => update.title)
     const projects = await prisma.project.findMany({ where: { title: { in: titles } } })
     for (const project of projects) {
-        const newDescription = projectChanges.find(c => c.title === project.title).newDescription
+        const newDescription = projectChanges.find(c => c.title === project.title)?.newDescription
         const res = await prisma.project.update({
             where: { id: project.id },
             data: {
