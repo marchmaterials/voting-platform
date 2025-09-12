@@ -135,7 +135,7 @@ export function parsePhotographer(
   const nameSplit = row["Photographer"].split(",")
   const urlSplit = row["Photographer URL"].split(/,\s*(?=http)/)
   const photographers = nameSplit.map((name, idx) => {
-    const url = urlSplit[idx].trim()
+    const url = urlSplit[idx] ? urlSplit[idx] : null
     return {
       type: [STAKEHOLDER_TYPE.PHOTOGRAPHER],
       companyName: name.trim(),

@@ -1,12 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `lastVote` on the `User` table. All the data in the column will be lost.
-
-*/
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "lastVote";
-
 -- CreateTable
 CREATE TABLE "Vote" (
     "id" TEXT NOT NULL,
@@ -25,7 +16,7 @@ CREATE INDEX "Vote_projectId_voteOn_idx" ON "Vote"("projectId", "voteOn");
 CREATE INDEX "Vote_userId_voteOn_idx" ON "Vote"("userId", "voteOn");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Vote_userId_projectId_voteOn_key" ON "Vote"("userId", "projectId", "voteOn");
+CREATE UNIQUE INDEX "Vote_userId_voteOn_key" ON "Vote"("userId", "voteOn");
 
 -- AddForeignKey
 ALTER TABLE "Vote" ADD CONSTRAINT "Vote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
