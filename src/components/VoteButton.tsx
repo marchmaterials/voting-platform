@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Modal, Input, message } from "antd";
 import { z } from "zod";
 import { castVote } from "@/app/actions/vote";
+import { useDataContext } from "@/app/context/dataContext";
 
 type Props = {
   projectId: string;
@@ -15,6 +16,7 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const { setAllProjects } = useDataContext();
 
   const handleSubmit = async () => {
     const emailSchema = z.email("Invalid email address");
@@ -23,13 +25,13 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
       message.error(parseResult.error.issues[0].message);
       return;
     }
-
     setLoading(true);
 
     try {
       const res = await castVote(projectId, email);
       if (res.type == "success") {
         setVotes(res.projectVotes);
+        setAllProjects(allProjects => allProjects.map(p => p.id === projectId ? { ...p, votes: res.projectVotes } : p))
         message.success("Thanks for voting!");
       } else {
         message.info(res.message)
