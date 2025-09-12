@@ -47,6 +47,7 @@ export const stakeholder = z.object({
       STAKEHOLDER_TYPE.INTERIOR_ARCHITECT,
       STAKEHOLDER_TYPE.CONTRACTOR,
       STAKEHOLDER_TYPE.ENGINEER,
+      STAKEHOLDER_TYPE.PHOTOGRAPHER
     ])
   ),
 
@@ -54,7 +55,7 @@ export const stakeholder = z.object({
 
   email: z.array(z.email()),
 
-  location: z.string().optional(),
+  location: z.string().optional().nullish(),
 
   phoneNumber: z.array(z.string().min(8).max(19)),
 

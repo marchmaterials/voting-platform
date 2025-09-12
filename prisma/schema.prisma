@@ -27,7 +27,6 @@ model Project {
   construction           CONSTRUCTION_TYPOLOGY[]
   votes                  Int                     @default(0)
   imageCredit            String?
-  photographerUrl        String?
 }
 
 model User {
@@ -116,4 +115,5 @@ enum STAKEHOLDER_TYPE {
   INTERIOR_ARCHITECT
   CONTRACTOR
   ENGINEER
+  PHOTOGRAPHER
 }
