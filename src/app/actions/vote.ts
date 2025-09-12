@@ -1,82 +1,86 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Vote } from "@prisma/client";
 
-
-function getMidnightToday(): Date {
-    const midnightToday = new Date()
-    midnightToday.setHours(0, 0, 0, 0)
-    return midnightToday
-}
 
 interface VoteSuccess {
     type: "success",
     projectVotes: number,
-    userVotes: number
+    userVotes: number,
+    vote: Vote
 }
 
-interface VoteFailure {
-    type: "failure",
+interface AlreadyVoted {
+    type: "alreadyVoted",
+}
+
+interface VoteError {
+    type: "error",
     message: string
 }
 
 
-export async function castVote(projectID: string, email: string): Promise<VoteSuccess | VoteFailure> {
-    const midnightToday = getMidnightToday()
+/** Return yyyy-mm-dd string representing the user's local calendar day 
+ * now: current datetime
+ * tz: client's timezone, of the form "Europe/Berlin"
+*/
+function voteDayInTZ(now: Date, tz: string) {
+    // Format the user's *local* date (yyyy-mm-dd)
+    const local = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" })
+        .format(now); // e.g. "2025-09-12"
+    return local; // "YYYY-MM-DD"
+}
+
+
+export async function castVote(projectId: string, email: string, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
+    const voteOnStr = voteDayInTZ(new Date(), timezone)
+    console.log(`caseVote: voteOnStr=${voteOnStr}`)
+    const voteOn = new Date(`${voteOnStr}T00:00:00.000Z`)
+
     const res = await prisma.$transaction(
         async (tx) => {
-            const { count } = await tx.user.updateMany({
-                where: {
-                    email,
-                    OR: [
-                        { lastVote: null },
-                        { lastVote: { lt: midnightToday } }
-                    ]
-                },
-                data: { voteCount: { increment: 1 }, lastVote: new Date() }
-            })
-            // if we updated, then update the project counts 
-            if (count === 1) {
-                const project = await tx.project.update({
-                    where: { id: projectID },
-                    data: { votes: { increment: 1 } },
-                    select: { votes: true }
-                })
-                const user = await tx.user.findUnique({ where: { email }, select: { voteCount: true } })
-                if (user === null) {
-                    throw new Error(`Unreachable; couldn't find user with email=${email}`)
-                }
-                return {
-                    projectVotes: project.votes,
-                    userVotes: user.voteCount,
-                }
-            }
-            // now we need to figure out why we couldn't update; is it because we've already voted today or because the user doesn't exist? 
-            const user = await tx.user.findUnique({ where: { email } });
-            console.log(user)
-
+            let user = await tx.user.findFirst({ where: { email } })
             if (user === null) {
-                // user doesn't exist, let's update the project counts and create the new user 
-                const project = await tx.project.update({
-                    where: { id: projectID },
-                    data: { votes: { increment: 1 } },
-                    select: { votes: true }
-                })
-                const user = await tx.user.create({ data: { voteCount: 1, lastVote: new Date(), email }, select: { voteCount: true } })
-
-                return {
-                    projectVotes: project.votes,
-                    userVotes: user.voteCount,
-                }
+                user = await tx.user.create({ data: { email } })
             }
-            // user existed but voted too recently, return an error 
-            return new Error(`You voted too recently! Please wait until tomorrow to vote again`)
+            try {
+                const vote = await tx.vote.create({
+                    data: { userId: user.id, projectId, voteOn },
+                });
+                const project = await tx.project.update({
+                    where: { id: projectId },
+                    data: { votes: { increment: 1 } },
+                });
+                const userUpdated = await tx.user.update({
+                    where: { id: user.id },
+                    data: { voteCount: { increment: 1 } },
+                });
+                return {
+                    type: "success",
+                    projectVotes: project.votes,
+                    userVotes: userUpdated.voteCount,
+                    vote
+                } as VoteSuccess
+            } catch (err: any) {
+                console.error(err)
+                if (err.code === "P2002") {
+                    return {
+                        type: "alreadyVoted",
+                    } as AlreadyVoted
+                }
+                throw err
+            }
+
         }
     )
-
     if (res instanceof Error) {
-        return { message: res.message, type: "failure" }
+        return {
+            type: "error",
+            message: res.message
+        }
     }
-    return { type: "success", ...res }
+
+    return res
 
 }
