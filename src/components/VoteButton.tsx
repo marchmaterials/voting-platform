@@ -28,13 +28,20 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
     setLoading(true);
 
     try {
-      const res = await castVote(projectId, email);
-      if (res.type == "success") {
-        setVotes(res.projectVotes);
-        setAllProjects(allProjects => allProjects.map(p => p.id === projectId ? { ...p, votes: res.projectVotes } : p))
-        message.success("Thanks for voting!");
-      } else {
-        message.info(res.message)
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      const res = await castVote(projectId, email, tz);
+      switch (res.type) {
+        case "success":
+          setVotes(res.projectVotes);
+          setAllProjects(allProjects => allProjects.map(p => p.id === projectId ? { ...p, votes: res.projectVotes } : p))
+          message.success("Thanks for voting!");
+          break
+        case "alreadyVoted":
+          message.info("You already voted today!")
+          break
+        case "error":
+          message.error(res.message)
+          break
       }
     } catch (err) {
       console.error(err);
