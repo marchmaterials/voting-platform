@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Vote } from "@prisma/client";
+import { Prisma, Vote } from "@prisma/client";
 
 
 interface VoteSuccess {
@@ -35,7 +35,6 @@ function voteDayInTZ(now: Date, tz: string) {
 
 export async function castVote(projectId: string, email: string, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
     const voteOnStr = voteDayInTZ(new Date(), timezone)
-    console.log(`caseVote: voteOnStr=${voteOnStr}`)
     const voteOn = new Date(`${voteOnStr}T00:00:00.000Z`)
 
     const res = await prisma.$transaction(
@@ -62,9 +61,8 @@ export async function castVote(projectId: string, email: string, timezone: strin
                     userVotes: userUpdated.voteCount,
                     vote
                 } as VoteSuccess
-            } catch (err: any) {
-                console.error(err)
-                if (err.code === "P2002") {
+            } catch (err) {
+                if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
                     return {
                         type: "alreadyVoted",
                     } as AlreadyVoted
