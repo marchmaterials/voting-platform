@@ -91,17 +91,17 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
   bar.start(validatedSubmissions.length, 0);
   for (const validated of validatedSubmissions) {
     try {
-      // const existingRecord = await prisma.project.findFirst({
-      //   where: {
-      //     AND: [{ author: { email } }, { title }],
-      //   },
-      // });
-      // if (existingRecord) {
-      //   console.log(
-      //     `Record with email ${email} and title ${title} already exists`
-      //   );
-      //   continue;
-      // }
+      const existingRecord = await prisma.project.findFirst({
+        where: {
+          AND: [{ author: { email: validated.email } }, { title: validated.title }],
+        },
+      });
+      if (existingRecord) {
+        console.log(
+          `Record with email ${validated.email} and title ${validated.title} already exists`
+        );
+        continue;
+      }
       // --- Upsert user-- -
       const user = await prisma.user.upsert({
         where: { email: validated.email },

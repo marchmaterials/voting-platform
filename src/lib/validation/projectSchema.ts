@@ -59,7 +59,7 @@ export const stakeholder = z.object({
 
   phoneNumber: z.array(z.string().min(8).max(19)),
 
-  url: z.url("Must be a valid URL").optional(),
+  url: z.url("Must be a valid URL").optional().nullish(),
 });
 
 export const projectSubmissionSchema = z.object({
