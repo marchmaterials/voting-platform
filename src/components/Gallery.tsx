@@ -6,10 +6,10 @@ export function Gallery({ images }: { images: string[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-full w-full relative flex flex-col items-center justify-center">
+    <div className="w-full relative flex flex-col items-center justify-center">
       <div
         ref={scrollRef}
-        className="flex flex-row h-full overflow-x-auto gap-4 scroll-smooth"
+        className="flex flex-row overflow-x-auto gap-4 scroll-smooth"
       >
         {images.map((img, i) => (
           <Image
@@ -18,7 +18,7 @@ export function Gallery({ images }: { images: string[] }) {
             alt={`Project image ${i + 1}`}
             width={800}
             height={800}
-            className="max-h-full max-w-full object-contain"
+            className="h-[50vh] sm:h-auto max-w-full object-contain"
           />
         ))}
       </div>
