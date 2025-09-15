@@ -100,7 +100,7 @@ export default function searchProjects(projects: Array<FullyEnrichedProject>, se
         default:
             predicate = (project: FullyEnrichedProject): boolean => {
                 const titleBool = project.title.toLowerCase().includes(sanitizedSearchTerm)
-                const companyNameBool = project.stakeholders.some(s => s.companyName.toLowerCase().includes(sanitizedSearchTerm))
+                const companyNameBool = project.projectStakeholders.some(s => s.stakeholder.companyName.toLowerCase().includes(sanitizedSearchTerm))
                 const materialBool = project.projectMaterial.some(pm => pm.material.name.toLowerCase().includes(sanitizedSearchTerm) || pm.material.tags.some(t => t.toLowerCase().includes(sanitizedSearchTerm)))
                 const locationBool = project.location === null ? false : project.location.toLowerCase().includes(sanitizedSearchTerm)
                 return (
