@@ -66,8 +66,10 @@ const generateStakeholder = (): Stakeholder => ({
 
 export const generateProject = (): FullyEnrichedProject => {
   const projectData = data[0];
+  const stakeholder = generateStakeholder()
+  const projectId = randomUUID()
   return {
-    id: randomUUID(),
+    id: projectId,
     createdAt: new Date(),
     title: projectData.title,
     description: projectData.description,
@@ -81,7 +83,14 @@ export const generateProject = (): FullyEnrichedProject => {
     area: projectData.area,
     construction: [CONSTRUCTION_TYPOLOGY.NEW],
     votes: 10,
-    stakeholders: [generateStakeholder()],
+    projectStakeholders: [{
+      id: randomUUID(),
+      createdAt: new Date(),
+      projectId,
+      stakeholderId: stakeholder.id,
+      position: 0,
+      stakeholder
+    }],
     imageCredit: "Joe Smith",
   };
 };
