@@ -121,12 +121,23 @@ export async function importProjects(csvPath: string, dryRun: boolean) {
           location: validated.location,
           authorId: user.id,
           imageCredit: validated.imageCredit,
-          stakeholders: {
-            create: [...validated.stakeholders],
-          },
+          projectStakeholders: {
+            create: validated.stakeholders.map((s, i) => ({
+              position: (i + 1) * 10,
+              stakeholder: {
+                create: {
+                  companyName: s.companyName,
+                  type: s.type,
+                  email: s.email,
+                  location: s.location,
+                  phoneNumber: s.phoneNumber,
+                  url: s.url,
+                },
+              },
+            })),
+          }
         },
       });
-
       await createMaterialsAndConnections(validated.materials, project.id);
       projects.push(project)
       bar.increment()
