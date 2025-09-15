@@ -71,7 +71,6 @@ export function Sidebar({
     (acc[key] ??= []).push(s.stakeholder);
     return acc
   }, {} as Partial<StakeholderRecord>) as StakeholderRecord
-
   const stakeholderList = Object.entries(stakeholdersMap)
     .map(([type, sArray]) => {
       const key = sArray.map(s => s.id).join(",")
