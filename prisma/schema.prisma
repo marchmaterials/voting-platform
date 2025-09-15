@@ -23,6 +23,7 @@ model Project {
   projectMaterial        ProjectMaterial[]       @relation("MaterialToProject")
   materials              Material[]
   stakeholders           Stakeholder[]
+  projectStakeholders    ProjectStakeholder[]
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
   votes                  Int                     @default(0)
@@ -68,6 +69,23 @@ model Image {
   credit    String?
 }
 
+model ProjectStakeholder {
+  id            String      @id @default(cuid())
+  projectId     String
+  stakeholderId String
+
+  // Low friction option: integer "position" (lower = earlier)
+  position      Int         @default(0)
+
+  createdAt     DateTime    @default(now())
+
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stakeholder   Stakeholder @relation(fields: [stakeholderId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, stakeholderId])      // don’t duplicate links
+  @@index([projectId, position])            // fast ordered fetch per project
+}
+
 model Stakeholder {
   id          String           @id @default(cuid())
   type        STAKEHOLDER_TYPE[]
@@ -76,6 +94,7 @@ model Stakeholder {
   location    String?
   phoneNumber String[]
   projects    Project[]
+  projectLinks ProjectStakeholder[]
   url         String?
 }
 
