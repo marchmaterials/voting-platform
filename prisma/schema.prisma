@@ -21,8 +21,6 @@ model Project {
   selectedForCompetition Boolean                 @default(false)
   images                 Image[]
   projectMaterial        ProjectMaterial[]       @relation("MaterialToProject")
-  materials              Material[]
-  stakeholders           Stakeholder[]
   projectStakeholders    ProjectStakeholder[]
   area                   Int
   construction           CONSTRUCTION_TYPOLOGY[]
@@ -35,7 +33,6 @@ model User {
   id        String    @id @default(cuid())
   email     String    @unique
   voteCount Int       @default(0)
-  lastVote  DateTime?
   votes     Vote[]   
   projects Project[]
 }
@@ -93,7 +90,6 @@ model Stakeholder {
   email       String[] 
   location    String?
   phoneNumber String[]
-  projects    Project[]
   projectLinks ProjectStakeholder[]
   url         String?
 }
@@ -116,7 +112,6 @@ model Material {
   supplierId       String
   supplier         Supplier          @relation(fields: [supplierId], references: [id])
   projectMaterials ProjectMaterial[] @relation("MaterialToProject")
-  projects         Project[]
   images           Image[]
   tags             String[] //characteristics, ex. natural, reused, circular
   certifications   String[]
