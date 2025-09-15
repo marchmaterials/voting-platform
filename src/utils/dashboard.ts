@@ -11,7 +11,7 @@ export const getAllProjects = async (): Promise<
       include: {
         images: true,
         projectMaterial: { include: { material: { include: { supplier: true } } } },
-        projectStakeholders: { include: { stakeholder: true } },
+        projectStakeholders: { include: { stakeholder: true }, orderBy: { position: "desc" } },
       },
       orderBy: [{
         votes: "desc"
