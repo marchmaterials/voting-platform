@@ -65,13 +65,12 @@ export function Sidebar({
   }));
 
 
-  const stakeholdersMap: StakeholderRecord = project.stakeholders.reduce((acc, s) => {
-    const key = s.type[0]
+  const stakeholdersMap: StakeholderRecord = project.projectStakeholders.reduce((acc, s) => {
+    const key = s.stakeholder.type[0]
     if (!key) { return acc }
-    (acc[key] ??= []).push(s);
+    (acc[key] ??= []).push(s.stakeholder);
     return acc
   }, {} as Partial<StakeholderRecord>) as StakeholderRecord
-
   const stakeholderList = Object.entries(stakeholdersMap)
     .map(([type, sArray]) => {
       const key = sArray.map(s => s.id).join(",")

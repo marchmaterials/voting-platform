@@ -2,6 +2,7 @@ import {
   Material,
   Image as PrismaImage,
   ProjectMaterial,
+  ProjectStakeholder,
   Project,
   Stakeholder,
   Supplier,
@@ -30,11 +31,15 @@ export type FilterOptions = {
   searchTerm: string;
 };
 
-export type Stakeholders = {
-  stakeholders: Array<Stakeholder>;
+export type EnrichedProjectStakeholder = ProjectStakeholder & {
+  stakeholder: Stakeholder
+}
+
+export type ProjectStakeholders = {
+  projectStakeholders: Array<EnrichedProjectStakeholder>;
 };
 
 export type FullyEnrichedProject = Project &
   Images &
   ProjectMaterials &
-  Stakeholders;
+  ProjectStakeholders;
