@@ -1,3 +1,4 @@
+// TODO: take a look at desktop and mobile view to figure out 
 "use client";
 import { Sidebar } from "./Sidebar";
 import { Gallery } from "./Gallery";
@@ -35,7 +36,19 @@ export default function Lightbox({
           <h2 className="text-md sm:text-2xl font-extrabold pr-4">{title}</h2>
           <VoteButton projectId={project.id} setVotes={setVotes} antdAdjustment={true} />
         </div>
-        <div className="flex sm:flex-row flex-col-reverse flex-1 h-0 justify-around">
+        {/* mobile view */}
+        <div className="min-h-0 overflow-y-auto sm:overflow-y-hidden sm:hidden">
+          <div className="flex sm:flex-row flex-col-reverse flex-1 justify-around">
+            <div className="h-1/3 sm:h-full w-full sm:w-1/3 sm:max-w-[320px] overflow-y-auto">
+              <Sidebar materials={materials} project={project} />
+            </div>
+            <div className="h-2/3 sm:h-full sm:w-2/3 flex mb-2 sm:mb-0">
+              <Gallery images={images} />
+            </div>
+          </div>
+        </div>
+        {/* desktop view */}
+        <div className="hidden sm:flex sm:flex-row flex-1 h-0 justify-around">
           <div className="h-1/3 sm:h-full w-full sm:w-1/3 sm:max-w-[320px] overflow-y-auto">
             <Sidebar materials={materials} project={project} />
           </div>
@@ -52,41 +65,6 @@ export default function Lightbox({
     </div>
   );
 
-
-  // return (
-  //   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
-  //     <button
-  //       className="absolute top-4 right-6 text-3xl text-white"
-  //       onClick={onClose}
-  //       aria-label="Close"
-  //     >
-  //       &times;
-  //     </button>
-  //     <div className="bg-white rounded-lg shadow-lg w-[90vw] h-[85vh] grid grid-rows-[auto,1fr,auto] min-h-0">
-  //       <div className="flex items-center p-4 justify-between">
-  //         <h2 className="text-md sm:text-2xl font-extrabold pr-4">{title}</h2>
-  //         <VoteButton projectId={project.id} setVotes={setVotes} antdAdjustment={true} />
-  //       </div>
-
-  //       <div className="min-h-0 overflow-y-auto sm:overflow-y-hidden">
-  //         <div className="flex sm:flex-row flex-col-reverse justify-around gap-4 px-4 py-2 min-h-0">
-  //           <div className="sm:w-1/3 sm:max-w-[320px] min-w-0 sm:overflow-y-auto">
-  //             <Sidebar materials={materials} project={project} />
-  //           </div>
-  //           <div className="sm:w-2/3 min-w-0">
-  //             <Gallery images={images} />
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <div className="p-4 border-t">
-  //         <div className="flex items-center justify-between">
-  //           <div className="text-sm text-gray-600">Votes: {votes}</div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
 
 }
 
