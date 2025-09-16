@@ -154,18 +154,20 @@ const createFullyEnrichedProject = async (
         area: validatedData.area,
         construction: validatedData.construction,
         votes: 0,
-        stakeholders: {
-          // create: validatedData.stakeholders.map((stakeholder) => ({
-          //   type: stakeholder.type,
-          //   companyName: stakeholder.companyName,
-          //   email: stakeholder.email,
-          //   location: {
-          //     create: {
-          //       ...stakeholder.location,
-          //     },
-          //   },
-          //   phoneNumber: stakeholder.phoneNumber,
-          // })),
+        projectStakeholders: {
+          create: validatedData.stakeholders.map((s, i) => ({
+            position: (i + 1) * 10,
+            stakeholder: {
+              create: {
+                companyName: s.companyName,
+                type: s.type,
+                email: s.email,
+                location: s.location,
+                phoneNumber: s.phoneNumber,
+                url: s.url,
+              },
+            },
+          })),
         },
         images: {
           create: images,
@@ -185,7 +187,7 @@ const createFullyEnrichedProject = async (
       where: {
         id: newProject.id,
       },
-      include: { images: true, materials: true },
+      include: { images: true, projectMaterial: true },
     });
     return finalProject;
   } catch (err) {
