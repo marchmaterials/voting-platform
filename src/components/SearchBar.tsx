@@ -22,7 +22,7 @@ export default function SearchBar({
     setLoading(false);
   };
   return (
-    <search className="w-4/5">
+    <search className="w-[90vw] sm:w-[80vw]">
       <form onSubmit={onSearch}>
         <div className="flex items-stretch">
           <input
