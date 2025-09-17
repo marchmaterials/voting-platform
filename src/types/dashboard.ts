@@ -19,9 +19,10 @@ export interface extendedImageLoaderProps extends ImageLoaderProps {
 
 export type EnrichedMaterial = Material & { supplier: Supplier };
 
-export type EnrichedProjectMaterials = Array<
-  ProjectMaterial & { material: EnrichedMaterial }
->;
+
+export type EnrichedProjectMaterial = ProjectMaterial & { material: EnrichedMaterial };
+
+export type EnrichedProjectMaterials = Array<EnrichedProjectMaterial>;
 
 export type ProjectMaterials = {
   projectMaterial: EnrichedProjectMaterials;
