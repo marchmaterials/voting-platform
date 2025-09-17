@@ -21,9 +21,9 @@ type StakeholderRecord = Record<STAKEHOLDER_TYPE, Array<Stakeholder>>;
 function StakeholderCollapseItem({ children, label }: { children: React.ReactNode, label: string }) {
     const [hidden, setHidden] = useState(true)
     return <div className="border-b-[1px] last:border-b-0">
-        <div className="p-2 text-sm font-semibold bg-gray-50 flex flex-row items-center justify-between" onClick={() => setHidden(!hidden)}>
+        <div className="p-2 text-sm font-normal bg-gray-50 flex flex-row items-center justify-between" onClick={() => setHidden(!hidden)}>
             {label}
-            <button className="mr-2" ><ChevronDown className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
+            <button ><ChevronDown className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
                 }`} /></button>
 
         </div>
