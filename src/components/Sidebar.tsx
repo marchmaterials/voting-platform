@@ -5,6 +5,7 @@ import {
   EnrichedProjectMaterials,
   FullyEnrichedProject,
 } from "@/types/dashboard";
+import MaterialCollapse from "./MaterialCollapse";
 import { Collapse, Tag } from "antd";
 const comingSoonStakeholders = [
   {
@@ -28,43 +29,8 @@ export function Sidebar({
   materials: EnrichedProjectMaterials;
   project: FullyEnrichedProject;
 }) {
-  const MaterialDetails = ({
-    certifications,
-    url,
-    supplierName,
-    usedWhere,
-    tags,
-  }: { certifications: string[], url: string | null, supplierName: string | null, usedWhere: string, tags: string[] }) => {
-    const certificationTags = certifications.map((c) => <Tag key={c}>{c}</Tag>);
-    const imageTags = tags.join(", ")
-    return (
-      <>
-        <h6 className="text-xs font-semibold mb-1">Where it is used:</h6>
-        <p className="mb-2 text-sm font-light">{usedWhere}</p>
-        <h6 className="text-xs font-semibold mb-1">Material Categories:</h6>
-        <div className="flex flex-wrap">
-          <p className="mb-2 text-sm font-light">{imageTags}</p>
-        </div>
-        {(url === null ? null : <a
-          href={`${url}?utm_source=marchmaterials.com&utm_medium=MARCH_material_search_for_architects`}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {supplierName}
-        </a>)}
-        {certificationTags}
-      </>
-    );
-  };
-  const materialList = materials.map((m) => ({
-    key: m.material.id,
-    label: `${m.percentage}% ${m.material.name}`,
-    children: (
-      <MaterialDetails {...{ usedWhere: m.usedWhere, supplierName: m.material.supplier.name, ...m.material }} />
-    ),
-  }));
 
-
+  const materialList = materials.map(m => (<MaterialCollapse projectMaterial={m} />))
   const stakeholdersMap: StakeholderRecord = project.projectStakeholders.reduce((acc, s) => {
     const key = s.stakeholder.type[0]
     if (!key) { return acc }
@@ -96,7 +62,9 @@ export function Sidebar({
       <p className="text-sm font-light">{project.area}sqm</p>
       <p className="text-sm font-light">completed in {project.yearCompleted}</p>
       <h4 className="font-medium mt-4 mb-4">Materials</h4>
-      <Collapse items={materialList} />
+      <div className="border-[1px] border-[#e5e7eb] rounded-lg overflow-hidden">
+        {materialList}
+      </div>
       <h4 className="font-medium mt-4 mb-4">Stakeholders</h4>
       <Collapse items={stakeholderList} />
       <p className="text-md mt-6">About this project:</p>
