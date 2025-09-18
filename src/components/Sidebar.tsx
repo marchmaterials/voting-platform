@@ -1,6 +1,5 @@
 "use client";
 
-import { Stakeholder, STAKEHOLDER_TYPE } from "@prisma/client";
 import {
   EnrichedProjectMaterials,
   FullyEnrichedProject,

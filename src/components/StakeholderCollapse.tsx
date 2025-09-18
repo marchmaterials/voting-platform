@@ -1,6 +1,6 @@
 import { EnrichedProjectStakeholder } from "@/types/dashboard";
 import { Stakeholder, STAKEHOLDER_TYPE } from "@prisma/client";
-import { ChevronDown, SquareArrowOutUpRight } from "lucide-react";
+import { ChevronUp, SquareArrowOutUpRight } from "lucide-react";
 import { useState } from "react";
 
 const comingSoonStakeholders = [
@@ -23,7 +23,7 @@ function StakeholderCollapseItem({ children, label }: { children: React.ReactNod
     return <div className="border-b-[1px] last:border-b-0">
         <div className="p-2 text-sm font-normal bg-gray-50 flex flex-row items-center justify-between" onClick={() => setHidden(!hidden)}>
             {label}
-            <button ><ChevronDown className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
+            <button ><ChevronUp className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
                 }`} /></button>
 
         </div>
