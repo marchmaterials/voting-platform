@@ -8,6 +8,7 @@ import { DataProvider } from "./context/dataContext";
 import HotjarAnalytics from "@/components/Hotjar"
 import { getAllProjects } from "@/utils/dashboard";
 import { unstable_noStore as noStore } from 'next/cache';
+import PinterestTag from "@/components/PinterestTag";
 
 export const revalidate = 0;            // disable ISR for everything under this layout
 export const dynamic = "force-dynamic"; // force per-request SSR
@@ -46,6 +47,7 @@ export default async function RootLayout({
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
           <Analytics />
           <HotjarAnalytics />
+          <PinterestTag />
         </AntdRegistry>
       </body>
     </html>
