@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function Footer() {
     return (
-        <>
+        <div className="flex flex-row items-center justify-between container">
             <div className="flex flex-row" >
                 <a
                     href="https://www.instagram.com/marchmaterials/"
@@ -56,5 +56,5 @@ export default function Footer() {
                     priority
                 />
             </div>
-        </>)
+        </div >)
 }
