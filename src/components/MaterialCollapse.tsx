@@ -1,6 +1,6 @@
 import { EnrichedProjectMaterial, EnrichedProjectMaterials } from "@/types/dashboard";
 import { useState } from "react";
-import { SquareArrowOutUpRight, ChevronDown } from "lucide-react";
+import { SquareArrowOutUpRight, ChevronUp } from "lucide-react";
 import { Tag } from "antd";
 
 function MaterialLink({ url, supplierName }: { url: string | null, supplierName: string | null }) {
@@ -35,7 +35,7 @@ function MaterialCollapseItem({ projectMaterial }: Readonly<{
     const supplierName = projectMaterial.material.supplier.name
     return (
         <div className="border-b-[1px] last:border-b-0">
-            <div className={`grid grid-cols-[15%_1fr] grid-rows-[1fr_30%] bg-gray-50 py-2 overflow-hidden`} onClick={() => setHidden(!hidden)}>
+            <div className={`grid grid-cols-[15%_1fr] grid-rows-[1fr_30%] space-y-1 bg-gray-50 py-2 overflow-hidden`} onClick={() => setHidden(!hidden)}>
                 <div className="flex justify-center items-center mx-1">
                     <div className="rounded-lg p-1 font-semibold text-xs bg-gray-200">
                         {projectMaterial.percentage}%
@@ -43,7 +43,7 @@ function MaterialCollapseItem({ projectMaterial }: Readonly<{
                 </div>
                 <div className="flex justify-between">
                     <div className="text-xs font-semibold">{projectMaterial.material.name}</div>
-                    <button className="mr-2" ><ChevronDown className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
+                    <button className="mr-2" ><ChevronUp className={`transition-transform duration-300 ${hidden ? "rotate-180" : "rotate-0"
                         }`} /></button>
 
                 </div>
