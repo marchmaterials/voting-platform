@@ -8,7 +8,6 @@ import { DataProvider } from "./context/dataContext";
 import HotjarAnalytics from "@/components/Hotjar"
 import { getAllProjects } from "@/utils/dashboard";
 import { unstable_noStore as noStore } from 'next/cache';
-import Footer from "@/components/Footer";
 
 export const revalidate = 0;            // disable ISR for everything under this layout
 export const dynamic = "force-dynamic"; // force per-request SSR
