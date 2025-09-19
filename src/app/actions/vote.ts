@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma, Vote } from "@prisma/client";
+import { Prisma, USER_TYPE, Vote } from "@prisma/client";
 
 
 interface VoteSuccess {
@@ -33,7 +33,7 @@ function voteDayInTZ(now: Date, tz: string) {
 }
 
 
-export async function castVote(projectId: string, email: string, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
+export async function castVote(projectId: string, email: string, userType: USER_TYPE, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
     const voteOnStr = voteDayInTZ(new Date(), timezone)
     const voteOn = new Date(`${voteOnStr}T00:00:00.000Z`)
 
@@ -41,7 +41,7 @@ export async function castVote(projectId: string, email: string, timezone: strin
         async (tx) => {
             let user = await tx.user.findFirst({ where: { email } })
             if (user === null) {
-                user = await tx.user.create({ data: { email } })
+                user = await tx.user.create({ data: { email, type: userType } })
             }
             try {
                 const vote = await tx.vote.create({
@@ -53,7 +53,7 @@ export async function castVote(projectId: string, email: string, timezone: strin
                 });
                 const userUpdated = await tx.user.update({
                     where: { id: user.id },
-                    data: { voteCount: { increment: 1 } },
+                    data: { voteCount: { increment: 1 }, type: userType },
                 });
                 return {
                     type: "success",
