@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Input, message, CascaderProps, Select, Form, Checkbox } from "antd";
-import { z } from "zod";
+import { Modal, Input, message, Select, Form, Checkbox } from "antd";
 import { castVote } from "@/app/actions/vote";
 import { useDataContext } from "@/app/context/dataContext";
 import { SquareArrowOutUpRight } from "lucide-react";
