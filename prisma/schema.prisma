@@ -35,6 +35,7 @@ model User {
   voteCount Int       @default(0)
   votes     Vote[]   
   projects Project[]
+  type USER_TYPE? 
 }
 
 
@@ -151,4 +152,12 @@ enum STAKEHOLDER_TYPE {
   CONTRACTOR
   ENGINEER
   PHOTOGRAPHER
+}
+
+enum USER_TYPE {
+  ARCHITECT
+	SUPPLIER
+	CONSTRUCTION_PROFESSIONAL
+	HOMEOWNER
+	OTHER
 }
