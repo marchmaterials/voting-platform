@@ -66,10 +66,11 @@ export default function StakeholderCollapse({ projectStakeholders }: { projectSt
         .map(([type, sArray]) => {
             const key = sArray.map(s => s.id).join(",")
             const children = sArray.map(s => {
+                const childKey = `${s.id}_`
                 if (s.url !== null) {
-                    return <StakeholderLink url={s.url} name={s.companyName} />
+                    return <StakeholderLink key={childKey} url={s.url} name={s.companyName} />
                 } else {
-                    <div key={`${s.id}_`} className="text-sm font-light">{s.companyName}</div>
+                    <div key={childKey} className="text-sm font-light">{s.companyName}</div>
                 }
             })
             return {
