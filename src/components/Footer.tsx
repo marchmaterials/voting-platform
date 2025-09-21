@@ -31,7 +31,7 @@ export default function Footer() {
                         priority
                     />
                 </a>
-                < Link href="/imprint" className="pl-1 text-[#109F00] underline">Imprint</Link>
+                < Link href="/imprint" className="pl-1 text-link underline">Imprint</Link>
             </div>
             < div className="flex flex-row justify-center items-center gap-2 h-10" >
                 <Image
