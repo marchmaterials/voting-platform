@@ -21,11 +21,12 @@ export default function ProjectCard({
 
   const onCardClick = () => {
     setLightboxOpen(true)
-    router.replace(`/project/${project.titleSlug}`)
+    router.push(`/project/${project.titleSlug}`)
   }
 
   const onClose = useCallback(() => {
     setLightboxOpen(false)
+    router.back()
   }, [])
 
   const titleImage = project.images.find((i) =>
