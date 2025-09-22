@@ -46,7 +46,7 @@ function MaterialCollapseItem({ projectMaterial }: Readonly<{
                     </div>
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className="flex">
+                    <div className="flex mb-1">
                         <div className="text-xs font-semibold">{projectMaterial.material.name}</div>
                     </div>
                     <MaterialLink url={url} supplierName={supplierName} />
