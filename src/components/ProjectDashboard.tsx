@@ -6,7 +6,7 @@ import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import Masonry from "react-masonry-css";
 
-export default function ProjectDashboard() {
+export default function ProjectDashboard({ projectSlug }: { projectSlug?: string }) {
   const { filteredProjects, allProjects, search } = useDataContext();
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,7 @@ export default function ProjectDashboard() {
           columnClassName="sm:pl-4 bg-clip-padding"
         >
           {projectsToShow.map((p) => (
-            <ProjectCard key={p.id} project={p} />
+            <ProjectCard key={p.id} project={p} lightBoxOpen={p.titleSlug === projectSlug} />
           ))}
         </Masonry>
       )}
