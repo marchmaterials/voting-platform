@@ -5,20 +5,33 @@ import { Card } from "antd";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
 import VoteButton from "./VoteButton";
+import { useRouter } from "next/navigation";
 
 export default function ProjectCard({
   project,
+  lightBoxOpen
 }: {
   project: FullyEnrichedProject;
+  lightBoxOpen: boolean
 }) {
-  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(lightBoxOpen);
   const [voteCount, setVoteCount] = useState(project.votes);
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
+
+  const onCardClick = () => {
+    setLightboxOpen(true)
+    router.push(`/project/${project.titleSlug}`)
+  }
+
+  const onClose = useCallback(() => {
+    setLightboxOpen(false)
+    router.back()
+  }, [])
 
   const titleImage = project.images.find((i) =>
     i.aiTags.includes("title-image")
   );
-
   return (
     <>
       <Card
@@ -26,7 +39,7 @@ export default function ProjectCard({
         data-testid={project.id}
         className="w-[350px] sm:w-[400px] max-h-fit cursor-pointer !mb-2"
         title={project.title}
-        onClick={() => setLightboxOpen(true)}
+        onClick={onCardClick}
         hoverable
         loading={loading}
         cover={
@@ -57,7 +70,7 @@ export default function ProjectCard({
         votes={voteCount}
         setVotes={setVoteCount}
         open={lightboxOpen}
-        onClose={useCallback(() => setLightboxOpen(false), [])}
+        onClose={onClose}
       />
     </>
   );

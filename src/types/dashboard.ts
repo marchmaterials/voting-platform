@@ -42,4 +42,4 @@ export type ProjectStakeholders = {
 export type FullyEnrichedProject = Project &
   Images &
   ProjectMaterials &
-  ProjectStakeholders;
+  ProjectStakeholders & { titleSlug: string }
