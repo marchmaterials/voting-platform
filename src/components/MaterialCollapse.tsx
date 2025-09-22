@@ -40,7 +40,7 @@ function MaterialCollapseItem({ projectMaterial }: Readonly<{
     return (
         <div className="border-b-[1px] last:border-b-0">
             <div className={`flex flex-row gap-1 bg-gray-50 py-2 overflow-hidden`} onClick={() => setHidden(!hidden)}>
-                <div className="flex items-start mx-1 w-8 shrink-0">
+                <div className="flex items-start justify-end ml-2 mr-1 w-8 shrink-0">
                     <div className="rounded-lg p-1 font-semibold text-xs bg-gray-200">
                         {projectMaterial.percentage}%
                     </div>
