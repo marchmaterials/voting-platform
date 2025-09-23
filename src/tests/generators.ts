@@ -8,6 +8,7 @@ import {
 import { EnrichedMaterial, FullyEnrichedProject, ProjectMaterials } from "@/types/dashboard";
 import * as data from "./testData.json";
 import { randomUUID } from "crypto";
+import slugify from "slugify";
 
 const generateMaterial = (): EnrichedMaterial => {
   const mat = data[0].materials[0];
@@ -72,6 +73,7 @@ export const generateProject = (): FullyEnrichedProject => {
     id: projectId,
     createdAt: new Date(),
     title: projectData.title,
+    titleSlug: slugify(projectData.title),
     description: projectData.description,
     location: "123 Main Street",
     yearCompleted: projectData.yearCompleted,
