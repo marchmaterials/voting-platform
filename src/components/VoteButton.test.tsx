@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import VoteButton from "./VoteButton";
 import { castVote } from "@/app/actions/vote";
@@ -13,6 +13,7 @@ describe("Votes Button", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (castVote as jest.Mock).mockResolvedValue({
+      type: "success",
       projectVotes: 5,
       userVotes: 1,
     });
@@ -44,7 +45,7 @@ describe("Votes Button", () => {
 
   it("submits a valid vote and updates vote count", async () => {
     render(<VoteButton projectId="123" setVotes={mockSetVotes} antdAdjustment={false} />);
-    fireEvent.click(screen.getByRole("button", { name: /vote/i }));
+    await userEvent.click(screen.getByRole("button", { name: /vote/i }));
 
     const emailInput = screen.getByTestId("email-input");
     await userEvent.type(emailInput, "user@example.com");
@@ -60,8 +61,7 @@ describe("Votes Button", () => {
     await userEvent.click(professionOption)
 
     const submitButton = screen.getByRole("button", { name: /submit vote/i });
-    fireEvent.click(submitButton);
-
+    await userEvent.click(submitButton);
     await waitFor(() => {
       expect(mockSetVotes).toHaveBeenCalledWith(5);
       expect(castVote).toHaveBeenCalledWith("123", "user@example.com", "ARCHITECT", expect.any(String));
