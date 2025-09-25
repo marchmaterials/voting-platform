@@ -27,7 +27,7 @@ describe("ProjectDashboard", () => {
 
     (useDataContext as jest.Mock).mockReturnValue({
       filteredProjects: [],
-      initialProjectsFetch: Promise.resolve(mockProjects),
+      allProjects: mockProjects,
       search: "",
     });
   });
@@ -45,12 +45,6 @@ describe("ProjectDashboard", () => {
       .mockImplementationOnce(() => [true, () => jest.fn()]);
     render(<ProjectDashboard />);
     expect(screen.getByTestId("loading-message")).toBeInTheDocument();
-  });
-
-  it("shows error message if projectsToShow is an Error", () => {
-    jest.spyOn(React, "use").mockReturnValueOnce(new Error("fail"));
-    render(<ProjectDashboard />);
-    expect(screen.getByTestId("error-message")).toBeInTheDocument();
   });
 
   it("shows no projects message when search return no results", () => {
