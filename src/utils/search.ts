@@ -75,7 +75,7 @@ const finalistMap = {
 
 
 
-export default function searchProjects(projects: Array<FullyEnrichedProject>, searchTerm: string): Array<FullyEnrichedProject> {
+export function searchProjects(projects: Array<FullyEnrichedProject>, searchTerm: string): Array<FullyEnrichedProject> {
 
     const sanitizedSearchTerm = searchTerm.toLowerCase().trim()
     let predicate: Predicate

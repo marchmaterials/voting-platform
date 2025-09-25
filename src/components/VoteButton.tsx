@@ -127,10 +127,12 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
               v ? Promise.resolve() : Promise.reject(new Error("Please accept the privacy policy before submitting")),
           },
           ]} className="!mb-0" label={null}>
-            <Checkbox>by submitting you agree to the terms of our <a className="text-link inline-flex items-center gap-1" href="https://marchmaterialspolicy.framer.website">privacy policy<span><SquareArrowOutUpRight size={14} strokeWidth={1.5} /></span></a></Checkbox>
+            <Checkbox data-testid="privacy-policy-input"
+            >by submitting you agree to the terms of our <a className="text-link inline-flex items-center gap-1" href="https://marchmaterialspolicy.framer.website">privacy policy<span><SquareArrowOutUpRight size={14} strokeWidth={1.5} /></span></a></Checkbox>
           </Form.Item>
           <Form.Item<FieldType> name="userType" label="What best describes your profession?" rules={[{ required: true, message: "Please select an option that best describes your profession" }]}>
-            <Select options={options} style={{ width: "100%" }} />
+            <Select data-testid="profession-input"
+              options={options} style={{ width: "100%" }} />
           </Form.Item>
         </Form>
       </Modal >
