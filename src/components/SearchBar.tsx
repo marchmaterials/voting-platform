@@ -2,7 +2,7 @@
 
 import { useDataContext } from "@/app/context/dataContext";
 import { useState } from "react";
-import searchProjects from "@/utils/search";
+import { searchProjects } from "@/utils/search";
 
 export default function SearchBar({
   setLoading,
@@ -26,6 +26,7 @@ export default function SearchBar({
       <form onSubmit={onSearch}>
         <div className="flex items-stretch">
           <input
+            data-testid="search-bar"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             type="search"
