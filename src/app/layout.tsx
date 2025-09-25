@@ -1,3 +1,4 @@
+import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -5,12 +6,12 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { DataProvider } from "./context/dataContext";
-import HotjarAnalytics from "@/components/Hotjar"
+import HotjarAnalytics from "@/components/Hotjar";
 import { getAllProjects } from "@/utils/dashboard";
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore } from "next/cache";
 import PinterestTag from "@/components/PinterestTag";
 
-export const revalidate = 0;            // disable ISR for everything under this layout
+export const revalidate = 0; // disable ISR for everything under this layout
 export const dynamic = "force-dynamic"; // force per-request SSR
 
 export const metadata: Metadata = {
@@ -29,10 +30,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await noStore()
+  await noStore();
   const initialProjects = await getAllProjects();
   if (initialProjects instanceof Error) {
-    throw initialProjects
+    throw initialProjects;
   }
   return (
     <html lang="en">
