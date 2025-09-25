@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import VoteButton from "./VoteButton";
 import { castVote } from "@/app/actions/vote";
