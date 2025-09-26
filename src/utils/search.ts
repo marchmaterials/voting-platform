@@ -114,7 +114,9 @@ export function searchProjects(
             pm.material.tags.some((t) =>
               t.toLowerCase().includes(sanitizedSearchTerm),
             ) ||
-            pm.material.supplier.name.includes(sanitizedSearchTerm),
+            pm.material.supplier.name
+              .toLowerCase()
+              .includes(sanitizedSearchTerm),
         );
         const locationBool =
           project.location === null
