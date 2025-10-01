@@ -32,6 +32,7 @@ export default function ProjectCard({
   const titleImage = project.images.find((i) =>
     i.aiTags.includes("title-image")
   );
+
   return (
     <>
       <Card
@@ -52,6 +53,7 @@ export default function ProjectCard({
               layout="responsive"
               loading="lazy"
               className="!rounded-none"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onLoad={() => setLoading(false)}
             />
           )
