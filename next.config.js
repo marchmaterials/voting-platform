@@ -10,6 +10,7 @@ const nextConfig = {
         pathname: "/march/**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 
