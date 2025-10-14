@@ -6,6 +6,7 @@ import Image from "next/image";
 import Lightbox from "./Lightbox";
 import VoteButton from "./VoteButton";
 import { useRouter } from "next/navigation";
+import { usePrevRoute } from "@/app/providers/RouteHistoryProvider";
 
 export default function ProjectCard({
   project,
@@ -18,6 +19,7 @@ export default function ProjectCard({
   const [voteCount, setVoteCount] = useState(project.votes);
   const [loading, setLoading] = useState(true);
   const router = useRouter()
+  const prev = usePrevRoute()
 
   const onCardClick = () => {
     setLightboxOpen(true)
@@ -26,7 +28,12 @@ export default function ProjectCard({
 
   const onClose = useCallback(() => {
     setLightboxOpen(false)
-    router.back()
+    if (prev === "/dashboard") {
+      // this preserves scroll position (more or less)
+      router.back()
+    } else {
+      router.push("/dashboard")
+    }
   }, [])
 
   const titleImage = project.images.find((i) =>

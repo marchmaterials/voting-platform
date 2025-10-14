@@ -1,4 +1,4 @@
-"use server"
+// "use server"
 import crypto from "node:crypto";
 import prisma from "@/lib/prisma";
 import { redirect } from 'next/navigation'
@@ -53,25 +53,27 @@ export default async function Verify({ searchParams }: VerifyProps) {
     switch (res.type) {
         case "success":
             return (
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center gap-2">
                     <div>
                         Successfully voted for project {res.projectTitle}
                     </div>
                     <div>
-                        <a href={`/project/${res.projectSlug}`}><button>Click here to return to project</button></a>
+                        <a href={`/project/${res.projectSlug}`} className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                        >Return to project</a>
                     </div>
                 </div>
             )
         case "alreadyVoted":
             return (
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center gap-2">
                     <div>
                         Looks like you already voted today
                     </div>
                     <div>
-                        <a href={`/dashboard`}><button>Click here to return to dashboard</button></a>
+                        <a href={`/dashboard`} className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                        >Return to dashboard</a>
                     </div>
-                </div>
+                </div >
             )
         case "error":
             return <div className="flex justify-center items-center">Looks like there was an error: {res.message}</div>
