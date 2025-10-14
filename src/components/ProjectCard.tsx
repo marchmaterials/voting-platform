@@ -50,7 +50,6 @@ export default function ProjectCard({
               alt={`image of architectural project titled ${project.title}`}
               width={400}
               height={300}
-              layout="responsive"
               loading="lazy"
               className="!rounded-none"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

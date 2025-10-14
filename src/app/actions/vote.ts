@@ -1,23 +1,29 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { Prisma, USER_TYPE, Vote } from "@prisma/client";
+import prisma, { Tx } from "@/lib/prisma";
+import { Prisma, User, USER_TYPE, Vote } from "@prisma/client";
+import slugify from "slugify";
 
 
 interface VoteSuccess {
     type: "success",
     projectVotes: number,
     userVotes: number,
-    vote: Vote
+    projectTitle: string,
+    projectSlug: string,
+    vote: Vote,
+    ok: true
 }
 
 interface AlreadyVoted {
     type: "alreadyVoted",
+    ok: false
 }
 
 interface VoteError {
     type: "error",
-    message: string
+    message: string,
+    ok: false
 }
 
 
@@ -32,53 +38,49 @@ function voteDayInTZ(now: Date, tz: string) {
     return local; // "YYYY-MM-DD"
 }
 
-
-export async function castVote(projectId: string, email: string, userType: USER_TYPE, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
+export async function castVoteExistingUser(tx: Tx | typeof prisma, projectId: string, user: User, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
     const voteOnStr = voteDayInTZ(new Date(), timezone)
     const voteOn = new Date(`${voteOnStr}T00:00:00.000Z`)
 
-    const res = await prisma.$transaction(
-        async (tx) => {
-            let user = await tx.user.findFirst({ where: { email } })
-            if (user === null) {
-                user = await tx.user.create({ data: { email, type: userType } })
-            }
-            try {
-                const vote = await tx.vote.create({
-                    data: { userId: user.id, projectId, voteOn },
-                });
-                const project = await tx.project.update({
-                    where: { id: projectId },
-                    data: { votes: { increment: 1 } },
-                });
-                const userUpdated = await tx.user.update({
-                    where: { id: user.id },
-                    data: { voteCount: { increment: 1 }, type: userType },
-                });
-                return {
-                    type: "success",
-                    projectVotes: project.votes,
-                    userVotes: userUpdated.voteCount,
-                    vote
-                } as VoteSuccess
-            } catch (err) {
-                if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-                    return {
-                        type: "alreadyVoted",
-                    } as AlreadyVoted
-                }
-                throw err
-            }
-
-        }
-    )
-    if (res instanceof Error) {
+    try {
+        const vote = await tx.vote.create({
+            data: { userId: user.id, projectId, voteOn },
+        });
+        const project = await tx.project.update({
+            where: { id: projectId },
+            data: { votes: { increment: 1 } },
+        });
+        const userUpdated = await tx.user.update({
+            where: { id: user.id },
+            data: { voteCount: { increment: 1 }, type: user.type },
+        });
         return {
-            type: "error",
-            message: res.message
+            type: "success",
+            projectVotes: project.votes,
+            userVotes: userUpdated.voteCount,
+            projectTitle: project.title,
+            projectSlug: slugify(project.title),
+            vote,
+            ok: true
         }
+    } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+            return {
+                type: "alreadyVoted",
+                ok: false
+            }
+        }
+        throw err
     }
+}
 
-    return res
+
+export async function castVote(tx: Tx | typeof prisma, projectId: string, email: string, userType: USER_TYPE, timezone: string): Promise<VoteSuccess | AlreadyVoted | VoteError> {
+
+    let user = await tx.user.findFirst({ where: { email } })
+    if (user === null) {
+        user = await tx.user.create({ data: { email, type: userType } })
+    }
+    return await castVoteExistingUser(tx, projectId, user, timezone)
 
 }

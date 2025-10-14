@@ -30,27 +30,43 @@ model Project {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  voteCount Int       @default(0)
-  votes     Vote[]   
-  projects Project[]
-  type USER_TYPE? 
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  voteCount          Int                 @default(0)
+  votes              Vote[]
+  projects           Project[]
+  type               USER_TYPE?
+  verified           Boolean             @default(false)
+  verificationTokens VerificationToken[]
 }
 
+model VerificationToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  ip        String?
+  userAgent String?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
 
 model Vote {
-  id        String   @id @default(cuid())
+  id        String @id @default(cuid())
   userId    String
   projectId String
 
   /// The *day* the vote is counted for (no time component)
-  voteOn    DateTime
+  voteOn DateTime
 
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([userId, voteOn]) // one vote per user per day
   @@index([projectId, voteOn])
@@ -68,38 +84,38 @@ model Image {
 }
 
 model ProjectStakeholder {
-  id            String      @id @default(cuid())
+  id            String @id @default(cuid())
   projectId     String
   stakeholderId String
 
   // Low friction option: integer "position" (lower = earlier)
-  position      Int         @default(0)
+  position Int @default(0)
 
-  createdAt     DateTime    @default(now())
+  createdAt DateTime @default(now())
 
-  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  stakeholder   Stakeholder @relation(fields: [stakeholderId], references: [id], onDelete: Cascade)
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stakeholder Stakeholder @relation(fields: [stakeholderId], references: [id], onDelete: Cascade)
 
-  @@unique([projectId, stakeholderId])      // don’t duplicate links
-  @@index([projectId, position])            // fast ordered fetch per project
+  @@unique([projectId, stakeholderId]) // don’t duplicate links
+  @@index([projectId, position]) // fast ordered fetch per project
 }
 
 model Stakeholder {
-  id          String           @id @default(cuid())
-  type        STAKEHOLDER_TYPE[]
-  companyName String
-  email       String[] 
-  location    String?
-  phoneNumber String[]
+  id           String               @id @default(cuid())
+  type         STAKEHOLDER_TYPE[]
+  companyName  String
+  email        String[]
+  location     String?
+  phoneNumber  String[]
   projectLinks ProjectStakeholder[]
-  url         String?
+  url          String?
 }
 
 model Supplier {
   id          String     @id @default(cuid())
   name        String
   website     String?
-  locations    String[]
+  locations   String[]
   email       String[]
   phoneNumber String[]
   materials   Material[]
@@ -156,8 +172,8 @@ enum STAKEHOLDER_TYPE {
 
 enum USER_TYPE {
   ARCHITECT
-	SUPPLIER
-	CONSTRUCTION_PROFESSIONAL
-	HOMEOWNER
-	OTHER
+  SUPPLIER
+  CONSTRUCTION_PROFESSIONAL
+  HOMEOWNER
+  OTHER
 }
