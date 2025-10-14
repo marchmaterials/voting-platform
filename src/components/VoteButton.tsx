@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Modal, Input, message, Select, Form, Checkbox } from "antd";
-import { useDataContext } from "@/app/context/dataContext";
+// import { useDataContext } from "@/app/context/dataContext";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { USER_TYPE } from "@prisma/client";
 import { sendVerificationEmail } from "@/app/actions/sendVerificationEmail";
@@ -51,10 +51,10 @@ const options: Option[] = [
 
 
 
-export default function VoteButton({ projectId, setVotes, antdAdjustment }: Props) {
+export default function VoteButton({ projectId, antdAdjustment }: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setAllProjects } = useDataContext();
+  // const { setAllProjects } = useDataContext();
   const [form] = Form.useForm();
 
 

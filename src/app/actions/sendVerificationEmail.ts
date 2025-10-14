@@ -6,12 +6,10 @@ import prisma from "@/lib/prisma";
 import { createVerificationEmail, createVerifyUrl } from "@/utils/verification";
 
 
-
 interface Success {
     type: "success",
     ok: true
 }
-
 
 interface SendVerificationEmailError {
     type: "error",
@@ -41,6 +39,7 @@ export async function sendVerificationEmail(projectId: string, email: string, us
         })
         verificationEmail = createVerificationEmail(email, verifyUrl)
     } catch (err) {
+        console.error("Failed to create verification URL", err)
         return {
             type: "error",
             message: "Failed to create verification URL",
@@ -52,6 +51,7 @@ export async function sendVerificationEmail(projectId: string, email: string, us
         const transporter = createTransporter()
         await sendEmail(transporter, verificationEmail)
     } catch (err) {
+        console.error("Failed to send verification email", err)
         return {
             type: "error",
             message: "Failed to send verification email",

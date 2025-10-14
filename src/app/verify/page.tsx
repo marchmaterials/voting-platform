@@ -36,13 +36,13 @@ export default async function Verify({ searchParams }: VerifyProps) {
 
     const vt = await prisma.verificationToken.findFirst({ where: { tokenHash } });
     if (vt === null) {
-        return <div>Couldn't find token</div>
+        redirect("/dashboard")
     }
 
     const now = new Date()
 
     if (now > vt.expiresAt) {
-        return <div>Token has already expired</div>
+        redirect("/dashboard")
     }
 
     const res = await prisma.$transaction(async (tx) => {
