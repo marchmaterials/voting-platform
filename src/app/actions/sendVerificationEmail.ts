@@ -23,7 +23,9 @@ type SendVerificationEmailResult = Success | SendVerificationEmailError
 
 export async function sendVerificationEmail(projectId: string, email: string, userType: USER_TYPE, tz: string): Promise<SendVerificationEmailResult> {
 
-    const baseUrl = process.env.VERCEL_URL ?? "http://localhost:3000"
+    const vercelUrl = process.env.VERCEL_URL
+    const baseUrl = vercelUrl ? `https://${vercelUrl}` : "http://localhost:3000"
+
     let verificationEmail: Email
     try {
         const verifyUrl = await prisma.$transaction(async (tx) => {
