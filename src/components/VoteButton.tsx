@@ -64,14 +64,14 @@ export default function VoteButton({ projectId, antdAdjustment }: Props) {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
       const res = await sendVerificationEmail(projectId, values.email, values.userType, tz)
       if (res.ok) {
-        message.success("Verification email sent — please click the link in the email to count your vote!")
+        message.success("Verification email sent — please click the link in the email to count your vote!", 10)
       } else {
-        message.error(res.message)
+        message.error(res.message, 10)
       }
       setModalOpen(false)
     } catch (err) {
       if (err instanceof Error) {
-        message.error(err.message);
+        message.error(err.message, 10);
       }
 
     } finally {

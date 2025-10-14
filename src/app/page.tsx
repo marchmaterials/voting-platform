@@ -16,11 +16,10 @@ export default function Home() {
 
           <div className="flex gap-4 items-center flex-col text-center">
             <h1 className="font-bold text-2xl m-5 w-3/4">
-              MARCH is a visual sourcing engine -{" "}
               <span className="font-normal">
-                where architects, designers, and clients come to get inspired and
-                source materials through built projects.
+                Get to know the team and story behind {" "}
               </span>
+              MARCH
             </h1>
           </div>
           <div className="flex-col">
@@ -33,19 +32,20 @@ export default function Home() {
                 className="bg-green min-w-48 hover:opacity-75  font-bold py-2 px-4 rounded-full"
                 type="button"
               >
-                Join the Waitlist
+                Keep me informed
               </button>
             </a>
           </div>
           <div className="flex flex-col justify-center gap-10">
             <video
-              autoPlay
               muted
               playsInline
               loop
-              width={800}
+              controls
+              preload="metadata"
+              width={600}
               height={400}
-              src="/prototype-better-quality.mov"
+              src="/story-march.mp4"
               className="rounded-lg shadow-xl"
             ></video>
           </div>
