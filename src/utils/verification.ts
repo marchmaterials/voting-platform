@@ -49,7 +49,7 @@ export function createVerificationEmail(to: string, verifyUrl: string): Email {
         subject: "Verify your email",
         text: `Tap to verify your email: ${verifyUrl} (valid for 30 minutes)`,
         html: `
-      <p>Confirm your email address for <b>MARCH</b>.</p>
+      <p>In order to place your vote, confirm your email address for <b>MARCH</b>.</p>
       <p><a href="${verifyUrl}">Verify my email</a></p>
       <p style="color:#666">Link expires in 60 minutes.</p>
     `,
