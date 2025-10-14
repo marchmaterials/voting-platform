@@ -34,7 +34,7 @@ export default function ProjectCard({
     } else {
       router.push("/dashboard")
     }
-  }, [])
+  }, [prev, router])
 
   const titleImage = project.images.find((i) =>
     i.aiTags.includes("title-image")
