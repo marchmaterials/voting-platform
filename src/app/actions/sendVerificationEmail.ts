@@ -24,7 +24,14 @@ type SendVerificationEmailResult = Success | SendVerificationEmailError
 export async function sendVerificationEmail(projectId: string, email: string, userType: USER_TYPE, tz: string): Promise<SendVerificationEmailResult> {
 
     const vercelUrl = process.env.VERCEL_URL
-    const baseUrl = vercelUrl ? `https://${vercelUrl}` : "http://localhost:3000"
+    let baseUrl: string
+    if (process.env.VERCEL_TARGET_ENV && process.env.VERCEL_TARGET_ENV === "production") {
+        baseUrl = "https://www.marchmaterials.com"
+    } else if (process.env.VERCEL_URL) {
+        baseUrl = `https://${vercelUrl}`
+    } else {
+        baseUrl = "http://localhost:3000"
+    }
 
     let verificationEmail: Email
     try {
