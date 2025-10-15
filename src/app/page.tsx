@@ -16,10 +16,9 @@ export default function Home() {
 
           <div className="flex gap-4 items-center flex-col text-center">
             <h1 className="font-bold text-2xl m-5 w-3/4">
-              MARCH is a visual sourcing engine -{" "}
+              MARCH {" "}
               <span className="font-normal">
-                where architects, designers, and clients come to get inspired and
-                source materials through built projects.
+                is a new discovery platform for architects and designers. Get inspired and explore new materials through built projects.
               </span>
             </h1>
           </div>
@@ -33,11 +32,11 @@ export default function Home() {
                 className="bg-green min-w-48 hover:opacity-75  font-bold py-2 px-4 rounded-full"
                 type="button"
               >
-                Stay informed
+                Reserve My Spot
               </button>
             </a>
           </div>
-          <div className="flex flex-col justify-center gap-10">
+          {/* <div className="flex flex-col justify-center gap-10">
             <video
               autoPlay
               muted
@@ -48,7 +47,7 @@ export default function Home() {
               src="/prototype-better-quality.mov"
               className="rounded-lg shadow-xl"
             ></video>
-          </div>
+          </div> */}
         </main >
       </div >
       <footer className="flex justify-center">
