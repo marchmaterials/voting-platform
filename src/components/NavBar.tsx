@@ -15,6 +15,11 @@ export default function NavBar() {
           Public Voting
         </div>
       </Link>
+      <Link href={"https://www.app.marchmaterials.com"}>
+        <div className={`m-8 ${pathname === "/dashboard" ? "font-bold" : ""}`}>
+          Inspiration Dashboard
+        </div>
+      </Link>
     </div>
   );
 }
