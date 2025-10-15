@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Modal, Input, message, Select, Form, Checkbox } from "antd";
-import { castVote } from "@/app/actions/vote";
-import { useDataContext } from "@/app/context/dataContext";
+// import { useDataContext } from "@/app/context/dataContext";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { USER_TYPE } from "@prisma/client";
+import { sendVerificationEmail } from "@/app/actions/sendVerificationEmail";
 
 type Props = {
   projectId: string;
@@ -51,10 +51,10 @@ const options: Option[] = [
 
 
 
-export default function VoteButton({ projectId, setVotes, antdAdjustment }: Props) {
+export default function VoteButton({ projectId, antdAdjustment }: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setAllProjects } = useDataContext();
+  // const { setAllProjects } = useDataContext();
   const [form] = Form.useForm();
 
 
@@ -62,25 +62,16 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
     try {
       setLoading(true);
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-      const res = await castVote(projectId, values.email, values.userType, tz);
-      switch (res.type) {
-        case "success":
-          setVotes(res.projectVotes);
-          setAllProjects(allProjects => allProjects.map(p => p.id === projectId ? { ...p, votes: res.projectVotes } : p))
-          message.success("Thanks for voting!");
-          break
-        case "alreadyVoted":
-          message.info("You already voted today!")
-          break
-        case "error":
-          message.error(res.message)
-          break
+      const res = await sendVerificationEmail(projectId, values.email, values.userType, tz)
+      if (res.ok) {
+        message.success("Verification email sent — please click the link in the email to count your vote!", 10)
+      } else {
+        message.error(res.message, 10)
       }
-
       setModalOpen(false)
     } catch (err) {
       if (err instanceof Error) {
-        message.error(err.message);
+        message.error(err.message, 10);
       }
 
     } finally {
@@ -108,7 +99,7 @@ export default function VoteButton({ projectId, setVotes, antdAdjustment }: Prop
         open={modalOpen}
         onOk={() => form.submit()}
         onCancel={onCancel}
-        okText="Submit Vote"
+        okText="Send Verification Email"
         confirmLoading={loading}
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
