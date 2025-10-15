@@ -33,7 +33,7 @@ export default function Home() {
                 className="bg-green min-w-48 hover:opacity-75  font-bold py-2 px-4 rounded-full"
                 type="button"
               >
-                Join the Waitlist
+                Stay informed
               </button>
             </a>
           </div>
