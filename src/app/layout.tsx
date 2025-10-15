@@ -9,6 +9,7 @@ import HotjarAnalytics from "@/components/Hotjar"
 import { getAllProjects } from "@/utils/dashboard";
 import { unstable_noStore as noStore } from 'next/cache';
 import PinterestTag from "@/components/PinterestTag";
+import { RouteHistoryProvider } from "./providers/RouteHistoryProvider";
 
 export const revalidate = 0;            // disable ISR for everything under this layout
 export const dynamic = "force-dynamic"; // force per-request SSR
@@ -41,9 +42,11 @@ export default async function RootLayout({
           <nav>
             <NavBar />
           </nav>
-          <DataProvider initialProjects={initialProjects}>
-            {children}
-          </DataProvider>
+          <RouteHistoryProvider>
+            <DataProvider initialProjects={initialProjects}>
+              {children}
+            </DataProvider>
+          </RouteHistoryProvider>
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
           <Analytics />
           <HotjarAnalytics />
