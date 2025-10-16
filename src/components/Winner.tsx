@@ -13,7 +13,7 @@ export default function Winner({ project, position }: WinnerProps) {
     const architect = project.projectStakeholders.find(ps => ps.stakeholder.type.includes(STAKEHOLDER_TYPE.ARCHITECT))?.stakeholder
     const architectName = architect?.companyName
     const architectUrl = architect?.url ?? "#"
-    const imagesSorted = project.images.sort((a, _) => a.aiTags.includes("title-image") ? -1 : 0)
+    const imagesSorted = project.images.sort(a => a.aiTags.includes("title-image") ? -1 : 0)
     return (
         <div className="flex flex-col items-center justify-center mb-10 last:mb-0 text-center">
             <h4 className="font-bold text-m mb-1">#{position} Prize</h4>
