@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -23,31 +24,16 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex-col">
-            <a
+            <Link
               href="https://forms.fillout.com/t/kweQHzpMbAus"
               target="_blank"
               rel="noopener"
+              className="inline-flex items-center w-48 justify-center bg-march_green text-black px-4 py-2 rounded-full font-semibold hover:opacity-75 transition-colors"
             >
-              <button
-                className="bg-green min-w-48 hover:opacity-75  font-bold py-2 px-4 rounded-full"
-                type="button"
-              >
-                Reserve My Spot
-              </button>
-            </a>
+              Reserve My Spot
+            </Link>
+
           </div>
-          {/* <div className="flex flex-col justify-center gap-10">
-            <video
-              autoPlay
-              muted
-              playsInline
-              loop
-              width={800}
-              height={400}
-              src="/prototype-better-quality.mov"
-              className="rounded-lg shadow-xl"
-            ></video>
-          </div> */}
         </main >
       </div >
       <footer className="flex justify-center">
