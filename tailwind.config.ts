@@ -14,7 +14,8 @@ export default {
         foreground: "var(--foreground)",
         green: "var(--primary-green)",
         "gray-500": "var(--gray-500)",
-        link: "#109F00"
+        link: "#109F00",
+        march_green: "#6BEC67"
       },
     },
   },

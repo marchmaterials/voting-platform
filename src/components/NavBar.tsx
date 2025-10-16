@@ -10,6 +10,11 @@ export default function NavBar() {
       <Link href={"/"}>
         <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>MARCH</div>
       </Link>
+      <Link href={"/voting-results"}>
+        <div className={`m-8 ${pathname === "/voting-results" ? "font-bold" : ""}`}>
+          Voting Results
+        </div>
+      </Link>
       <Link href={"/dashboard"}>
         <div className={`m-8 ${pathname === "/dashboard" ? "font-bold" : ""}`}>
           Public Voting
