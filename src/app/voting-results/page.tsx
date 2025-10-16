@@ -10,7 +10,7 @@ export default async function Page() {
     if (!voteCount.ok) {
         return <div>Something went wrong getting vote count</div>
     }
-    const allProjects = await getAllProjects()
+    const allProjects = await getAllProjects(10)
     if (!allProjects.ok) {
         return <div>Something went wrong getting projects</div>
     }

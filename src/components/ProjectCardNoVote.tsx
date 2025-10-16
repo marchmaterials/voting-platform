@@ -9,7 +9,6 @@ export default function ProjectCardNoVote({
 }: {
     project: FullyEnrichedProject;
 }) {
-    const [voteCount, setVoteCount] = useState(project.votes);
     const [loading, setLoading] = useState(true);
 
     const titleImage = project.images.find((i) =>
@@ -41,7 +40,7 @@ export default function ProjectCardNoVote({
                 }
             >
                 <div className="flex flex-row justify-between items-center">
-                    <div className="text-sm text-gray-700">Votes: {voteCount}</div>
+                    <div className="text-sm text-gray-700">Votes: {project.votes}</div>
                 </div>
             </Card>
 
