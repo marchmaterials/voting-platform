@@ -28,6 +28,7 @@ export const getAllProjects = async (limit?: number): Promise<Result<Success>> =
         title: "asc"
       },
       ],
+      ...(limit ? { take: limit } : {}),
     }).then(projects => projects.map(p => ({ titleSlug: slugify(p.title), ...p })));
     return {
       ok: true,

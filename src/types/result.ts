@@ -7,7 +7,8 @@ export enum ErrorCode {
 export type ServerError = {
     ok: false,
     type: "error",
-    code: ErrorCode
+    code: ErrorCode,
+    message: string
 }
 
 
