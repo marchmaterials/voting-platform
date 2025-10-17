@@ -34,19 +34,19 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
                 </Link>
             </div>
 
-            <div className="flex flex-row flex-wrap gap-2 justify-evenly items-center max-w-[1000px] mx-auto px-10">
+            {/* <div className="flex flex-row flex-wrap gap-2 justify-evenly items-center max-w-[1000px] mx-auto px-10">
                 <FloatingInfoBox title={"100+"} subTitle={"Submissions"} />
                 <FloatingInfoBox title={"17"} subTitle={"Countries"} />
                 <FloatingInfoBox title={"36"} subTitle={"Finalists"} />
                 <FloatingInfoBox title={"3"} subTitle={"Winners"} />
-            </div>
+            </div> */}
 
             <div className="flex flex-col items-center justify-center mt-28 text-center px-2 sm:px-0">
                 <h2 className="text-3xl font-bold mb-2">Community favorites</h2>
                 <p className="text-xl">
                     Over <span className="font-bold">{voteCount} votes{" "}</span>were cast in just one month!
                 </p>
-                <p className="text-xl">Here are the top three projects chosen by the community.</p>
+                <p className="text-xl">Here are the top three projects chosen by our community.</p>
             </div>
         </div>
 
@@ -56,7 +56,6 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
 
         <div className="flex flex-col text-center mb-24 bg-[#FBFEFA] py-14">
             <h4 className="text-xl font-bold">Top 10</h4>
-            <h4 className="text-l">Honarable Mentions</h4>
             <div className="flex items-center justify-center">
                 <Masonry
                     data-testid="project-grid"
