@@ -46,5 +46,5 @@ type Props = {
   title: string;
   project: FullyEnrichedProject;
   votes: number;
-  setVotes: React.Dispatch<React.SetStateAction<number>>;
+  setVotes?: React.Dispatch<React.SetStateAction<number>>;
 };

@@ -1,8 +1,9 @@
 "use client";
 import { FullyEnrichedProject } from "@/types/dashboard";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Card } from "antd";
 import Image from "next/image";
+import Lightbox from "./Lightbox";
 
 export default function ProjectCardNoVote({
     project,
@@ -10,10 +11,26 @@ export default function ProjectCardNoVote({
     project: FullyEnrichedProject;
 }) {
     const [loading, setLoading] = useState(true);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
 
     const titleImage = project.images.find((i) =>
         i.aiTags.includes("title-image")
     );
+
+    const onClose = useCallback(() => {
+        setLightboxOpen(false)
+    }, [])
+
+    // const onClose = useCallback(() => {
+    //     setLightboxOpen(false)
+    //     if (prev === "/dashboard") {
+    //       // this preserves scroll position (more or less)
+    //       router.back()
+    //     } else {
+    //       router.push("/dashboard")
+    //     }
+    //   }, [prev, router])
+    
 
     return (
         <>
@@ -24,6 +41,7 @@ export default function ProjectCardNoVote({
                 title={project.title}
                 hoverable
                 loading={loading}
+                onClick={() => setLightboxOpen(true)}
                 cover={
                     Boolean(project.images.length) && (
                         <Image
@@ -43,7 +61,15 @@ export default function ProjectCardNoVote({
                     <div className="text-sm text-gray-700">Votes: {project.votes}</div>
                 </div>
             </Card>
-
+            <Lightbox
+            images={project.images.map((img) => img.url)}
+            materials={[...project.projectMaterial.map((m) => m)]}
+            title={project.title}
+            project={project}
+            votes={project.votes}
+            open={lightboxOpen}
+            onClose={onClose}
+            />
         </>
     );
 

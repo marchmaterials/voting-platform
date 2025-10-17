@@ -13,10 +13,12 @@ export default function DetailedProjectView({
 }: Props) {
     return (
         <div className=" bg-white rounded-lg shadow-lg w-[90vw] h-[85vh] flex flex-col min-h-0">
+           
             <div className="flex flex-row items-center max-h-fit p-4 justify-between shrink-0">
                 <h2 className="text-md sm:text-2xl font-extrabold pr-4">{title}</h2>
-                <VoteButton projectId={project.id} setVotes={setVotes} antdAdjustment={true} />
+                {(setVotes ? (<VoteButton projectId={project.id} setVotes={setVotes} antdAdjustment={true} />): null)}
             </div>
+
             {/* mobile view */}
             <div className="min-h-0 overflow-y-auto sm:overflow-y-hidden sm:hidden">
                 <div className="flex sm:flex-row flex-col-reverse flex-1 justify-around">
@@ -53,5 +55,5 @@ type Props = {
     title: string;
     project: FullyEnrichedProject;
     votes: number;
-    setVotes: React.Dispatch<React.SetStateAction<number>>;
+    setVotes?: React.Dispatch<React.SetStateAction<number>>;
 };
