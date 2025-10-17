@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Instagram from "./Instagram";
+import { Mail } from 'lucide-react';
+import Image from "next/image";
 
 export default function VotingResultsFooter() {
     return (
@@ -16,9 +18,17 @@ export default function VotingResultsFooter() {
             >
                 Reserve My Spot
             </Link>
-            <Link href="https://www.instagram.com/marchmaterials/">
-                <Instagram />
-            </Link>
+            <div className="flex flex-row items-center justify-center gap-2">
+                <Link href="https://www.instagram.com/marchmaterials/">
+                    <Instagram />
+                </Link>
+                <Link href="mailto:info@marchmaterials.com">
+                    <Mail size={48} />
+                </Link>
+                <Link href="https://www.linkedin.com/company/marchmaterials/">
+                    <Image src={"/InBug-Black.png"} width={42} height={42} alt="LinkedIn logo" />
+                </Link>
+            </div>
         </div>
     )
 }
