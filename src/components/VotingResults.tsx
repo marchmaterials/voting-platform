@@ -50,11 +50,11 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
             </div>
         </div>
 
-        <div className="my-14">
+        <div className="mt-14 sm:my-14">
             {winners.map((w, idx) => <Winner key={`w-${w.id}`} project={w} position={idx + 1} />)}
         </div>
 
-        <div className="flex flex-col text-center mb-24 bg-[#FBFEFA] py-14">
+        <div className="flex flex-col text-center sm:mb-24 bg-[#FBFEFA] py-14">
             <h4 className="text-xl font-bold">Top 10</h4>
             <div className="flex items-center justify-center">
                 <Masonry
