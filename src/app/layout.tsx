@@ -32,8 +32,8 @@ export default async function RootLayout({
 }>) {
   await noStore()
   const initialProjects = await getAllProjects();
-  if (initialProjects instanceof Error) {
-    throw initialProjects
+  if (!initialProjects.ok) {
+    throw new Error(initialProjects.message)
   }
   return (
     <html lang="en">
@@ -43,7 +43,7 @@ export default async function RootLayout({
             <NavBar />
           </nav>
           <RouteHistoryProvider>
-            <DataProvider initialProjects={initialProjects}>
+            <DataProvider initialProjects={initialProjects.projects}>
               {children}
             </DataProvider>
           </RouteHistoryProvider>
