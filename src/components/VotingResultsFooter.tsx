@@ -5,8 +5,8 @@ export default function VotingResultsFooter() {
     return (
         <div className="flex flex-col items-center justify-center text-center max-w-xl mx-auto gap-8">
             <div>
-                <h2 className="text-2xl font-bold">MARCH is a new discovery platform for {" "}</h2>
-                <h2 className="text-2xl font-bold">architects and designers</h2>
+                <h2 className="text-2xl"><span className="font-bold">MARCH</span>{" "}is a new discovery platform for {" "}</h2>
+                <h2 className="text-2xl">architects and designers</h2>
             </div>
             <Link
                 href="https://forms.fillout.com/t/kweQHzpMbAus"
