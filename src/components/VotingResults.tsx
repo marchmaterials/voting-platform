@@ -23,8 +23,7 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
     return (<>
         <div className="bg-[#FBFEFA] pb-14">
             <div
-                className="flex flex-col px-40 py-52 text-center justify-center items-center gap-4 mb-6 bg-cover bg-center"
-                style={{ backgroundImage: "url('/winner-hero.jpg')" }}
+                className="flex flex-col px-40 py-52 text-center justify-center items-center gap-4 mb-6 bg-[url('/march-competition.-.Forest_Gate_House.-.hello--at--lsdarchitects.co.uk.-.Forest_Gate_extension_by_LSD_Architects__12___m6SWQthF.jpg')] bg-cover bg-center bg-black/50  bg-blend-multiply"
             >
                 <p className="font-bold text-5xl text-white">{"Here's to the winners!"}</p>
                 <Link
@@ -42,12 +41,12 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
                 <FloatingInfoBox title={"3"} subTitle={"Winners"} />
             </div>
 
-            <div className="flex flex-col items-center justify-center mt-28 text-center">
+            <div className="flex flex-col items-center justify-center mt-28 text-center px-2 sm:px-0">
                 <h2 className="text-3xl font-bold mb-2">Community favorites</h2>
                 <p className="text-xl">
-                    Over <span className="font-bold">{voteCount} votes{" "}</span>were cast in just two months!
+                    Over <span className="font-bold">{voteCount} votes{" "}</span>were cast in just one month!
                 </p>
-                <p className="text-xl">Here are the top three projects chosen by the community</p>
+                <p className="text-xl">Here are the top three projects chosen by the community.</p>
             </div>
         </div>
 
