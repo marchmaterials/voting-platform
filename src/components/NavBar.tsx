@@ -8,15 +8,17 @@ export default function NavBar() {
   return (
     <div className="w-full flex justify-start">
       <Link href={"/"}>
-        <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>MARCH</div>
+        <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>
+          MARCH
+        </div>
       </Link>
       <Link href={"/dashboard"}>
         <div className={`m-8 ${pathname === "/dashboard" ? "font-bold" : ""}`}>
           Public Voting
         </div>
       </Link>
-      <Link href={"/voting-results"}>
-        <div className={`m-8 ${pathname === "/voting-results" ? "font-bold" : ""}`}>
+      <Link href={"/awards"}>
+        <div className={`m-8 ${pathname === "/awards" ? "font-bold" : ""}`}>
           Awards 2025
         </div>
       </Link>
