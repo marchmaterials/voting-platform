@@ -25,13 +25,12 @@ export const getAllProjects = async (
 
     const countsMap = new Map(counts.map((c) => [c.projectId, c._count._all]));
     // 2) Sort projectIds by count desc
-    const sortedIds = counts
-      .sort((a, b) => b._count._all - a._count._all)
-      .map((c) => c.projectId);
-    console.log(sortedIds);
+    // const sortedIds = counts
+    //   .sort((a, b) => b._count._all - a._count._all)
+    //   .map((c) => c.projectId);
     const projects = await prisma.project
       .findMany({
-        where: { id: { in: sortedIds } },
+        // where: { id: { in: sortedIds } },
         include: {
           images: true,
           projectMaterial: {
@@ -45,7 +44,7 @@ export const getAllProjects = async (
         },
         orderBy: [
           {
-            id: "desc",
+            votes: "desc",
           },
           {
             title: "asc",
