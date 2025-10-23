@@ -2,7 +2,8 @@ import { PrismaClient, Prisma } from "@prisma/client";
 export type Tx = Prisma.TransactionClient;
 
 export const prismaClientSingleton = () => {
-  const log: Prisma.LogLevel[] = (process.env.NODE_ENV === "production") ? ["query", "info"] : []
+  const log: Prisma.LogLevel[] =
+    process.env.NODE_ENV === "production" ? ["query", "info"] : [];
   return new PrismaClient({
     datasources: {
       db: {

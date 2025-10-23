@@ -27,10 +27,10 @@ export default function VotingResults({ voteCount, projects }: { voteCount: numb
             >
                 <p className="font-bold text-5xl text-white">{"Here's to the winners!"}</p>
                 <Link
-                    href={`/dashboard`}
+                    href={`https://www.app.marchmaterials.com`}
                     className="inline-flex items-center w-48 justify-center bg-march_green text-black px-4 py-2 rounded-full font-semibold hover:opacity-75 transition-colors"
                 >
-                    Explore Projects
+                    Get inspired
                 </Link>
             </div>
 
