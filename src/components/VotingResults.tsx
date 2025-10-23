@@ -251,7 +251,7 @@ export default function VotingResults({
             competition, evaluating your projects and awarding their favourites
           </p>
         </div>
-        <div className="flex flex-wrap overflow-auto px-20 mx-auto justify-center">
+        <div className="flex flex-wrap overflow-auto px-40 mx-auto justify-center">
           {judgeFloatingHeads.map((p) => (
             <JudgeFloatingHead key={p.name} {...p} />
           ))}
