@@ -37,10 +37,13 @@ export function JudgeSelectionView({
   return (
     <>
       <div>
-        <div className="text-center font-bold text-3xl mb-10">{title}</div>
-        <div className="flex flex-col sm:flex-row mx-auto items-center justify-center gap-8">
+        <h2 className="text-center font-bold text-3xl mb-2">{title}</h2>
+        <h3 className="text-center font-bold text-l mb-10">First Prize</h3>
+        <div className="flex flex-col sm:flex-row mx-auto items-center justify-center sm:divide-x sm:divide-gray-300 mb-10">
           {selection.winners.map((w) => (
-            <Winner key={`w-${w.id}`} project={w} />
+            <div key={`w-${w.id}`} className="px-4">
+              <Winner project={w} />
+            </div>
           ))}
         </div>
         <div className="text-center font-bold text-2xl mb-10">
@@ -48,9 +51,11 @@ export function JudgeSelectionView({
             ? "Honourable Mention"
             : "Honourable Mentions"}
         </div>
-        <div className="flex flex-col sm:flex-row mx-auto items-center justify-center gap-8">
+        <div className="flex flex-col sm:flex-row mx-auto items-center justify-center sm:divide-x sm:divide-gray-300">
           {selection.honorableMentions.map((w) => (
-            <Winner key={`w-${w.id}`} project={w} />
+            <div key={`w-${w.id}`} className="px-4">
+              <Winner project={w} />
+            </div>
           ))}
         </div>
       </div>

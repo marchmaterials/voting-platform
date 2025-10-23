@@ -68,7 +68,7 @@ export default function VotingResults({
           <FloatingInfoBox title={"100+"} subTitle={"Submissions"} />
           <FloatingInfoBox title={"17"} subTitle={"Countries"} />
           <FloatingInfoBox title={"36"} subTitle={"Finalists"} />
-          <FloatingInfoBox title={"3"} subTitle={"Winners"} />
+          <FloatingInfoBox title={"5"} subTitle={"Winners"} />
         </div>
         <div className="mb-20">
           <div className="flex flex-col text-center mt-14 mb-4 px-24">
@@ -81,16 +81,19 @@ export default function VotingResults({
           </div>
         </div>
         <div className="flex flex-col text-center my-10 px-24">
-          <h2 className="text-2xl font-bold">Jury Awards</h2>
+          <h2 className="text-3xl font-bold mb-4">Jury Awards</h2>
           <p className="text-l">
-            <span className="font-bold">17 Judges</span> participated in the
-            competition, evaluating your projects and awarding their favourites
+            Our <span className="font-bold">17 Judges</span> carefully assessed
+            the environmental and social impact of each project and awarded 5
+            prize winners and 7 honourable mentions.
           </p>
         </div>
-        <div className="flex overflow-x-auto px-4 sm:flex-wrap sm:overflow-auto sm:px-40 sm:mx-auto sm:justify-center">
-          {judgeFloatingHeads.map((p) => (
-            <JudgeFloatingHead key={p.name} {...p} />
-          ))}
+        <div className="px-4 sm:px-40">
+          <div className="flex overflow-x-auto">
+            {judgeFloatingHeads.map((p) => (
+              <JudgeFloatingHead key={p.name} {...p} />
+            ))}
+          </div>
         </div>
 
         <div className="mt-14 sm:my-14">
@@ -118,7 +121,9 @@ export default function VotingResults({
             title={"Micro Category"}
           />
         </div>
-
+        <div className="px-10">
+          <hr />
+        </div>
         <div className="flex flex-col items-center justify-center mt-28 text-center px-2 sm:px-0">
           <h2 className="text-3xl font-bold mb-2">Community favorites</h2>
           <p className="text-xl">
