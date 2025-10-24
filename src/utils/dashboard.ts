@@ -87,7 +87,16 @@ export const getAllProjects = async (
       ok: false,
       type: "error",
       code: ErrorCode.DbError,
+<<<<<<< HEAD
       message: "failed to get projects from db",
     };
   }
 };
+=======
+      message: "failed to get projects from db"
+    }
+  }
+};
+
+
+>>>>>>> f2bc48f772ec9e4e4d04530b4efc97c8ebf3bb3a
