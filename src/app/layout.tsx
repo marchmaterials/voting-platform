@@ -5,13 +5,13 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { DataProvider } from "./context/dataContext";
-import HotjarAnalytics from "@/components/Hotjar"
+import HotjarAnalytics from "@/components/Hotjar";
 import { getAllProjects } from "@/utils/dashboard";
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore } from "next/cache";
 import PinterestTag from "@/components/PinterestTag";
 import { RouteHistoryProvider } from "./providers/RouteHistoryProvider";
 
-export const revalidate = 0;            // disable ISR for everything under this layout
+export const revalidate = 0; // disable ISR for everything under this layout
 export const dynamic = "force-dynamic"; // force per-request SSR
 
 export const metadata: Metadata = {
@@ -30,13 +30,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await noStore()
+  await noStore();
   const initialProjects = await getAllProjects();
   if (!initialProjects.ok) {
-    throw new Error(initialProjects.message)
+    throw new Error(initialProjects.message);
   }
   return (
     <html lang="en">
+      <meta name="p:domain_verify" content="0ed493644fddec0f9dc8cff469f00f17" />
       <body className="antialiased">
         <AntdRegistry>
           <nav>
