@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { FullyEnrichedProject } from "@/types/dashboard";
 import { ErrorCode, Result } from "@/types/result";
+import { STAKEHOLDER_TYPE } from "@prisma/client";
 import slugify from "slugify";
 
 type Success = {
@@ -53,12 +54,28 @@ export const getAllProjects = async (
         ...(limit ? { take: limit } : {}),
       })
       .then((projects) =>
-        projects.map((p) => ({
-          titleSlug: slugify(p.title),
-          ...p,
-          votes: countsMap.get(p.id) ?? p.votes,
-        }))
+        projects
+          .map((p) => ({
+            titleSlug: slugify(p.title),
+            ...p,
+            votes: countsMap.get(p.id) ?? p.votes,
+          }))
+          .map((p) => {
+            // special case from Marie -- this could be done in the DB but its 6:14 AM on the day of launch
+            if (p.title === "office  Van Laethem - Architecten") {
+              p.title = "Office Van Laethem";
+              const architectIdx = p.projectStakeholders.findIndex((ps) =>
+                ps.stakeholder.type.includes(STAKEHOLDER_TYPE.ARCHITECT)
+              );
+              if (p.projectStakeholders[architectIdx].stakeholder) {
+                p.projectStakeholders[architectIdx].stakeholder.companyName =
+                  "Van Laethem Architecten";
+              }
+            }
+            return p;
+          })
       );
+
     return {
       ok: true,
       type: "success",

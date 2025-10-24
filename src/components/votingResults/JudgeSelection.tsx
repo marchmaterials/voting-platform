@@ -14,7 +14,8 @@ export const judgeWinnersNameMap: Record<Category, JudgeSelection<string>> = {
     honorableMentions: ["Bienenskulptur", "Kiosk zur FÜRstin"],
   },
   small: {
-    winners: ["office  Van Laethem - Architecten"],
+    // winners: ["office  Van Laethem - Architecten"],
+    winners: ["Office Van Laethem"],
     honorableMentions: ["Bademaschinen", "Re:House"],
   },
   medium: {
