@@ -17,25 +17,25 @@ export default function Home() {
 
           <div className="flex gap-4 items-center flex-col text-center">
             <h1 className="font-bold text-2xl m-5 w-3/4">
-              MARCH {" "}
+              MARCH{" "}
               <span className="font-normal">
-                is a new discovery platform for architects and designers. Get inspired and explore new materials through built projects.
+                is a new discovery platform for architects and designers. Get
+                inspired and explore new materials through built projects.
               </span>
             </h1>
           </div>
           <div className="flex-col">
             <Link
-              href="https://forms.fillout.com/t/kweQHzpMbAus"
+              href="https://www.app.marchmaterials.com"
               target="_blank"
               rel="noopener"
               className="inline-flex items-center w-48 justify-center bg-march_green text-black px-4 py-2 rounded-full font-semibold hover:opacity-75 transition-colors"
             >
-              Reserve My Spot
+              Get Inspired
             </Link>
-
           </div>
-        </main >
-      </div >
+        </main>
+      </div>
       <footer className="flex justify-center">
         <Footer />
       </footer>
