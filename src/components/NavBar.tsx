@@ -22,11 +22,9 @@ export default function NavBar() {
           Awards 2025
         </div>
       </Link>
-      {/* <Link href={"https://www.app.marchmaterials.com"}>
-        <div className="m-8">
-          Inspiration Dashboard
-        </div>
-      </Link> */}
+      <Link href="https://www.app.marchmaterials.com">
+        <div className="m-8">Inspiration Board</div>
+      </Link>
     </div>
   );
 }
