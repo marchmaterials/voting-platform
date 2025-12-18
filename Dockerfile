@@ -31,5 +31,9 @@ RUN bun run prisma generate
 # COPY --from=prerelease /usr/src/app/package.json .
 # COPY . .
 # # run the app
+
+RUN mkdir -p /usr/src/app/.next \
+    && chown -R bun:bun /usr/src/app
+
 USER bun
 CMD [ "bun", "run", "start" ]
