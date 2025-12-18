@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
@@ -49,7 +48,6 @@ export default async function RootLayout({
             </DataProvider>
           </RouteHistoryProvider>
           <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || ""} />
-          <Analytics />
           <HotjarAnalytics />
           <PinterestTag />
         </AntdRegistry>

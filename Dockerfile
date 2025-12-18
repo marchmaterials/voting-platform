@@ -1,6 +1,6 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 AS base
+FROM oven/bun:1.3.1 AS base
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl ca-certificates postgresql-client \
@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
+WORKDIR /temp/dev
+RUN ls -la && bun --version
+# CMD ["sh"]
 RUN cd /temp/dev && bun install --frozen-lockfile
 FROM base AS prerelease
 WORKDIR /usr/src/app
