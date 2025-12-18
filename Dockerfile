@@ -22,14 +22,14 @@ COPY . .
 
 ENV NODE_ENV=production
 RUN bun run prisma generate
-RUN bun run build
+# RUN bun run build
 
-FROM base AS release
+# FROM base AS release
 
-COPY --from=prerelease /usr/src/app/node_modules node_modules
-COPY --from=prerelease /usr/src/app/.next .next
-COPY --from=prerelease /usr/src/app/package.json .
-COPY . .
-# run the app
+# COPY --from=prerelease /usr/src/app/node_modules node_modules
+# COPY --from=prerelease /usr/src/app/.next .next
+# COPY --from=prerelease /usr/src/app/package.json .
+# COPY . .
+# # run the app
 USER bun
 CMD [ "bun", "run", "start" ]
