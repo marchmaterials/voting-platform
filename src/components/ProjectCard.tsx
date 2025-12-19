@@ -2,43 +2,45 @@
 import { FullyEnrichedProject } from "@/types/dashboard";
 import { useCallback, useState } from "react";
 import { Card } from "antd";
-import Image from "next/image";
 import Lightbox from "./Lightbox";
 import VoteButton from "./VoteButton";
 import { useRouter } from "next/navigation";
 import { usePrevRoute } from "@/app/providers/RouteHistoryProvider";
+import { getIUrl } from "@/utils/image";
 
 export default function ProjectCard({
   project,
-  lightBoxOpen
+  lightBoxOpen,
 }: {
   project: FullyEnrichedProject;
-  lightBoxOpen: boolean
+  lightBoxOpen: boolean;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(lightBoxOpen);
   const [voteCount, setVoteCount] = useState(project.votes);
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
-  const prev = usePrevRoute()
+  const router = useRouter();
+  const prev = usePrevRoute();
 
   const onCardClick = () => {
-    setLightboxOpen(true)
-    router.push(`/project/${project.titleSlug}`)
-  }
+    setLightboxOpen(true);
+    router.push(`/project/${project.titleSlug}`);
+  };
 
   const onClose = useCallback(() => {
-    setLightboxOpen(false)
+    setLightboxOpen(false);
     if (prev === "/dashboard") {
       // this preserves scroll position (more or less)
-      router.back()
+      router.back();
     } else {
-      router.push("/dashboard")
+      router.push("/dashboard");
     }
-  }, [prev, router])
+  }, [prev, router]);
 
   const titleImage = project.images.find((i) =>
     i.aiTags.includes("title-image")
   );
+  const imageKitSrc = titleImage?.url ?? project.images[0].url;
+  const imageSrc = getIUrl(imageKitSrc);
 
   return (
     <>
@@ -52,8 +54,8 @@ export default function ProjectCard({
         loading={loading}
         cover={
           Boolean(project.images.length) && (
-            <Image
-              src={titleImage?.url ?? project.images[0].url}
+            <img
+              src={imageSrc}
               alt={`image of architectural project titled ${project.title}`}
               width={400}
               height={300}
@@ -67,7 +69,11 @@ export default function ProjectCard({
       >
         <div className="flex flex-row justify-between items-center">
           <div className="text-sm text-gray-700">Votes: {voteCount}</div>
-          <VoteButton projectId={project.id} setVotes={setVoteCount} antdAdjustment={false}></VoteButton>
+          <VoteButton
+            projectId={project.id}
+            setVotes={setVoteCount}
+            antdAdjustment={false}
+          ></VoteButton>
         </div>
       </Card>
       <Lightbox
@@ -82,5 +88,4 @@ export default function ProjectCard({
       />
     </>
   );
-
 }

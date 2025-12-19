@@ -1,4 +1,5 @@
 "use client";
+import { getIUrl } from "@/utils/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -50,12 +51,13 @@ export function Gallery({ images }: { images: string[] }) {
     const next = Math.max(0, Math.min(items.length - 1, curr + delta));
     el.scrollTo({ left: items[next].offsetLeft, behavior: "smooth" });
   };
-
   return (
     <div className="w-full relative flex flex-col items-center justify-center">
       <button
         onClick={() => scrollByItems(-1)}
-        className={`${!canScrollLeft ? "hidden" : ""} absolute left-2 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm transition`}
+        className={`${
+          !canScrollLeft ? "hidden" : ""
+        } absolute left-2 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm transition`}
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
@@ -65,9 +67,9 @@ export function Gallery({ images }: { images: string[] }) {
         className="flex flex-row overflow-x-auto gap-4 scroll-smooth"
       >
         {images.map((img, i) => (
-          <Image
+          <img
             key={img}
-            src={img}
+            src={getIUrl(img)}
             alt={`Project image ${i + 1}`}
             width={800}
             height={800}
@@ -78,11 +80,12 @@ export function Gallery({ images }: { images: string[] }) {
 
       <button
         onClick={() => scrollByItems(1)}
-        className={`${!canScrollRight ? "hidden" : ""} absolute right-2 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm transition`}
+        className={`${
+          !canScrollRight ? "hidden" : ""
+        } absolute right-2 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm transition`}
       >
         <ChevronRight className="w-6 h-6" />
       </button>
     </div>
   );
 }
-
