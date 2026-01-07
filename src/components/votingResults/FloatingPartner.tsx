@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export type FloatingPartnerProps = {
   name: string;
   src: string;
@@ -39,7 +37,7 @@ export const partners: FloatingPartnerProps[] = [
 export function FloatingPartner({ name, src }: FloatingPartnerProps) {
   return (
     <div className="flex flex-col text-center items-center w-32 mx-2 flex-shrink-0">
-      <Image
+      <img
         src={src}
         alt={`${name} logo`}
         width={200}

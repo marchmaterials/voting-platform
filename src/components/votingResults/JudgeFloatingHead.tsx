@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export type JudgeFloatingHeadProps = {
   name: string;
   description: string;
@@ -101,7 +99,7 @@ export function JudgeFloatingHead({
 }: JudgeFloatingHeadProps) {
   return (
     <div className="flex flex-col text-center items-center w-32 mx-2 flex-shrink-0 mb-3">
-      <Image
+      <img
         src={src}
         width={200}
         height={200}
