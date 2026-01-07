@@ -14,6 +14,7 @@ export default function Footer() {
             alt="instagram logo"
             width={30}
             height={30}
+            loading="lazy"
           />
         </a>
         <a
@@ -21,7 +22,13 @@ export default function Footer() {
           target="blank"
           rel="noopener noreferrer"
         >
-          <img src="/linkedin.svg" alt="linkedin logo" width={30} height={30} />
+          <img
+            src="/linkedin.svg"
+            alt="linkedin logo"
+            width={30}
+            height={30}
+            loading="lazy"
+          />
         </a>
         <Link href="/imprint" className="pl-1 text-link underline">
           Imprint
@@ -33,18 +40,21 @@ export default function Footer() {
           alt="avant now accelerator fem track logo"
           width={60}
           height={20}
+          loading="lazy"
         />
         <img
           src="https://www.berlin.de/i9f/r1/images/logo_berlin_m_srgb.svg"
           alt="Berlin Senat Logo"
           width={120}
           height={20}
+          loading="lazy"
         />
         <img
           src="/EUlogo.png"
           alt="kofinanziert von der Europäischen Union"
           width={180}
           height={10}
+          loading="lazy"
         />
       </div>
     </div>

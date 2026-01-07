@@ -105,6 +105,7 @@ export function JudgeFloatingHead({
         height={200}
         alt={`headshot of ${name}`}
         className="w-28 h-28 object-cover rounded-full filter grayscale"
+        loading="lazy"
       />
       <p className={`font-bold text-s break-normal whitespace-normal mt-4`}>
         {name}

@@ -33,6 +33,7 @@ export default function VotingResultsFooter() {
             width={42}
             height={42}
             alt="LinkedIn logo"
+            loading="lazy"
           />
         </Link>
       </div>

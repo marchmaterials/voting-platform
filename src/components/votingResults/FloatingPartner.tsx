@@ -43,6 +43,7 @@ export function FloatingPartner({ name, src }: FloatingPartnerProps) {
         width={200}
         height={200}
         className="w-28 h-28 object-cover rounded-full border border-gray-300 mb-4"
+        loading="lazy"
       />
       <p className="text-s font-bold">{name}</p>
     </div>

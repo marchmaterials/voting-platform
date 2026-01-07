@@ -74,6 +74,7 @@ export function Gallery({ images }: { images: string[] }) {
             width={800}
             height={800}
             className="h-[50vh] sm:h-auto max-w-full object-contain"
+            loading="lazy"
           />
         ))}
       </div>
