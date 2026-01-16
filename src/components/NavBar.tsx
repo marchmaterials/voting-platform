@@ -8,23 +8,35 @@ export default function NavBar() {
   return (
     <div className="w-full flex justify-start">
       <Link href={"/"}>
-        <div className={`m-8 ${pathname === "/" ? "font-bold" : ""}`}>
+        <div
+          className={`m-8 hover:text-black/60 ${
+            pathname === "/" ? "font-bold" : ""
+          }`}
+        >
           MARCH
         </div>
       </Link>
       <Link href={"/dashboard"}>
-        <div className={`m-8 ${pathname === "/dashboard" ? "font-bold" : ""}`}>
+        <div
+          className={`m-8 hover:text-black/60 ${
+            pathname === "/dashboard" ? "font-bold" : ""
+          }`}
+        >
           Public Voting
         </div>
       </Link>
       <Link href={"/awards"}>
-        <div className={`m-8 ${pathname === "/awards" ? "font-bold" : ""}`}>
+        <div
+          className={`m-8 hover:text-black/60 ${
+            pathname === "/awards" ? "font-bold" : ""
+          }`}
+        >
           Awards 2025
         </div>
       </Link>
-      <Link href="https://www.app.marchmaterials.com">
-        <div className="m-8">Inspiration Board</div>
-      </Link>
+      <a href="https://www.app.marchmaterials.com">
+        <div className="m-8 hover:text-black/60">Inspiration Board</div>
+      </a>
     </div>
   );
 }
